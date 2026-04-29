@@ -1,0 +1,63 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CookiePrefsModal from "@/components/islands/CookiePrefsModal.tsx";
+
+const cookies = [
+  { name: "cif_session", finalite: "Session utilisateur, maintien de la connexion.", duree: "12 heures", type: "Essentiel" },
+  { name: "cif_cart", finalite: "Mémorisation du contenu du panier entre les visites.", duree: "30 jours", type: "Essentiel" },
+  { name: "_pa_id", finalite: "Plausible Analytics auto-hébergé, audience anonymisée (sans IP).", duree: "7 jours", type: "Analytique" },
+  { name: "cif_consent", finalite: "Enregistrement de vos choix de consentement.", duree: "13 mois", type: "Essentiel" },
+];
+---
+<BaseLayout title="Cookies, Les Contes Infusés">
+  <section class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+    <header class="mb-10">
+      <p class="eyebrow">Transparence</p>
+      <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Cookies & traceurs</h1>
+      <p class="font-body text-cocoa-400 mt-2">Quatre cookies, c'est tout. Pas de pixel publicitaire, pas de revente.</p>
+    </header>
+
+    <section class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8">
+      <h2 class="font-display italic text-2xl text-cocoa-700">Liste des cookies utilisés</h2>
+      <div class="mt-5 overflow-x-auto">
+        <table class="w-full text-sm font-sans">
+          <thead>
+            <tr class="text-left text-xs uppercase tracking-widest text-cocoa-400 border-b border-line">
+              <th class="py-2 pr-4 font-medium">Nom</th>
+              <th class="py-2 pr-4 font-medium">Finalité</th>
+              <th class="py-2 pr-4 font-medium">Durée</th>
+              <th class="py-2 font-medium">Type</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-line">
+            {cookies.map(c => (
+              <tr class="text-cocoa-700">
+                <td class="py-3 pr-4 font-mono text-xs text-cocoa-700">{c.name}</td>
+                <td class="py-3 pr-4 font-body">{c.finalite}</td>
+                <td class="py-3 pr-4 tabular-nums text-xs text-cocoa-400">{c.duree}</td>
+                <td class="py-3">
+                  <span class={`chip ${c.type === "Analytique" ? "!text-plum-600 !border-plum-200" : "!text-sage-600 !border-sage-200"}`}>{c.type}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="bg-cream-100/60 border border-line rounded-2xl p-6 md:p-8 mt-6">
+      <h2 class="font-display italic text-2xl text-cocoa-700">Modifier mes choix</h2>
+      <p class="text-sm text-cocoa-700 mt-2 leading-relaxed">
+        À tout moment, ajustez vos préférences. Les cookies essentiels sont nécessaires au fonctionnement du site (panier, session) et ne peuvent pas être désactivés.
+      </p>
+      <div class="mt-5">
+        <CookiePrefsModal client:idle />
+      </div>
+    </section>
+
+    <section class="mt-8 text-sm text-cocoa-700 leading-relaxed">
+      <p>Aucun cookie marketing tiers n'est utilisé sur ce site. Pas de Facebook Pixel, pas de Google Ads, pas de DoubleClick. Notre suivi d'audience repose exclusivement sur Plausible, hébergé en France, sans empreinte numérique ni identifiant persistant.</p>
+      <p class="mt-3">Pour aller plus loin : voir notre <a href="/rgpd" class="text-terracotta-400 underline">politique RGPD</a>.</p>
+    </section>
+  </section>
+</BaseLayout>

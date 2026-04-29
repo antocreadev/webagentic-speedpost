@@ -1,0 +1,51 @@
+---
+import { formatPrice } from "@/lib/format";
+import type { CafeItem } from "@/data/cafe";
+interface Props { item: CafeItem; }
+const { item } = Astro.props;
+
+const palette: Record<string, [string, string]> = {
+  espresso: ["#3A2014", "#4A2D1F"],
+  machiato: ["#4A2D1F", "#7C4F31"],
+  cappuccino: ["#C9A37D", "#7C4F31"],
+  chocolat: ["#5C3820", "#26150C"],
+  chai: ["#C77A4F", "#9A4F2A"],
+  matcha: ["#8A9876", "#5A6647"],
+  ube: ["#8E6C90", "#5E456A"],
+  the: ["#C9B0C5", "#5E456A"],
+  icetea: ["#C77A4F", "#7C4F31"],
+  iceteaMaison: ["#E2B594", "#C77A4F"],
+  kombucha: ["#C9B0C5", "#8E6C90"],
+  brownie: ["#5C3820", "#26150C"],
+  cake: ["#EAD9A6", "#C77A4F"],
+  cookie: ["#C9A37D", "#7C4F31"],
+  coca: ["#5C3820", "#26150C"],
+  pago: ["#C77A4F", "#9A4F2A"],
+  eau: ["#C7CDB7", "#8A9876"],
+};
+const [c1, c2] = palette[item.imageKey] ?? ["#C9A37D", "#7C4F31"];
+---
+<article class="group bg-cream-50 border border-line rounded-2xl p-5 transition-all hover:border-terracotta-400 hover:-translate-y-0.5">
+  <div class="flex items-start gap-4">
+    <div class="shrink-0 w-16 h-16 rounded-full overflow-hidden flex items-center justify-center" style={`background: radial-gradient(circle at 30% 30%, ${c1}, ${c2})`}>
+      {/* simple flat illustration: cup */}
+      <svg viewBox="0 0 40 40" width="36" height="36" fill="none" stroke="#FBF6E9" stroke-width="1.2" stroke-linecap="round">
+        <path d="M10 16 L 12 30 Q 12 34, 16 34 L 24 34 Q 28 34, 28 30 L 30 16 Z"/>
+        <path d="M30 20 q 5 0, 5 4 q 0 4, -5 4"/>
+        <ellipse cx="20" cy="16" rx="10" ry="1.6" fill="#FBF6E9" opacity=".4" stroke="none"/>
+      </svg>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-baseline justify-between gap-3">
+        <h3 class="font-display italic text-lg text-cocoa-600 leading-tight">{item.name}</h3>
+        <span class="price-tab text-sm shrink-0">{formatPrice(item.price)}</span>
+      </div>
+      <p class="text-xs text-cocoa-400 mt-1 line-clamp-2">{item.ingredients.join(", ")}</p>
+      <button type="button" data-add-cart={item.slug} data-price={item.price} data-name={item.name}
+        class="mt-3 inline-flex items-center gap-1.5 text-xs font-smallcap tracking-widest uppercase text-terracotta-600 hover:text-cocoa-600 transition-colors">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+        Ajouter
+      </button>
+    </div>
+  </div>
+</article>

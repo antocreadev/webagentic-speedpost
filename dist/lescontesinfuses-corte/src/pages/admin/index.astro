@@ -1,0 +1,123 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { adminOrders } from "@/data/admin";
+import { formatPrice } from "@/lib/format";
+
+const kpis = [
+  { label: "Commandes du jour", value: "8", trend: "+3 vs hier", color: "terracotta" },
+  { label: "Chiffre d'affaires du mois", value: "4 280 €", trend: "+12% vs mars", color: "sage" },
+  { label: "Inscriptions événements", value: "23", trend: "5 événements actifs", color: "plum" },
+  { label: "Stock en alerte", value: "4", trend: "livres sous le seuil", color: "cocoa" },
+];
+
+// 30 days mock heights (deterministic)
+const bars = [42, 28, 51, 33, 47, 58, 71, 35, 24, 49, 62, 80, 55, 41, 38, 44, 67, 73, 52, 36, 29, 47, 61, 78, 84, 59, 43, 50, 66, 74];
+const maxBar = Math.max(...bars);
+
+const last5 = adminOrders.slice(0, 5);
+const todos = [
+  { label: "Préparer 8 commandes en attente d'expédition", urgent: true },
+  { label: "Relancer 3 fournisseurs en retard (Albiana, Actes Sud, Gallimard)", urgent: false },
+  { label: "Confirmer la jauge de la soirée contes (capacité 50, 31 inscrits)", urgent: false },
+  { label: "Réapprovisionner Mémoires d'Hadrien (stock à 3)", urgent: true },
+];
+
+function statusChip(s: string) {
+  if (s === "À traiter") return "bg-terracotta-50 text-terracotta-600 border-terracotta-200";
+  if (s === "Préparée") return "bg-cream-200 text-cocoa-600 border-line";
+  if (s === "Expédiée") return "bg-plum-200/60 text-plum-600 border-plum-200";
+  return "bg-sage-200 text-sage-600 border-sage-400/40";
+}
+---
+<AdminLayout title="Tableau de bord, Admin" section="dashboard">
+  <header class="mb-8">
+    <p class="eyebrow !text-[10px]">Vue générale</p>
+    <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1">Bonjour Paul-Antoine</h1>
+    <p class="font-body text-cocoa-400 mt-1 text-sm">Lundi 20 avril 2026, 09h12. Café tiède, journée chargée.</p>
+  </header>
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    {kpis.map(k => (
+      <div class="bg-cream-50 border border-line rounded-xl p-5 relative overflow-hidden">
+        <div class={`absolute top-0 right-0 w-20 h-20 rounded-full -mr-8 -mt-8 ${k.color === "terracotta" ? "bg-terracotta-50" : k.color === "sage" ? "bg-sage-200/40" : k.color === "plum" ? "bg-plum-200/40" : "bg-cream-100"}`}></div>
+        <p class="text-[10px] uppercase tracking-widest text-cocoa-400 font-sans relative">{k.label}</p>
+        <p class="font-display italic text-3xl text-cocoa-700 mt-2 tabular-nums relative">{k.value}</p>
+        <p class="text-xs text-cocoa-400 mt-1 relative font-sans">{k.trend}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6 mb-8">
+    <div class="lg:col-span-2 bg-cream-50 border border-line rounded-xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-display italic text-2xl text-cocoa-700">Activité, 30 derniers jours</h2>
+        <span class="chip">Commandes / jour</span>
+      </div>
+      <svg viewBox="0 0 600 180" class="w-full h-44" preserveAspectRatio="none">
+        <line x1="0" y1="170" x2="600" y2="170" stroke="#D9C8A8" stroke-width="1" />
+        {bars.map((h, i) => (
+          <rect
+            x={i * 19 + 4}
+            y={170 - (h / maxBar) * 150}
+            width={14}
+            height={(h / maxBar) * 150}
+            fill="#C77A4F"
+            opacity={0.85}
+            rx={2}
+          />
+        ))}
+      </svg>
+      <div class="flex justify-between mt-2 text-[10px] text-cocoa-400 font-sans tabular-nums">
+        <span>21 mars</span><span>5 avril</span><span>20 avril</span>
+      </div>
+    </div>
+
+    <div class="bg-cocoa-700 text-cream-100 rounded-xl p-6 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-terracotta-400/20 -mr-12 -mt-12 blur-2xl"></div>
+      <p class="eyebrow !text-cream-100/60 !text-[10px]">À faire aujourd'hui</p>
+      <h2 class="font-display italic text-2xl text-cream-50 mt-1">4 priorités</h2>
+      <ul class="mt-5 space-y-3 relative">
+        {todos.map(t => (
+          <li class="flex items-start gap-3">
+            <input type="checkbox" class="mt-1 accent-terracotta-400 w-4 h-4 shrink-0" />
+            <span class={`text-sm leading-snug ${t.urgent ? "text-cream-50" : "text-cream-100/75"}`}>
+              {t.urgent && <span class="inline-block w-1.5 h-1.5 rounded-full bg-terracotta-400 mr-1.5 align-middle"></span>}
+              {t.label}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="bg-cream-50 border border-line rounded-xl p-6">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="font-display italic text-2xl text-cocoa-700">Dernières commandes</h2>
+      <a href="/admin/commandes" class="text-xs uppercase tracking-widest text-terracotta-400 hover:text-cocoa-700 font-smallcap">Voir tout</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm font-sans">
+        <thead>
+          <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400 border-b border-line">
+            <th class="py-2 pr-4 font-medium">N°</th>
+            <th class="py-2 pr-4 font-medium">Client</th>
+            <th class="py-2 pr-4 font-medium">Articles</th>
+            <th class="py-2 pr-4 font-medium">Total</th>
+            <th class="py-2 font-medium">Statut</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          {last5.map(o => (
+            <tr class="text-cocoa-700 hover:bg-cream-100/40">
+              <td class="py-3 pr-4 font-mono text-xs"><a href={`/admin/commandes/${o.id}`} class="hover:text-terracotta-400">{o.id}</a></td>
+              <td class="py-3 pr-4">{o.customer}</td>
+              <td class="py-3 pr-4 tabular-nums text-xs text-cocoa-400">{o.items}</td>
+              <td class="py-3 pr-4 tabular-nums">{formatPrice(o.total)}</td>
+              <td class="py-3"><span class={`chip border ${statusChip(o.status)}`}>{o.status}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>

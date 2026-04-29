@@ -1,0 +1,124 @@
+---
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title?: string;
+  section?: string;
+  breadcrumb?: { label: string; href?: string }[];
+}
+
+const { title = "Admin, Les Contes Infusés", section = "dashboard", breadcrumb = [] } = Astro.props;
+
+const nav = [
+  { id: "dashboard", label: "Tableau de bord", href: "/admin", icon: "layout-dashboard" },
+  { id: "commandes", label: "Commandes", href: "/admin/commandes", icon: "shopping-bag" },
+  { id: "produits", label: "Produits", href: "/admin/produits", icon: "book-open" },
+  { id: "evenements", label: "Événements", href: "/admin/evenements", icon: "calendar" },
+  { id: "stocks", label: "Stocks", href: "/admin/stocks", icon: "package" },
+  { id: "etiquettes", label: "Étiquettes", href: "/admin/etiquettes", icon: "tag" },
+  { id: "clients", label: "Clients", href: "/admin/clients", icon: "users" },
+];
+
+const icons: Record<string, string> = {
+  "layout-dashboard": '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+  "shopping-bag": '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  "book-open": '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
+  package: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/>',
+  tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+};
+---
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#26150C" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Cormorant+SC:wght@500&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <ClientRouter />
+  </head>
+  <body class="bg-cream-50 text-cocoa-700 font-sans min-h-screen">
+    <div class="flex min-h-screen">
+      {/* Sidebar */}
+      <aside class="hidden lg:flex flex-col w-64 bg-cocoa-700 text-cream-100 sticky top-0 h-screen">
+        <div class="px-6 py-6 border-b border-cream-100/10">
+          <p class="font-display italic text-2xl text-cream-50 leading-none">Les Contes</p>
+          <p class="font-display italic text-2xl text-terracotta-200 leading-none">Infusés</p>
+          <p class="mt-2 font-smallcap tracking-windier text-[10px] text-cream-100/60 uppercase">Espace administration</p>
+        </div>
+        <nav class="flex-1 p-4 space-y-1">
+          {nav.map(item => (
+            <a
+              href={item.href}
+              class={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${section === item.id ? 'bg-cocoa-600 text-cream-50' : 'text-cream-100/75 hover:bg-cocoa-600/60 hover:text-cream-50'}`}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
+              <span>{item.label}</span>
+            </a>
+          ))}
+        </nav>
+        <div class="p-4 border-t border-cream-100/10">
+          <a href="/" class="flex items-center gap-2 text-xs text-cream-100/60 hover:text-cream-50 transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            Retour au site public
+          </a>
+        </div>
+      </aside>
+
+      <div class="flex-1 flex flex-col min-w-0">
+        {/* Topbar */}
+        <header class="sticky top-0 z-20 bg-paper/95 backdrop-blur border-b border-line">
+          <div class="flex items-center justify-between gap-4 px-5 lg:px-8 h-16">
+            <div class="flex items-center gap-3 min-w-0">
+              <button class="lg:hidden p-2 -ml-2" aria-label="Menu">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+              </button>
+              <nav aria-label="Fil d'Ariane" class="hidden md:flex items-center gap-2 text-xs text-cocoa-400 truncate">
+                <a href="/admin" class="hover:text-terracotta-400">Admin</a>
+                {breadcrumb.map(b => (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+                    {b.href ? <a href={b.href} class="hover:text-terracotta-400">{b.label}</a> : <span class="text-cocoa-700 font-medium">{b.label}</span>}
+                  </>
+                ))}
+              </nav>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="hidden sm:flex items-center gap-2 px-3 h-9 bg-cream-100 border border-line rounded-full w-64">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="search" placeholder="Rechercher commande, livre, client..." class="bg-transparent outline-none text-sm flex-1 placeholder:text-cocoa-400/70" />
+              </div>
+              <button class="relative p-2" aria-label="Notifications">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-terracotta-400"></span>
+              </button>
+              <div class="flex items-center gap-2 pl-3 border-l border-line">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-terracotta-400 to-cocoa-500 flex items-center justify-center text-cream-50 text-xs font-medium">PA</div>
+                <div class="hidden sm:block leading-tight">
+                  <p class="text-sm text-cocoa-700">Paul-Antoine</p>
+                  <p class="text-[10px] text-cocoa-400">Gérant</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+        <main class="flex-1 px-5 lg:px-8 py-8 max-w-[1400px] w-full">
+          <slot />
+        </main>
+        <footer class="px-5 lg:px-8 py-6 text-xs text-cocoa-400 border-t border-line bg-cream-100/40">
+          <p>Espace admin Les Contes Infusés, version mock 0.1. Connexion LibriSoft, à venir.</p>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

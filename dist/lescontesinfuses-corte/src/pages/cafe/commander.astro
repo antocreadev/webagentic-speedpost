@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import QuickOrder from "@/components/islands/QuickOrder.tsx";
+import { cafe } from "@/data/cafe";
+const items = cafe.filter((c) => c.category !== "the"); // Damman is single line, garde tout sinon
+---
+<BaseLayout
+  title="Click & collect, Les Contes Infusés"
+  description="Composez votre commande, prête en 15 minutes. Place Paoli, Corte."
+>
+  <section class="max-w-7xl mx-auto px-5 sm:px-8 py-12">
+    <div class="flex items-end justify-between gap-6 flex-wrap mb-10">
+      <div>
+        <p class="eyebrow">Click & collect</p>
+        <h1 class="font-display italic text-4xl md:text-6xl text-cocoa-600 mt-2 leading-[0.95]">
+          Composez. On prépare. Vous passez.
+        </h1>
+        <p class="font-body italic text-cocoa-400 mt-3 max-w-xl">
+          Cliquez les articles, choisissez votre créneau, on vous attend, prêt et chaud.
+        </p>
+      </div>
+      <a href="/cafe" class="btn-ghost">Voir la carte complète</a>
+    </div>
+    <QuickOrder items={cafe} client:load />
+  </section>
+</BaseLayout>

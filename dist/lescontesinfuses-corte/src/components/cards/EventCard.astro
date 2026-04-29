@@ -1,0 +1,35 @@
+---
+import { formatDate, formatPrice } from "@/lib/format";
+import type { Event } from "@/data/events";
+interface Props { event: Event; }
+const { event } = Astro.props;
+const day = formatDate(event.date, "day");
+const month = formatDate(event.date, "month");
+const time = new Date(event.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+const remaining = event.capacity - event.registered;
+---
+<a href={`/evenements/${event.slug}`} class="block group">
+  <article class="relative bg-cream-50 border border-line rounded-2xl p-6 transition-all duration-300 group-hover:border-terracotta-400 group-hover:-translate-y-0.5 group-hover:shadow-page">
+    <div class="flex items-start gap-6">
+      <div class="text-center shrink-0 px-3 border-r border-line pr-6">
+        <div class="font-display italic text-5xl text-cocoa-600 leading-none">{day}</div>
+        <div class="eyebrow mt-1">{month}</div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="eyebrow">{event.hostedAt === "horsLesMurs" ? "Hors les murs" : "Boutique"}</p>
+        <h3 class="font-display italic text-xl md:text-2xl text-cocoa-600 mt-1 leading-tight group-hover:text-terracotta-400 transition-colors">{event.title}</h3>
+        <p class="text-sm text-cocoa-400 mt-2 line-clamp-2">{event.description}</p>
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          <span class="chip">{event.location}</span>
+          <span class="chip">{time}, {event.duration} min</span>
+          <span class={`chip ${event.price === 0 ? "border-sage-400 text-sage-600" : "border-terracotta-200 text-terracotta-600"}`}>
+            {event.price === 0 ? "Gratuit" : formatPrice(event.price)}
+          </span>
+          {remaining <= 5 && remaining > 0 && (
+            <span class="chip border-terracotta-400 text-terracotta-600">{remaining} places</span>
+          )}
+        </div>
+      </div>
+    </div>
+  </article>
+</a>

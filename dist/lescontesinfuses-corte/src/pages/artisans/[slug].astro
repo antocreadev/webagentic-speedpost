@@ -1,0 +1,82 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProductCard from "@/components/cards/ProductCard.astro";
+import { artisans, type ArtisanProduct } from "@/data/artisans";
+import { formatPrice } from "@/lib/format";
+
+export function getStaticPaths() {
+  return artisans.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+const { product } = Astro.props as { product: ArtisanProduct };
+
+const palette: Record<string, [string, string]> = {
+  bougie: ["#E2B594", "#9A4F2A"],
+  marquepage: ["#C9A37D", "#7C4F31"],
+  mug: ["#F2E7C4", "#C77A4F"],
+  foulard: ["#C9B0C5", "#8E6C90"],
+  savon: ["#C7CDB7", "#5A6647"],
+  miel: ["#EAD9A6", "#C77A4F"],
+  confiture: ["#C77A4F", "#5C3820"],
+};
+const [c1, c2] = palette[product.imageKey] ?? ["#C9A37D", "#7C4F31"];
+const related = artisans.filter((a) => a.slug !== product.slug && (a.artisan === product.artisan || a.category === product.category)).slice(0, 4);
+---
+<BaseLayout title={`${product.name}, ${product.artisan}`} description={product.description}>
+  <section class="max-w-7xl mx-auto px-5 sm:px-8 py-12">
+    <nav class="text-xs font-sans text-cocoa-400">
+      <a href="/artisans" class="hover:text-terracotta-400">L'atelier</a>
+      <span class="mx-2">/</span>
+      <span>{product.name}</span>
+    </nav>
+
+    <div class="mt-10 grid lg:grid-cols-2 gap-12 items-start">
+      <div class="aspect-square rounded-3xl overflow-hidden border border-line shadow-page relative" style={`background: linear-gradient(135deg, ${c1}, ${c2})`}>
+        <div class="absolute inset-0 flex items-end p-10">
+          <div class="text-cream-50">
+            <p class="font-smallcap tracking-windier text-xs uppercase opacity-80">{product.artisan}, {product.city}</p>
+            <p class="font-display italic text-4xl mt-2">{product.name}</p>
+          </div>
+        </div>
+        <svg viewBox="0 0 200 200" class="absolute top-6 right-6 opacity-30" width="120" height="120" fill="none" stroke="#FBF6E9" stroke-width="0.6">
+          <circle cx="100" cy="100" r="80"/>
+          <circle cx="100" cy="100" r="55"/>
+          <circle cx="100" cy="100" r="30"/>
+        </svg>
+      </div>
+
+      <div>
+        <p class="eyebrow">{product.artisan}, {product.city}</p>
+        <h1 class="font-display italic text-4xl md:text-6xl text-cocoa-600 mt-2 leading-[0.95]">{product.name}</h1>
+        <p class="font-body text-cocoa-700 text-[17px] leading-[1.7] mt-6">{product.description}</p>
+
+        <div class="mt-10 flex items-end gap-6 flex-wrap">
+          <div>
+            <p class="eyebrow">Prix</p>
+            <p class="price-tab text-4xl mt-1">{formatPrice(product.price)}</p>
+          </div>
+          <button class="btn-terracotta" data-add-cart={product.slug} data-price={product.price} data-name={product.name}>Ajouter au panier</button>
+          <span class="chip border-sage-400 text-sage-600">
+            {product.stock > 0 ? `${product.stock} en stock` : "Sur commande"}
+          </span>
+        </div>
+
+        <article class="mt-12 bg-cream-100 border border-line rounded-2xl p-6 md:p-8">
+          <p class="eyebrow">L'artisan</p>
+          <p class="font-display italic text-2xl text-cocoa-600 mt-2">{product.artisan}</p>
+          <p class="font-body italic text-cocoa-700 mt-3 leading-relaxed text-sm">
+            Atelier installé à {product.city}. Une fabrication patiente, en petite quantité, dans la tradition d'un savoir-faire transmis. Chaque pièce porte la trace d'une main, jamais d'une machine seule.
+          </p>
+        </article>
+      </div>
+    </div>
+
+    {related.length > 0 && (
+      <section class="mt-24">
+        <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600 mb-8">À découvrir aussi</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {related.map((p) => <ProductCard product={p} />)}
+        </div>
+      </section>
+    )}
+  </section>
+</BaseLayout>

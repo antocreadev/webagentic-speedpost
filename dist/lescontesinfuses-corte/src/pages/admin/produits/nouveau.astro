@@ -1,0 +1,13 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import ProductForm from "@/components/islands/ProductForm.tsx";
+---
+<AdminLayout title="Nouveau produit, Admin" section="produits" breadcrumb={[{ label: "Produits", href: "/admin/produits" }, { label: "Nouveau" }]}>
+  <header class="mb-7">
+    <p class="eyebrow !text-[10px]">Création</p>
+    <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1">Nouveau produit</h1>
+    <p class="font-body text-cocoa-400 mt-1 text-sm">Choisissez le type, remplissez la fiche, l'aperçu se met à jour à droite.</p>
+  </header>
+
+  <ProductForm client:load />
+</AdminLayout>

@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/bin/ls *)",
+      "Bash(python3 *)",
+      "Bash(open *)",
+      "WebSearch",
+      "WebFetch(domain:www.tripadvisor.com)",
+      "WebFetch(domain:www.visit-corsica.com)",
+      "WebFetch(domain:www.instagram.com)",
+      "WebFetch(domain:www.justacote.com)",
+      "WebFetch(domain:restaurants-de-france.fr)",
+      "WebFetch(domain:pizzeria.restaurants-de-france.fr)",
+      "WebFetch(domain:www.seein.fr)",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(git --version)",
+      "Bash(gh api *)",
+      "WebFetch(domain:restaurantguru.com)",
+      "WebFetch(domain:www.tripadvisor.fr)",
+      "WebFetch(domain:www.pagesjaunes.fr)",
+      "WebFetch(domain:www.petitfute.co.uk)",
+      "WebFetch(domain:lacarte.menu)",
+      "WebFetch(domain:en.balagne-corsica.com)",
+      "WebFetch(domain:corsicalovers.fr)",
+      "WebFetch(domain:rankeat.fr)",
+      "WebFetch(domain:www.ouestcorsica.com)",
+      "WebFetch(domain:www.corseweb.corsica)",
+      "WebFetch(domain:www.bowlingofsagone.com)",
+      "WebFetch(domain:bowlingofsagone.com)",
+      "WebFetch(domain:mapstr.com)",
+      "WebFetch(domain:fr.restaurantguru.com)",
+      "WebFetch(domain:unsplash.com)"
+    ]
+  }
+}

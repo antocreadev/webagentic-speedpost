@@ -1,0 +1,87 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { books } from "@/data/books";
+
+function chip(s: number) {
+  if (s < 3) return "bg-terracotta-50 text-terracotta-600 border-terracotta-200";
+  if (s <= 10) return "bg-cream-200 text-cocoa-600 border-line";
+  return "bg-sage-200 text-sage-600 border-sage-400/40";
+}
+---
+<AdminLayout title="Stocks, Admin" section="stocks" breadcrumb={[{ label: "Stocks" }]}>
+  <header class="mb-7">
+    <p class="eyebrow !text-[10px]">Inventaire</p>
+    <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1">Stocks</h1>
+    <p class="font-body text-cocoa-400 mt-1 text-sm">{books.length} références suivies, dont {books.filter(b => b.stock < 3).length} en alerte basse.</p>
+  </header>
+
+  <section class="bg-gradient-to-br from-cocoa-700 to-cocoa-800 text-cream-50 rounded-2xl p-6 md:p-8 mb-7 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 rounded-full bg-terracotta-400/15 -mr-24 -mt-24 blur-3xl"></div>
+    <div class="flex items-start gap-5 relative">
+      <div class="shrink-0 w-12 h-12 rounded-full bg-terracotta-400/20 flex items-center justify-center text-terracotta-200">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+      </div>
+      <div class="flex-1">
+        <div class="flex flex-wrap items-center gap-3">
+          <p class="eyebrow !text-cream-100/60">Connexion LibriSoft</p>
+          <span class="chip !bg-cream-50/10 !text-cream-100 !border-cream-100/30">À configurer</span>
+        </div>
+        <p class="text-sm text-cream-100/85 mt-3 leading-relaxed max-w-2xl">
+          Le raccord avec votre logiciel de gestion de stock LibriSoft est en cours de mise en place. Format prévu : export CSV horaire ou API REST. Contactez-nous pour activer la synchronisation, nous nous chargeons du paramétrage.
+        </p>
+        <div class="flex flex-wrap items-center gap-5 mt-5">
+          <div class="flex items-center gap-3">
+            <button type="button" role="switch" aria-checked="false" class="w-11 h-6 rounded-full p-0.5 bg-cream-100/20" disabled>
+              <span class="block w-5 h-5 rounded-full bg-cream-100/50"></span>
+            </button>
+            <span class="text-sm text-cream-100/75">Synchronisation activée</span>
+          </div>
+          <span class="text-xs text-cream-100/50 font-sans">Dernière sync : aucune</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-cream-50 border border-line rounded-xl p-4 mb-5 flex flex-wrap items-center gap-3">
+    <span class="text-[10px] uppercase tracking-widest text-cocoa-400 font-sans">Filtrer par seuil</span>
+    <button type="button" class="chip !text-terracotta-600 !border-terracotta-200 !bg-terracotta-50">Critique (&lt; 3)</button>
+    <button type="button" class="chip">3 à 10</button>
+    <button type="button" class="chip">&gt; 10</button>
+  </div>
+
+  <div class="bg-cream-50 border border-line rounded-xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm font-sans min-w-[800px]">
+        <thead class="bg-cream-100/60 border-b border-line">
+          <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400">
+            <th class="px-4 py-3 font-medium w-12">Visuel</th>
+            <th class="px-4 py-3 font-medium">Titre</th>
+            <th class="px-4 py-3 font-medium">Auteur</th>
+            <th class="px-4 py-3 font-medium">ISBN</th>
+            <th class="px-4 py-3 font-medium">Stock</th>
+            <th class="px-4 py-3 font-medium text-right">Ajuster</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          {books.map(b => (
+            <tr class="text-cocoa-700 hover:bg-cream-100/40">
+              <td class="px-4 py-3">
+                <div class="w-8 h-11 rounded-sm shadow-sm" style={`background: linear-gradient(135deg, ${b.coverGradient[0]}, ${b.coverGradient[1]});`}></div>
+              </td>
+              <td class="px-4 py-3 font-medium">{b.title}</td>
+              <td class="px-4 py-3 text-cocoa-400">{b.author}</td>
+              <td class="px-4 py-3 text-xs font-mono text-cocoa-400">{b.isbn}</td>
+              <td class="px-4 py-3"><span class={`chip border ${chip(b.stock)}`}>{b.stock}</span></td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-2">
+                  <input type="number" defaultValue={b.stock} class="w-16 px-2 py-1 bg-cream-100 border border-line rounded-md text-sm font-sans text-right tabular-nums focus:outline-none focus:border-terracotta-400" />
+                  <button type="button" class="px-3 py-1 text-[11px] uppercase tracking-widest font-smallcap rounded-md border border-line hover:border-terracotta-400 hover:text-terracotta-400 text-cocoa-700">Enregistrer</button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>

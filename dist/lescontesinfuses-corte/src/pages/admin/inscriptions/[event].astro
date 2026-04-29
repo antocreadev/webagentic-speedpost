@@ -1,0 +1,92 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { events, getEvent } from "@/data/events";
+import { registrantsFor } from "@/data/admin";
+import { formatDate } from "@/lib/format";
+
+export function getStaticPaths() {
+  return events.map(e => ({ params: { event: e.slug } }));
+}
+
+const { event } = Astro.params;
+const ev = getEvent(event!)!;
+const registrants = registrantsFor(event!);
+const totalSeats = registrants.reduce((s, r) => s + r.seats, 0);
+---
+<AdminLayout title={`Inscrits, ${ev.title}`} section="evenements" breadcrumb={[{ label: "Événements", href: "/admin/evenements" }, { label: "Inscrits" }]}>
+  <header class="bg-gradient-to-br from-cocoa-700 to-cocoa-800 text-cream-50 rounded-2xl p-7 md:p-9 mb-7 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 rounded-full bg-terracotta-400/15 -mr-24 -mt-24 blur-3xl"></div>
+    <p class="eyebrow !text-cream-100/60">Inscrits</p>
+    <h1 class="font-display italic text-3xl md:text-4xl mt-2 text-cream-50 max-w-2xl leading-tight">{ev.title}</h1>
+    <p class="text-cream-100/75 mt-2 text-sm">{formatDate(ev.date, "long")} · {ev.location}</p>
+    <div class="flex flex-wrap items-center gap-6 mt-5">
+      <div>
+        <p class="text-[10px] uppercase tracking-widest text-cream-100/60">Capacité</p>
+        <p class="font-display italic text-2xl text-cream-50 tabular-nums">{totalSeats}/{ev.capacity}</p>
+      </div>
+      <div>
+        <p class="text-[10px] uppercase tracking-widest text-cream-100/60">Inscrits</p>
+        <p class="font-display italic text-2xl text-cream-50 tabular-nums">{registrants.length}</p>
+      </div>
+      <div>
+        <p class="text-[10px] uppercase tracking-widest text-cream-100/60">Tarif</p>
+        <p class="font-display italic text-2xl text-cream-50">{ev.price === 0 ? "Gratuit" : `${ev.price} €`}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex flex-wrap gap-3 mb-5">
+    <button type="button" class="btn-ghost">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exporter CSV
+    </button>
+    <button type="button" class="btn-ghost">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      Envoyer rappel groupé
+    </button>
+    <button type="button" class="btn-terracotta">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+      Imprimer la liste
+    </button>
+  </div>
+
+  <div class="bg-cream-50 border border-line rounded-xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm font-sans min-w-[800px]">
+        <thead class="bg-cream-100/60 border-b border-line">
+          <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400">
+            <th class="px-4 py-3 font-medium">Nom</th>
+            <th class="px-4 py-3 font-medium">Email</th>
+            <th class="px-4 py-3 font-medium">Téléphone</th>
+            <th class="px-4 py-3 font-medium">Places</th>
+            <th class="px-4 py-3 font-medium">Inscription</th>
+            <th class="px-4 py-3 font-medium text-center">Présent</th>
+            <th class="px-4 py-3 font-medium text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          {registrants.map(r => (
+            <tr class="text-cocoa-700 hover:bg-cream-100/40">
+              <td class="px-4 py-3 font-medium">{r.name}</td>
+              <td class="px-4 py-3 text-cocoa-400 text-xs">{r.email}</td>
+              <td class="px-4 py-3 text-cocoa-400 text-xs tabular-nums">{r.phone}</td>
+              <td class="px-4 py-3 tabular-nums">{r.seats}</td>
+              <td class="px-4 py-3 text-xs text-cocoa-400 tabular-nums">{r.registeredAt}</td>
+              <td class="px-4 py-3 text-center"><input type="checkbox" checked={r.present} class="accent-terracotta-400 w-4 h-4" /></td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1 text-cocoa-400">
+                  <button aria-label="Email" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  </button>
+                  <button aria-label="Supprimer" class="p-1.5 hover:text-terracotta-600 hover:bg-cream-100 rounded">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>

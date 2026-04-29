@@ -1,0 +1,59 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Bookmark from "../components/Bookmark.tsx";
+import CursorTeacup from "../components/CursorTeacup.tsx";
+import SplashLoader from "../components/SplashLoader.tsx";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = "Les Contes Infusés, librairie et café à Corte",
+  description = "Une librairie indépendante et un café au pied de la citadelle de Corte. Lire, infuser, recommencer.",
+  image = "/poster.jpg",
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#FBF6E9" />
+    <meta name="view-transition" content="same-origin" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Cormorant+SC:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=Pinyon+Script&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <ClientRouter />
+  </head>
+  <body class="bg-paper text-cocoa-700 font-body antialiased min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-1 pt-24">
+      <slot />
+    </main>
+    <Footer />
+    <Bookmark client:idle />
+    <CursorTeacup client:idle />
+    <SplashLoader client:load />
+
+    <script>
+      import "../scripts/reveals.ts";
+    </script>
+  </body>
+</html>

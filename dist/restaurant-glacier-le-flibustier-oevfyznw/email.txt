@@ -1,0 +1,53 @@
+Sujet : Le Flibustier : les glaces Lilou en première ligne
+
+Bonjour,
+
+J'ai passé un moment sur Le Flibustier avant de vous écrire. Sur le port de Taverna, à Santa-Maria-Poggio, vous avez bâti une adresse qui tient sur trois jambes : la cuisine du port (les burgers reviennent souvent dans les avis), la terrasse face à la marina, et surtout les glaces artisanales signées Lilou, citées en boucle dans vos 1 594 avis Google (4,5/5). « Glaces de fou », « superbes glaces » : c'est votre signature.
+
+Chez Menghi Computer Science, on est une équipe tech et créative. On fait du développement web sur-mesure, du graphisme (logos, identité, affiches, supports print), du marketing digital et des réseaux sociaux, et des applications/logiciels métier dédiés. Tout sous un même toit, tout codé ou conçu à la main par des pros. Pas de sous-traitance opaque, pas de templates rapiécés.
+
+Pour vous montrer comment on travaille, j'ai conçu une démo complète de site pour Le Flibustier, déjà en ligne :
+
+Le site que j'ai conçu pour vous : https://antocreadev.github.io/menghicomputerscience-restaurant-glacier-le-flibustier-oevfyznw/
+
+Ce qui a été mis en avant pour vous :
+
+- La vue du port de Taverna en image d'accueil plein écran, parce que c'est le premier mot de presque tous vos avis.
+- Une section dédiée aux glaces Lilou placée avant tout le reste : c'est votre différenciateur, il devait s'imposer dès l'ouverture.
+- Une palette sable-corail-bleu de port pensée pour la Corse estivale et l'esprit paillote, pas un maritime nautique générique.
+- Vos horaires 11 h – 23 h, 7j/7 d'avril à octobre, vos deux numéros et la carte Google Maps centrée sur le port, accessibles d'un geste.
+
+Ce n'est pas un site template. Chaque ligne de code est écrite à la main pour votre maison, donc tout est modifiable : textes, photos, couleurs, sections, polices, structure. Vous n'êtes enfermé dans rien.
+
+Ce qui est inclus dans le 1500€
+
+- Site codé main, sur-mesure : zéro template, zéro compromis, tout est modifiable (textes, photos, couleurs, sections, polices)
+- Identité graphique cohérente avec le site (logo si besoin, palette, visuels, déclinaisons)
+- Référencement Google (SEO), technique et éditorial : indexation, balisage, mots-clés, sitemap, robots, structured data
+- Optimisation performance : chargement rapide, mobile-first, expérience fluide
+- Indexation et citations par les IA (ChatGPT, Gemini, Perplexity, Copilot) : signaux d'autorité pour apparaître dans les réponses génératives
+- Hébergement et nom de domaine gérés par nous
+- Maintenance et support direct sous 24h pendant toute l'année 1
+- Aucun abonnement année 1 : 0€/mois
+- Prix : 1740€ 1500€, une seule fois, tout compris
+
+Ensuite
+
+- Année 2 : 20€/mois (maintenance et hébergement)
+- Option premium (+10€/mois, soit 30€/mois année 2) :
+  - agent IA sécurisé connecté à WhatsApp (vous demandez une modif en langage naturel, elle est appliquée)
+  - modifications du site en temps réel
+  - sauvegardes automatiques
+  - versionning complet (rollback possible)
+  - assistance 24/7
+
+Concrètement, vous gagnez sur quatre fronts : visibilité (Google et IA), crédibilité (un vrai site change le signal perçu, surtout face à une présence Facebook/Instagram seule), image (cohérence graphique sable-corail qui colle à l'esprit paillote) et trafic qualifié. Quand un voyageur demandera à ChatGPT « bon restaurant à Santa-Maria-Poggio » ou « où manger près du port de Taverna », on veut que Le Flibustier ressorte, et c'est exactement ce que prépare le travail SEO et indexation IA livré dans le 1500€.
+
+Si le rendu vous plaît en l'état, je peux mettre le site en ligne sur votre nom de domaine dès cette semaine. Si vous voulez ajuster quoi que ce soit avant (photos des glaces Lilou, textes, sections, couleurs), dites-moi simplement ce que vous aimeriez voir évoluer, je le fais.
+
+À très vite,
+
+Anto
+Menghi Computer Science
+menghicomputerscience@gmail.com
+06 43 87 91 14

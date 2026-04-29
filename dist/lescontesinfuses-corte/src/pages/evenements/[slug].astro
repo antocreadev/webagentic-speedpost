@@ -1,0 +1,85 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import EventCard from "@/components/cards/EventCard.astro";
+import EventRegistration from "@/components/islands/EventRegistration.tsx";
+import LaceMedallion from "@/components/icons/LaceMedallion.astro";
+import { events, type Event } from "@/data/events";
+import { formatPrice, formatDate } from "@/lib/format";
+
+export function getStaticPaths() {
+  return events.map((e) => ({ params: { slug: e.slug }, props: { event: e } }));
+}
+const { event } = Astro.props as { event: Event };
+const d = new Date(event.date);
+const time = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+const remaining = event.capacity - event.registered;
+const others = events.filter((e) => e.slug !== event.slug).slice(0, 3);
+---
+<BaseLayout title={`${event.title}, Les Contes Infusés`} description={event.description}>
+  <section class="relative max-w-6xl mx-auto px-5 sm:px-8 py-12">
+    <a href="/evenements" class="text-xs font-sans text-cocoa-400 hover:text-terracotta-400">← Tous les événements</a>
+
+    <div class="mt-8 grid lg:grid-cols-[1.4fr_1fr] gap-12">
+      <div>
+        <div class="flex items-baseline gap-6 flex-wrap">
+          <p class="font-display italic text-7xl md:text-[8rem] text-terracotta-400 leading-none">
+            {String(d.getDate()).padStart(2, "0")}
+          </p>
+          <div>
+            <p class="eyebrow">{formatDate(event.date, "long").split(" ").slice(2,4).join(" ")}, {d.getFullYear()}</p>
+            <p class="font-display italic text-2xl text-cocoa-600 mt-1">à {time}</p>
+            <p class="text-sm text-cocoa-400 mt-1">{event.duration} minutes</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="chip">{event.location}</span>
+          <span class={`chip ${event.price === 0 ? "border-sage-400 text-sage-600" : "border-terracotta-200 text-terracotta-600"}`}>
+            {event.price === 0 ? "Gratuit" : formatPrice(event.price)}
+          </span>
+          <span class="chip">{event.hostedAt === "horsLesMurs" ? "Hors les murs" : "En boutique"}</span>
+        </div>
+
+        <h1 class="font-display italic text-4xl md:text-6xl text-cocoa-600 mt-8 leading-[1]">
+          {event.title}
+        </h1>
+
+        <p class="font-body text-cocoa-700 text-[17px] leading-[1.7] mt-8 max-w-2xl">
+          {event.description}
+        </p>
+        <p class="font-body italic text-cocoa-400 mt-4 max-w-2xl">
+          Tisanes offertes pendant la rencontre. Inscription gratuite quand l'événement est ouvert au public, recommandée pour ne pas rester debout.
+        </p>
+
+        <div class="mt-10 grid sm:grid-cols-3 gap-4 max-w-xl">
+          <div class="bg-cream-50 border border-line rounded-2xl p-5 text-center">
+            <p class="eyebrow">Capacité</p>
+            <p class="font-display italic text-3xl text-cocoa-600 mt-1">{event.capacity}</p>
+          </div>
+          <div class="bg-cream-50 border border-line rounded-2xl p-5 text-center">
+            <p class="eyebrow">Inscrits</p>
+            <p class="font-display italic text-3xl text-cocoa-600 mt-1">{event.registered}</p>
+          </div>
+          <div class={`rounded-2xl p-5 text-center border ${remaining < 5 ? "bg-terracotta-50 border-terracotta-400" : "bg-sage-200/40 border-sage-400"}`}>
+            <p class="eyebrow">Restantes</p>
+            <p class={`font-display italic text-3xl mt-1 ${remaining < 5 ? "text-terracotta-600" : "text-sage-600"}`}>{remaining}</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="lg:sticky lg:top-28 lg:self-start">
+        <EventRegistration eventTitle={event.title} remaining={remaining} client:load />
+      </aside>
+    </div>
+
+    <section class="mt-24">
+      <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
+        <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600">Autres rencontres</h2>
+        <a href="/evenements" class="btn-ghost">Tout le calendrier</a>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        {others.map((e) => <EventCard event={e} />)}
+      </div>
+    </section>
+  </section>
+</BaseLayout>

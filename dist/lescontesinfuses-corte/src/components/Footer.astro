@@ -1,0 +1,69 @@
+---
+import LaceMedallion from "./icons/LaceMedallion.astro";
+import Newsletter from "./Newsletter.astro";
+---
+<footer class="bg-cocoa-800 text-cream-100 mt-24">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-20 pb-10">
+    <div class="flex justify-center mb-10 opacity-90">
+      <LaceMedallion size={130} />
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 border-y border-cream-100/15 py-12">
+      <div>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60">À propos</p>
+        <ul class="mt-4 space-y-2 text-sm font-body">
+          <li><a href="/histoire" class="hover:text-terracotta-200 transition">Notre histoire</a></li>
+          <li><a href="/equipe" class="hover:text-terracotta-200 transition">L'équipe</a></li>
+          <li><a href="/presse" class="hover:text-terracotta-200 transition">Presse</a></li>
+          <li><a href="/recrutement" class="hover:text-terracotta-200 transition">Nous rejoindre</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Boutique</p>
+        <ul class="mt-4 space-y-2 text-sm font-body">
+          <li><a href="/livres" class="hover:text-terracotta-200 transition">Catalogue</a></li>
+          <li><a href="/artisans" class="hover:text-terracotta-200 transition">Artisans corses</a></li>
+          <li><a href="/cafe" class="hover:text-terracotta-200 transition">Carte café</a></li>
+          <li><a href="/cartes-cadeaux" class="hover:text-terracotta-200 transition">Cartes cadeaux</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Visiter</p>
+        <ul class="mt-4 space-y-2 text-sm font-body">
+          <li>Place Paoli</li>
+          <li>20250 Corte</li>
+          <li class="pt-1 text-cream-100/70">Mardi à samedi</li>
+          <li class="text-cream-100/70">10h-13h, 14h-19h</li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Légal</p>
+        <ul class="mt-4 space-y-2 text-sm font-body">
+          <li><a href="/mentions-legales" class="hover:text-terracotta-200 transition">Mentions légales</a></li>
+          <li><a href="/cgv" class="hover:text-terracotta-200 transition">CGV</a></li>
+          <li><a href="/rgpd" class="hover:text-terracotta-200 transition">RGPD</a></li>
+          <li><a href="/cookies" class="hover:text-terracotta-200 transition">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="py-12 border-b border-cream-100/15">
+      <Newsletter compact />
+    </div>
+
+    <div class="pt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-sans text-cream-100/60">
+      <p>© 2026 Les Contes Infusés, Corte. Tous droits réservés.</p>
+      <p>
+        <a href="mailto:contact@lescontesinfuses.corsica" class="hover:text-terracotta-200">contact@lescontesinfuses.corsica</a>
+      </p>
+      <div class="flex gap-3">
+        <a href="#" aria-label="Instagram" class="p-2 hover:text-terracotta-200">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook" class="p-2 hover:text-terracotta-200">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

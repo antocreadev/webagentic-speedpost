@@ -1,0 +1,20 @@
+---
+interface Props { size?: number; class?: string; }
+const { size = 140, class: className = "" } = Astro.props;
+const scallops = 28;
+---
+<svg viewBox="0 0 200 140" width={size} height={size * 0.7} class={className} aria-hidden="true">
+  <ellipse cx="100" cy="70" rx="90" ry="55" fill="none" stroke="#C9A37D" stroke-width="0.6"/>
+  <ellipse cx="100" cy="70" rx="82" ry="48" fill="none" stroke="#C9A37D" stroke-width="0.4" stroke-dasharray="1 2"/>
+  {Array.from({ length: scallops }).map((_, i) => {
+    const t = (i / scallops) * Math.PI * 2;
+    const cx = 100 + Math.cos(t) * 90;
+    const cy = 70 + Math.sin(t) * 55;
+    return <circle cx={cx} cy={cy} r="2.4" fill="none" stroke="#C9A37D" stroke-width="0.5"/>;
+  })}
+  <g stroke="#7C4F31" stroke-width="0.5" fill="none">
+    <path d="M70 70 Q 100 55, 130 70"/>
+    <path d="M70 70 Q 100 85, 130 70"/>
+    <circle cx="100" cy="70" r="3" fill="#C77A4F"/>
+  </g>
+</svg>

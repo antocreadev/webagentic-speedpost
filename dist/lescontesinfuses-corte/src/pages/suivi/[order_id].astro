@@ -1,0 +1,80 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Package, Truck, MapPin, Check } from "lucide-react";
+
+export function getStaticPaths() {
+  return [
+    { params: { order_id: "CI-2026-0001" }, props: { stage: 4, customer: "Pierre Santoni" } },
+    { params: { order_id: "CI-2026-0002" }, props: { stage: 3, customer: "Lucia Pieri" } },
+    { params: { order_id: "CI-2026-0003" }, props: { stage: 2, customer: "Antoine Mariani" } },
+    { params: { order_id: "CI-2026-0004" }, props: { stage: 1, customer: "Letizia Casanova" } },
+    { params: { order_id: "CI-2026-0042" }, props: { stage: 1, customer: "Marie Andreani" } },
+  ];
+}
+
+const { order_id } = Astro.params;
+const { stage, customer } = Astro.props;
+
+const steps = [
+  { n: 1, title: "Commande reçue", desc: "Paiement validé, préparation en cours.", date: "19 avril, 14h32" },
+  { n: 2, title: "Colis préparé", desc: "Emballé à la main, place Paoli.", date: "20 avril, 09h15" },
+  { n: 3, title: "En route", desc: "Pris en charge par Mondial Relay.", date: "20 avril, 17h40" },
+  { n: 4, title: "Disponible en relais", desc: "À retirer au point Tabac de la Restonica.", date: "23 avril, 11h08" },
+];
+
+const tracking = "MR-FR-9824-7531-2068";
+---
+<BaseLayout title={`Suivi commande ${order_id}, Les Contes Infusés`} description="Suivez l'acheminement de votre commande, de la préparation au point relais.">
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+    <header class="mb-10">
+      <p class="eyebrow">Suivi de commande</p>
+      <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Commande {order_id}</h1>
+      <p class="font-body text-cocoa-400 mt-2">Bonjour {customer}, voici l'avancée de votre paquet.</p>
+    </header>
+
+    <div class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8 mb-8">
+      <div class="flex flex-wrap items-center gap-4 justify-between">
+        <div>
+          <p class="font-smallcap tracking-widest uppercase text-[11px] text-cocoa-400">Numéro Mondial Relay</p>
+          <p class="font-mono text-lg text-cocoa-700 tabular-nums mt-1">{tracking}</p>
+        </div>
+        <div>
+          <p class="font-smallcap tracking-widest uppercase text-[11px] text-cocoa-400">Point relais</p>
+          <p class="font-display italic text-lg text-cocoa-700 mt-1">Tabac de la Restonica</p>
+          <p class="text-xs text-cocoa-400">8 cours Paoli, 20250 Corte</p>
+        </div>
+        <div>
+          <p class="font-smallcap tracking-widest uppercase text-[11px] text-cocoa-400">Estimation</p>
+          <p class="font-display italic text-lg text-cocoa-700 mt-1">Vendredi 23 avril</p>
+        </div>
+      </div>
+    </div>
+
+    <ol class="relative pl-8 sm:pl-10 space-y-8">
+      <div class="absolute left-3 sm:left-4 top-2 bottom-2 w-px bg-line"></div>
+      {steps.map((s) => {
+        const isDone = stage >= s.n;
+        const isCurrent = s.n === stage;
+        return (
+          <li class="relative">
+            <div class={`absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full border-2 flex items-center justify-center ${isDone ? 'bg-terracotta-400 border-terracotta-400 text-cream-50' : 'bg-paper border-line text-cocoa-400'}`}>
+              {isDone ? <Check size={14} /> : <span class="text-xs tabular-nums">{s.n}</span>}
+            </div>
+            <div class={`bg-cream-50 border rounded-xl p-5 ${isCurrent ? 'border-terracotta-400 shadow-book' : 'border-line'}`}>
+              <div class="flex items-baseline justify-between gap-3 flex-wrap">
+                <p class="font-display italic text-xl text-cocoa-700">{s.title}</p>
+                {isDone && <p class="text-xs text-cocoa-400 tabular-nums font-sans">{s.date}</p>}
+              </div>
+              <p class="text-sm text-cocoa-400 mt-1">{s.desc}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+
+    <div class="mt-12 grid sm:grid-cols-2 gap-4">
+      <a href="/contact" class="btn-ghost justify-center">Une question, écrire à la maison</a>
+      <a href="/compte/commandes" class="btn-ghost justify-center">Toutes mes commandes</a>
+    </div>
+  </section>
+</BaseLayout>

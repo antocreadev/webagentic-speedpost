@@ -1,0 +1,65 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+<BaseLayout title="Mes informations, Les Contes Infusés">
+  <section class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+    <header class="mb-10">
+      <p class="eyebrow"><a href="/compte" class="hover:text-terracotta-400">Compte</a> · Informations</p>
+      <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Mes informations</h1>
+      <p class="font-body text-cocoa-400 mt-2">Vos coordonnées de livraison et de contact.</p>
+    </header>
+
+    <form class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8 space-y-6">
+      <fieldset>
+        <legend class="font-display italic text-2xl text-cocoa-700 mb-4">Identité</legend>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-[11px] font-smallcap tracking-widest uppercase text-cocoa-400">Prénom</span>
+            <input type="text" value="Jean" class="mt-1 w-full bg-paper border border-line rounded-md px-3 py-2.5 text-sm font-sans text-cocoa-700 focus:outline-none focus:border-terracotta-400" />
+          </label>
+          <label class="block">
+            <span class="text-[11px] font-smallcap tracking-widest uppercase text-cocoa-400">Nom</span>
+            <input type="text" value="Mariani" class="mt-1 w-full bg-paper border border-line rounded-md px-3 py-2.5 text-sm font-sans text-cocoa-700 focus:outline-none focus:border-terracotta-400" />
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="font-display italic text-2xl text-cocoa-700 mb-4">Contact</legend>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <label class="block sm:col-span-2">
+            <span class="text-[11px] font-smallcap tracking-widest uppercase text-cocoa-400">Email</span>
+            <input type="email" value="jean.mariani@example.fr" class="mt-1 w-full bg-paper border border-line rounded-md px-3 py-2.5 text-sm font-sans text-cocoa-700 focus:outline-none focus:border-terracotta-400" />
+          </label>
+          <label class="block">
+            <span class="text-[11px] font-smallcap tracking-widest uppercase text-cocoa-400">Téléphone</span>
+            <input type="tel" value="06 21 43 87 19" class="mt-1 w-full bg-paper border border-line rounded-md px-3 py-2.5 text-sm font-sans text-cocoa-700 focus:outline-none focus:border-terracotta-400" />
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="font-display italic text-2xl text-cocoa-700 mb-4">Adresse de livraison</legend>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <label class="block sm:col-span-3">
+            <span class="text-[11px] font-smallcap tracking-widest uppercase text-cocoa-400">Rue</span>
+            <input type="text" value="22 route de Bastia" class="mt-1 w-full bg-paper border border-line rounded-md px-3 py-2.5 text-sm font-sans text-cocoa-700 focus:outline-none focus:border-terracotta-400" />
+          </label>
+          <label class="block">
+            <span class="text-[11px] font-smallcap tracking-widest uppercase text-cocoa-400">Code postal</span>
+            <input type="text" value="20250" class="mt-1 w-full bg-paper border border-line rounded-md px-3 py-2.5 text-sm font-sans text-cocoa-700 focus:outline-none focus:border-terracotta-400" />
+          </label>
+          <label class="block sm:col-span-2">
+            <span class="text-[11px] font-smallcap tracking-widest uppercase text-cocoa-400">Ville</span>
+            <input type="text" value="Corte" class="mt-1 w-full bg-paper border border-line rounded-md px-3 py-2.5 text-sm font-sans text-cocoa-700 focus:outline-none focus:border-terracotta-400" />
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="pt-6 border-t border-line flex justify-end gap-3">
+        <a href="/compte" class="btn-ghost">Annuler</a>
+        <button type="button" class="btn-terracotta">Enregistrer</button>
+      </div>
+    </form>
+  </section>
+</BaseLayout>

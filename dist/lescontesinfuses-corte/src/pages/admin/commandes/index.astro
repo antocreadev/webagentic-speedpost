@@ -1,0 +1,104 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { adminOrders } from "@/data/admin";
+import { formatPrice, formatDate } from "@/lib/format";
+
+function statusChip(s: string) {
+  if (s === "À traiter") return "bg-terracotta-50 text-terracotta-600 border-terracotta-200";
+  if (s === "Préparée") return "bg-cream-200 text-cocoa-600 border-line";
+  if (s === "Expédiée") return "bg-plum-200/60 text-plum-600 border-plum-200";
+  return "bg-sage-200 text-sage-600 border-sage-400/40";
+}
+
+const deliveryIcon: Record<string, string> = {
+  relais: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4v-8H10v8H6a2 2 0 0 1-2-2z"/>',
+  domicile: '<path d="m1 3 22 0"/><path d="M5 3v18h14V3"/><path d="M9 12h6"/>',
+  click: '<rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21v-4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4"/>',
+};
+const deliveryLabel: Record<string, string> = { relais: "Mondial Relay", domicile: "Domicile", click: "Click & Collect" };
+---
+<AdminLayout title="Commandes, Admin" section="commandes" breadcrumb={[{ label: "Commandes" }]}>
+  <header class="flex items-end justify-between gap-4 mb-7 flex-wrap">
+    <div>
+      <p class="eyebrow !text-[10px]">Gestion</p>
+      <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1">Commandes</h1>
+      <p class="font-body text-cocoa-400 mt-1 text-sm">{adminOrders.length} commandes affichées, filtrées par défaut sur les 30 derniers jours.</p>
+    </div>
+    <button type="button" class="btn-ghost">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exporter CSV
+    </button>
+  </header>
+
+  <div class="bg-cream-50 border border-line rounded-xl p-4 mb-6 flex flex-wrap items-center gap-3">
+    <div class="flex items-center gap-2">
+      <label class="text-[10px] uppercase tracking-widest text-cocoa-400 font-sans">Statut</label>
+      <select class="bg-cream-100 border border-line rounded-md px-3 py-1.5 text-sm font-sans focus:outline-none focus:border-terracotta-400">
+        <option>Tous</option><option>À traiter</option><option>Préparée</option><option>Expédiée</option><option>Livrée</option>
+      </select>
+    </div>
+    <div class="flex items-center gap-2">
+      <label class="text-[10px] uppercase tracking-widest text-cocoa-400 font-sans">Période</label>
+      <input type="date" value="2026-04-01" class="bg-cream-100 border border-line rounded-md px-3 py-1.5 text-sm font-sans focus:outline-none focus:border-terracotta-400" />
+      <span class="text-cocoa-400">→</span>
+      <input type="date" value="2026-04-20" class="bg-cream-100 border border-line rounded-md px-3 py-1.5 text-sm font-sans focus:outline-none focus:border-terracotta-400" />
+    </div>
+    <div class="flex items-center gap-2">
+      <label class="text-[10px] uppercase tracking-widest text-cocoa-400 font-sans">Livraison</label>
+      <select class="bg-cream-100 border border-line rounded-md px-3 py-1.5 text-sm font-sans focus:outline-none focus:border-terracotta-400">
+        <option>Toutes</option><option>Mondial Relay</option><option>Domicile</option><option>Click & Collect</option>
+      </select>
+    </div>
+    <button type="button" class="ml-auto text-xs text-terracotta-400 hover:text-cocoa-700 font-sans">Réinitialiser</button>
+  </div>
+
+  <div class="bg-cream-50 border border-line rounded-xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm font-sans min-w-[900px]">
+        <thead class="bg-cream-100/60 border-b border-line">
+          <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400">
+            <th class="px-4 py-3 font-medium">N°</th>
+            <th class="px-4 py-3 font-medium">Date</th>
+            <th class="px-4 py-3 font-medium">Client</th>
+            <th class="px-4 py-3 font-medium">Articles</th>
+            <th class="px-4 py-3 font-medium">Total</th>
+            <th class="px-4 py-3 font-medium">Livraison</th>
+            <th class="px-4 py-3 font-medium">Statut</th>
+            <th class="px-4 py-3 font-medium text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          {adminOrders.map(o => (
+            <tr class="text-cocoa-700 hover:bg-cream-100/40">
+              <td class="px-4 py-3 font-mono text-xs"><a href={`/admin/commandes/${o.id}`} class="hover:text-terracotta-400">{o.id}</a></td>
+              <td class="px-4 py-3 text-xs text-cocoa-400 tabular-nums whitespace-nowrap">{formatDate(o.date, "short")}</td>
+              <td class="px-4 py-3">{o.customer}</td>
+              <td class="px-4 py-3 tabular-nums text-cocoa-400 text-xs">{o.items}</td>
+              <td class="px-4 py-3 tabular-nums font-medium">{formatPrice(o.total)}</td>
+              <td class="px-4 py-3 text-cocoa-400">
+                <span class="inline-flex items-center gap-1.5 text-xs">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={deliveryIcon[o.delivery]} />
+                  {deliveryLabel[o.delivery]}
+                </span>
+              </td>
+              <td class="px-4 py-3"><span class={`chip border ${statusChip(o.status)}`}>{o.status}</span></td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1 text-cocoa-400">
+                  <a href={`/admin/commandes/${o.id}`} aria-label="Voir" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </a>
+                  <button type="button" aria-label="Préparer" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg>
+                  </button>
+                  <button type="button" aria-label="Modifier" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>

@@ -1,0 +1,110 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LaceMedallion from "@/components/icons/LaceMedallion.astro";
+import { Heart, CalendarDays, Coffee } from "lucide-react";
+---
+<BaseLayout
+  title="La gazette des Contes Infusés, lettre saisonnière"
+  description="Coups de cœur, calendrier d'événements, recettes du café. Une lettre par mois, glissée entre deux pages."
+>
+  <section class="relative max-w-4xl mx-auto px-5 sm:px-8 pt-14 pb-12 text-center">
+    <div class="flex justify-center mb-6 opacity-80">
+      <LaceMedallion size={150} />
+    </div>
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Lettre saisonnière</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-4 leading-[0.95]">
+      La gazette
+    </h1>
+    <p class="font-script text-3xl md:text-4xl text-terracotta-400 mt-4">Coups de cœur. Calendrier. Coulisses.</p>
+    <p class="font-body italic text-cocoa-400 mt-4 max-w-xl mx-auto">
+      Une fois par mois, glissée entre deux pages. Pas plus, pas de spam, jamais.
+    </p>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pb-12">
+    <div class="grid md:grid-cols-3 gap-6">
+      <article class="bg-cream-50 border border-line rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-full bg-terracotta-50 text-terracotta-400 flex items-center justify-center mb-4">
+          <Heart size={22} strokeWidth={1.4} />
+        </div>
+        <h3 class="font-display italic text-xl text-cocoa-600">Coups de cœur</h3>
+        <p class="text-sm text-cocoa-700 mt-2 leading-relaxed">
+          Trois titres lus par l'équipe, choisis pour leur voix. Avec un extrait, l'éditeur, le ressenti.
+        </p>
+      </article>
+      <article class="bg-cream-50 border border-line rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-full bg-sage-200 text-sage-600 flex items-center justify-center mb-4">
+          <CalendarDays size={22} strokeWidth={1.4} />
+        </div>
+        <h3 class="font-display italic text-xl text-cocoa-600">Calendrier</h3>
+        <p class="text-sm text-cocoa-700 mt-2 leading-relaxed">
+          Toutes les rencontres du mois. Dédicaces, club lecture, contes du soir. Lien direct pour réserver.
+        </p>
+      </article>
+      <article class="bg-cream-50 border border-line rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-full bg-plum-200 text-plum-600 flex items-center justify-center mb-4">
+          <Coffee size={22} strokeWidth={1.4} />
+        </div>
+        <h3 class="font-display italic text-xl text-cocoa-600">Coulisses</h3>
+        <p class="text-sm text-cocoa-700 mt-2 leading-relaxed">
+          Une recette du café, le portrait d'un artisan, ce qui se passe en cuisine et derrière la caisse.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-5 sm:px-8 pb-20">
+    <form class="bg-cream-50 border border-line rounded-2xl p-8" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Bien reçu, à très vite';">
+      <p class="eyebrow text-center">Inscription</p>
+      <h2 class="font-display italic text-3xl text-cocoa-600 text-center mt-2">Recevez la prochaine édition</h2>
+
+      <div class="mt-6 grid sm:grid-cols-2 gap-4">
+        <label class="block text-xs font-smallcap tracking-widest uppercase text-cocoa-400">
+          Prénom
+          <input type="text" required class="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400" />
+        </label>
+        <label class="block text-xs font-smallcap tracking-widest uppercase text-cocoa-400">
+          Email
+          <input type="email" required class="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400" />
+        </label>
+      </div>
+      <label class="mt-4 flex items-start gap-2 text-xs text-cocoa-400 font-sans">
+        <input type="checkbox" required class="mt-0.5 accent-terracotta-400" />
+        <span>J'accepte de recevoir la gazette mensuelle. Je peux me désinscrire à tout moment (RGPD).</span>
+      </label>
+      <div class="mt-6 text-center">
+        <button type="submit" class="btn-terracotta">M'inscrire à la gazette</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="bg-cream-100/40 border-y border-line py-16">
+    <div class="max-w-3xl mx-auto px-5 sm:px-8">
+      <p class="eyebrow text-center">Aperçu, édition de mai</p>
+      <h3 class="font-display italic text-3xl md:text-4xl text-cocoa-600 text-center mt-2">Au sommaire ce mois-ci</h3>
+      <ul class="mt-8 space-y-4 max-w-xl mx-auto">
+        <li class="flex gap-4 bg-cream-50 border border-line rounded-2xl p-5">
+          <span class="font-display italic text-3xl text-terracotta-400 leading-none">01</span>
+          <div>
+            <p class="font-display italic text-lg text-cocoa-600">Le sermon sur la chute de Rome, relire Ferrari à voix haute.</p>
+            <p class="text-xs text-cocoa-400 mt-1">Coup de cœur, par l'équipe</p>
+          </div>
+        </li>
+        <li class="flex gap-4 bg-cream-50 border border-line rounded-2xl p-5">
+          <span class="font-display italic text-3xl text-terracotta-400 leading-none">02</span>
+          <div>
+            <p class="font-display italic text-lg text-cocoa-600">Dédicace de Marcu Biancarelli, vendredi 9 mai.</p>
+            <p class="text-xs text-cocoa-400 mt-1">Calendrier, en boutique</p>
+          </div>
+        </li>
+        <li class="flex gap-4 bg-cream-50 border border-line rounded-2xl p-5">
+          <span class="font-display italic text-3xl text-terracotta-400 leading-none">03</span>
+          <div>
+            <p class="font-display italic text-lg text-cocoa-600">La recette du chai catte, étape par étape.</p>
+            <p class="text-xs text-cocoa-400 mt-1">Coulisses, par Léa</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

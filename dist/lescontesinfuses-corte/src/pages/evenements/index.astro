@@ -1,0 +1,34 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LaurelBranch from "@/components/icons/LaurelBranch.astro";
+import EventsView from "@/components/islands/EventsView.tsx";
+import { events } from "@/data/events";
+
+const sorted = events.slice().sort((a, b) => +new Date(a.date) - +new Date(b.date));
+---
+<BaseLayout
+  title="Événements à Corte, Les Contes Infusés"
+  description="Dédicaces, club lecture, ateliers d'écriture, contes corses, lectures publiques, concerts intimes. Place Paoli, Corte."
+>
+  <section class="relative overflow-hidden">
+    <div class="absolute -top-10 -left-10 opacity-30 pointer-events-none">
+      <LaurelBranch size={360} />
+    </div>
+    <div class="absolute -top-10 -right-10 opacity-30 pointer-events-none">
+      <LaurelBranch size={360} flip />
+    </div>
+    <div class="relative max-w-4xl mx-auto px-5 sm:px-8 pt-14 pb-10 text-center">
+      <p class="eyebrow"><span class="filet"></span><span class="mx-3">Calendrier</span><span class="filet"></span></p>
+      <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-4 leading-[0.95]">
+        La maison vit en plusieurs voix
+      </h1>
+      <p class="font-body italic text-cocoa-400 mt-4 max-w-xl mx-auto">
+        Toutes les rencontres prévues : dédicaces, club lecture, contes du soir, lectures publiques.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 py-12">
+    <EventsView events={sorted} client:load />
+  </section>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import UnifiedSearch from "@/components/islands/UnifiedSearch.tsx";
+import { books } from "@/data/books";
+import { events } from "@/data/events";
+import { artisans } from "@/data/artisans";
+const initial = Astro.url.searchParams.get("q") ?? "";
+---
+<BaseLayout
+  title="Recherche, Les Contes Infusés"
+  description="Cherchez parmi les livres, les événements et les produits artisans."
+>
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-16 pb-10 text-center">
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Recherche unifiée</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-4xl md:text-6xl text-cocoa-600 mt-4 leading-[0.95]">
+      Que voulez-vous trouver ?
+    </h1>
+    <p class="font-body italic text-cocoa-400 mt-4 text-sm max-w-md mx-auto">
+      Un titre, un auteur, un événement, un produit. Tout, en une seule barre.
+    </p>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-24">
+    <UnifiedSearch books={books} events={events} products={artisans} initialQuery={initial} client:load />
+  </section>
+</BaseLayout>

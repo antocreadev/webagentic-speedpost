@@ -1,0 +1,120 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const sections = [
+  { id: "objet", n: 1, title: "Objet" },
+  { id: "prix", n: 2, title: "Prix" },
+  { id: "commande", n: 3, title: "Commande" },
+  { id: "paiement", n: 4, title: "Paiement" },
+  { id: "livraison", n: 5, title: "Livraison" },
+  { id: "retractation", n: 6, title: "Droit de rétractation" },
+  { id: "retours", n: 7, title: "Retours" },
+  { id: "garanties", n: 8, title: "Garanties légales" },
+  { id: "donnees", n: 9, title: "Données personnelles" },
+  { id: "ip", n: 10, title: "Propriété intellectuelle" },
+  { id: "force-majeure", n: 11, title: "Force majeure" },
+  { id: "juridiction", n: 12, title: "Juridiction" },
+  { id: "service-client", n: 13, title: "Service client" },
+];
+---
+<BaseLayout title="CGV, Les Contes Infusés">
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+    <header class="mb-10">
+      <p class="eyebrow">Conditions générales</p>
+      <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Conditions générales de vente</h1>
+      <p class="font-body text-cocoa-400 mt-2">Version applicable au 12 avril 2026, librairie & café Les Contes Infusés, Corte.</p>
+    </header>
+
+    <div class="grid lg:grid-cols-[220px_1fr] gap-10 lg:gap-14">
+      <aside class="hidden lg:block">
+        <nav class="sticky top-28 text-sm">
+          <p class="eyebrow !text-[10px] mb-4">Sommaire</p>
+          <ol class="space-y-2 font-body">
+            {sections.map(s => (
+              <li>
+                <a href={`#${s.id}`} class="flex gap-3 text-cocoa-700 hover:text-terracotta-400 transition-colors">
+                  <span class="text-cocoa-400 tabular-nums w-5">{String(s.n).padStart(2, "0")}</span>
+                  <span>{s.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </aside>
+
+      <article class="space-y-12 text-cocoa-700 font-body leading-relaxed">
+        <section id="objet">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">01.</span> Objet</h2>
+          <p class="mt-3 text-sm">Les présentes conditions régissent les ventes conclues entre la SARL Les Contes Infusés (ci-après "la Maison") et tout client, professionnel ou particulier, sur le site lescontesinfuses.corsica et en boutique à Corte.</p>
+        </section>
+
+        <section id="prix">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">02.</span> Prix</h2>
+          <p class="mt-3 text-sm">Les prix sont indiqués en euros, toutes taxes comprises. La TVA appliquée est de 5,5 % sur les livres (taux réduit conformément à l'article 278-0 bis du CGI) et de 20 % sur le café à emporter, le matériel et les produits artisans. La Maison se réserve le droit de modifier ses prix à tout moment. Les commandes en cours restent honorées au tarif validé lors du paiement.</p>
+        </section>
+
+        <section id="commande">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">03.</span> Commande</h2>
+          <p class="mt-3 text-sm">Toute commande validée vaut acceptation des présentes CGV. Un accusé de réception est envoyé par email sous 30 minutes. Les délais de préparation sont de 1 à 3 jours ouvrés selon la disponibilité (livre commandé chez l'éditeur : 5 à 10 jours ouvrés, signalé sur la fiche produit).</p>
+        </section>
+
+        <section id="paiement">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">04.</span> Paiement</h2>
+          <p class="mt-3 text-sm">Le paiement s'effectue par carte bancaire (CB, Visa, Mastercard) via le prestataire Stripe en environnement sécurisé 3D Secure, ou par PayPal. L'encaissement intervient au moment de l'expédition. Aucune donnée bancaire n'est stockée sur nos serveurs.</p>
+        </section>
+
+        <section id="livraison">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">05.</span> Livraison</h2>
+          <ul class="mt-3 text-sm space-y-2">
+            <li><span class="font-medium text-cocoa-700">Mondial Relay</span> : 4,90 €, livraison sous 3 à 5 jours ouvrés en point relais (France métropolitaine et Corse).</li>
+            <li><span class="font-medium text-cocoa-700">Domicile (Colissimo)</span> : 7,90 €, sous 2 à 4 jours ouvrés.</li>
+            <li><span class="font-medium text-cocoa-700">Click & Collect en boutique</span> : gratuit, dès le lendemain ouvré dès 14h, retrait Place Paoli.</li>
+          </ul>
+          <p class="mt-3 text-sm">Au-delà de 60 € d'achat, la livraison Mondial Relay est offerte. Un numéro de suivi est communiqué par email dès l'expédition.</p>
+        </section>
+
+        <section id="retractation">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">06.</span> Droit de rétractation</h2>
+          <p class="mt-3 text-sm">Conformément à l'article L.221-18 du Code de la consommation, vous disposez de 14 jours à compter de la réception pour exercer votre droit de rétractation, sans motif. Sont exclus de ce droit les produits descellés (café à boire ouvert, livres dont le film de protection a été retiré quand applicable) ainsi que les denrées périssables.</p>
+        </section>
+
+        <section id="retours">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">07.</span> Retours</h2>
+          <p class="mt-3 text-sm">Les frais de retour sont à la charge du client, sauf en cas de défaut, d'erreur de préparation ou de produit non conforme : la Maison prend alors en charge l'intégralité des frais. Le remboursement intervient sous 14 jours après réception du retour.</p>
+        </section>
+
+        <section id="garanties">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">08.</span> Garanties légales</h2>
+          <p class="mt-3 text-sm">Tous les produits bénéficient des garanties légales de conformité (articles L.217-4 et suivants du Code de la consommation) et contre les vices cachés (articles 1641 et suivants du Code civil), indépendamment de toute garantie commerciale.</p>
+        </section>
+
+        <section id="donnees">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">09.</span> Données personnelles</h2>
+          <p class="mt-3 text-sm">Le traitement des données personnelles est détaillé dans notre <a href="/rgpd" class="text-terracotta-400 underline">politique de confidentialité</a>. Vous y trouverez la liste des finalités, les durées de conservation et les modalités d'exercice de vos droits.</p>
+        </section>
+
+        <section id="ip">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">10.</span> Propriété intellectuelle</h2>
+          <p class="mt-3 text-sm">La marque "Les Contes Infusés", le logo, la charte graphique, les illustrations sépia et les flat illustrations sont la propriété exclusive de la SARL. Toute reproduction est interdite sans autorisation écrite.</p>
+        </section>
+
+        <section id="force-majeure">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">11.</span> Force majeure</h2>
+          <p class="mt-3 text-sm">La responsabilité de la Maison ne pourra être engagée en cas de force majeure (intempéries en Corse, grève des transporteurs, panne d'infrastructure, événement épidémique). Les délais sont alors suspendus pour la durée de l'événement.</p>
+        </section>
+
+        <section id="juridiction">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">12.</span> Juridiction</h2>
+          <p class="mt-3 text-sm">Les présentes CGV sont soumises au droit français. En cas de litige et après tentative de règlement amiable, compétence exclusive est attribuée au tribunal judiciaire de Bastia.</p>
+        </section>
+
+        <section id="service-client">
+          <h2 class="font-display italic text-3xl text-cocoa-700"><span class="text-terracotta-400 tabular-nums">13.</span> Service client</h2>
+          <p class="mt-3 text-sm">
+            Service client joignable par email à <a href="mailto:contact@lescontesinfuses.corsica" class="text-terracotta-400 underline">contact@lescontesinfuses.corsica</a>, du lundi au samedi de 10h à 18h. En boutique, mardi au samedi de 10h à 13h et de 14h à 19h, Place Paoli, 20250 Corte.
+          </p>
+        </section>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

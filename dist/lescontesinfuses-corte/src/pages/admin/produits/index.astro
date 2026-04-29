@@ -1,0 +1,140 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import { books } from "@/data/books";
+import { artisans } from "@/data/artisans";
+import { formatPrice } from "@/lib/format";
+
+const url = new URL(Astro.request.url);
+const onglet = url.searchParams.get("onglet") === "artisans" ? "artisans" : "livres";
+
+function stockChip(s: number) {
+  if (s < 3) return { cls: "bg-terracotta-50 text-terracotta-600 border-terracotta-200", label: `${s} restants` };
+  if (s <= 10) return { cls: "bg-cream-200 text-cocoa-600 border-line", label: `${s} en stock` };
+  return { cls: "bg-sage-200 text-sage-600 border-sage-400/40", label: `${s} en stock` };
+}
+---
+<AdminLayout title="Produits, Admin" section="produits" breadcrumb={[{ label: "Produits" }]}>
+  <header class="flex flex-wrap items-end justify-between gap-4 mb-6">
+    <div>
+      <p class="eyebrow !text-[10px]">Catalogue</p>
+      <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1">Produits</h1>
+      <p class="font-body text-cocoa-400 mt-1 text-sm">{books.length} livres + {artisans.length} produits artisans.</p>
+    </div>
+    <a href="/admin/produits/nouveau" class="btn-terracotta">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+      Ajouter un produit
+    </a>
+  </header>
+
+  <div class="flex items-center gap-4 mb-6 border-b border-line">
+    <a href="?onglet=livres" class={`pb-3 text-sm font-smallcap uppercase tracking-widest border-b-2 -mb-px transition-colors ${onglet === "livres" ? "text-terracotta-400 border-terracotta-400" : "text-cocoa-400 border-transparent hover:text-cocoa-700"}`}>
+      Livres ({books.length})
+    </a>
+    <a href="?onglet=artisans" class={`pb-3 text-sm font-smallcap uppercase tracking-widest border-b-2 -mb-px transition-colors ${onglet === "artisans" ? "text-terracotta-400 border-terracotta-400" : "text-cocoa-400 border-transparent hover:text-cocoa-700"}`}>
+      Artisans ({artisans.length})
+    </a>
+    <div class="ml-auto pb-3">
+      <div class="flex items-center gap-2 px-3 h-9 bg-cream-100 border border-line rounded-full w-64">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="Rechercher..." class="bg-transparent outline-none text-sm flex-1 font-sans" />
+      </div>
+    </div>
+  </div>
+
+  {onglet === "livres" && (
+    <div class="bg-cream-50 border border-line rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm font-sans min-w-[900px]">
+          <thead class="bg-cream-100/60 border-b border-line">
+            <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400">
+              <th class="px-4 py-3 font-medium w-16">Visuel</th>
+              <th class="px-4 py-3 font-medium">Titre</th>
+              <th class="px-4 py-3 font-medium">Auteur</th>
+              <th class="px-4 py-3 font-medium">Genre</th>
+              <th class="px-4 py-3 font-medium">Prix</th>
+              <th class="px-4 py-3 font-medium">Stock</th>
+              <th class="px-4 py-3 font-medium">Coup de cœur</th>
+              <th class="px-4 py-3 font-medium text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-line">
+            {books.map(b => {
+              const sc = stockChip(b.stock);
+              return (
+                <tr class="text-cocoa-700 hover:bg-cream-100/40">
+                  <td class="px-4 py-3">
+                    <div class="w-9 h-12 rounded-sm shadow-sm" style={`background: linear-gradient(135deg, ${b.coverGradient[0]}, ${b.coverGradient[1]});`}></div>
+                  </td>
+                  <td class="px-4 py-3 font-medium">{b.title}</td>
+                  <td class="px-4 py-3 text-cocoa-400">{b.author}</td>
+                  <td class="px-4 py-3"><span class="chip">{b.genre}</span></td>
+                  <td class="px-4 py-3 tabular-nums">{formatPrice(b.price)}</td>
+                  <td class="px-4 py-3"><span class={`chip border ${sc.cls}`}>{sc.label}</span></td>
+                  <td class="px-4 py-3">{b.coupDeCoeur ? <span class="chip !text-terracotta-600 !border-terracotta-200 !bg-terracotta-50">★ Coup de cœur</span> : <span class="text-cocoa-400 text-xs">,</span>}</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center justify-end gap-1 text-cocoa-400">
+                      <button type="button" aria-label="Voir" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                      <button type="button" aria-label="Modifier" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                      </button>
+                      <button type="button" aria-label="Supprimer" class="p-1.5 hover:text-terracotta-600 hover:bg-cream-100 rounded">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )}
+
+  {onglet === "artisans" && (
+    <div class="bg-cream-50 border border-line rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm font-sans min-w-[800px]">
+          <thead class="bg-cream-100/60 border-b border-line">
+            <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400">
+              <th class="px-4 py-3 font-medium">Produit</th>
+              <th class="px-4 py-3 font-medium">Artisan</th>
+              <th class="px-4 py-3 font-medium">Ville</th>
+              <th class="px-4 py-3 font-medium">Catégorie</th>
+              <th class="px-4 py-3 font-medium">Prix</th>
+              <th class="px-4 py-3 font-medium">Stock</th>
+              <th class="px-4 py-3 font-medium text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-line">
+            {artisans.map(a => {
+              const sc = stockChip(a.stock);
+              return (
+                <tr class="text-cocoa-700 hover:bg-cream-100/40">
+                  <td class="px-4 py-3 font-medium">{a.name}</td>
+                  <td class="px-4 py-3 text-cocoa-400">{a.artisan}</td>
+                  <td class="px-4 py-3 text-cocoa-400 text-xs">{a.city}</td>
+                  <td class="px-4 py-3"><span class="chip">{a.category}</span></td>
+                  <td class="px-4 py-3 tabular-nums">{formatPrice(a.price)}</td>
+                  <td class="px-4 py-3"><span class={`chip border ${sc.cls}`}>{sc.label}</span></td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center justify-end gap-1 text-cocoa-400">
+                      <button type="button" aria-label="Modifier" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                      </button>
+                      <button type="button" aria-label="Supprimer" class="p-1.5 hover:text-terracotta-600 hover:bg-cream-100 rounded">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )}
+</AdminLayout>

@@ -1,0 +1,146 @@
+{
+  "clients": {
+    "ChIJaYyo2SpJ1xIRmFbOeVfyZNw": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "site",
+        "email",
+        "review",
+        "publish"
+      ],
+      "slug": "restaurant-glacier-le-flibustier-oevfyznw",
+      "updated_at": "2026-04-19T22:16:44+00:00",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-restaurant-glacier-le-flibustier-oevfyznw/",
+      "repo": "antocreadev/menghicomputerscience-restaurant-glacier-le-flibustier-oevfyznw"
+    },
+    "ChIJ32i3e4CB2RIRpfhLLNdgrfg": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "le-chalet-llndgrfg",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-le-chalet-llndgrfg/",
+      "repo": "antocreadev/menghicomputerscience-le-chalet-llndgrfg"
+    },
+    "ChIJtXSUDvUu1xIRnIFLuRfMs4c": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "restaurant-l-arriere-cour-lurfms4c",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-restaurant-l-arriere-cour-lurfms4c/",
+      "repo": "antocreadev/menghicomputerscience-restaurant-l-arriere-cour-lurfms4c"
+    },
+    "ChIJySKNJm9c1xIRoXtBPL6jWsE": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "restaurant-u-caradellu-bpl6jwse",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-restaurant-u-caradellu-bpl6jwse/",
+      "repo": "antocreadev/menghicomputerscience-restaurant-u-caradellu-bpl6jwse"
+    },
+    "ChIJy-352ojE0BIRuWuECdm5Ex0": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "le-grand-bleu-ecdm5ex0",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-le-grand-bleu-ecdm5ex0/",
+      "repo": "antocreadev/menghicomputerscience-le-grand-bleu-ecdm5ex0"
+    },
+    "ChIJ_deU74jE0BIR75uyVlwNmXg": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "restaurant-u-spuntinu-yvlwnmxg",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-restaurant-u-spuntinu-yvlwnmxg/",
+      "repo": "antocreadev/menghicomputerscience-restaurant-u-spuntinu-yvlwnmxg"
+    },
+    "ChIJn4toQJaC0BIRzxzHUbyezdE": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "la-voute-hubyezde",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-la-voute-hubyezde/",
+      "repo": "antocreadev/menghicomputerscience-la-voute-hubyezde"
+    },
+    "ChIJK6ynhuVw2hIR0ddDBUFSZwc": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "le-bowling-dbufszwc",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-le-bowling-dbufszwc/",
+      "repo": "antocreadev/menghicomputerscience-le-bowling-dbufszwc"
+    },
+    "ChIJk1CVHnjr0BIResNgVmJPnec": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "build",
+        "site"
+      ],
+      "slug": "le-nautic-gvmjpnec",
+      "updated_at": "2026-04-20T08:07:31+00:00",
+      "step_bis": "publish",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-le-nautic-gvmjpnec/",
+      "repo": "antocreadev/menghicomputerscience-le-nautic-gvmjpnec"
+    },
+    "ChIJl2TenAqn0BIRkG2zDfkBlEU": {
+      "status": "done",
+      "steps_done": [
+        "research",
+        "design",
+        "site",
+        "publish",
+        "email",
+        "review"
+      ],
+      "updated_at": "2026-04-20T13:07:35+00:00",
+      "slug": "s-e-m-corse-bois-energie-zdfkbleu",
+      "pages_url": "https://antocreadev.github.io/menghicomputerscience-s-e-m-corse-bois-energie-zdfkbleu/",
+      "repo": "antocreadev/menghicomputerscience-s-e-m-corse-bois-energie-zdfkbleu"
+    }
+  }
+}

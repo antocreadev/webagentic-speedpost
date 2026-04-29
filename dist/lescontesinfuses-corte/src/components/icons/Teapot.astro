@@ -1,0 +1,15 @@
+---
+interface Props { size?: number; class?: string; }
+const { size = 60, class: className = "" } = Astro.props;
+---
+<svg viewBox="0 0 80 80" width={size} height={size} class={className} aria-hidden="true"
+     fill="none" stroke="#4A2D1F" stroke-width="1" stroke-linecap="round">
+  <path d="M16 50 Q 16 32, 40 32 Q 64 32, 64 50 Q 64 58, 40 58 Q 16 58, 16 50 Z"/>
+  <path d="M64 44 q 10 0, 10 8 q 0 6, -8 6"/>
+  <path d="M16 44 q -8 -2, -10 4 q -2 6, 4 6"/>
+  <path d="M28 32 q 4 -10, 12 -10 q 8 0, 12 10"/>
+  <circle cx="40" cy="22" r="2"/>
+  <path d="M30 16 q 2 -4, 0 -8" stroke-dasharray="1 2"/>
+  <path d="M40 14 q 2 -4, 0 -8" stroke-dasharray="1 2"/>
+  <path d="M50 16 q 2 -4, 0 -8" stroke-dasharray="1 2"/>
+</svg>

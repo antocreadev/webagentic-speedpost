@@ -1,0 +1,20 @@
+---
+interface Props { size?: number; class?: string; flip?: boolean; }
+const { size = 120, class: className = "", flip = false } = Astro.props;
+---
+<svg viewBox="0 0 200 60" width={size} height={size * 0.3} class={className} aria-hidden="true"
+     style={flip ? "transform: scaleX(-1)" : undefined}>
+  <g stroke="#7C4F31" stroke-width="0.9" fill="none" stroke-linecap="round">
+    <path d="M10 30 Q 90 20, 190 30"/>
+    {Array.from({ length: 9 }).map((_, i) => {
+      const x = 22 + i * 18;
+      const dy = i % 2 === 0 ? -8 : 8;
+      return (
+        <>
+          <path d={`M ${x} 30 q 6 ${dy}, 12 ${dy * 1.4}`} />
+          <path d={`M ${x} 30 q 6 ${-dy}, 12 ${-dy * 1.4}`} />
+        </>
+      );
+    })}
+  </g>
+</svg>

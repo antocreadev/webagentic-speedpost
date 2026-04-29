@@ -1,0 +1,85 @@
+---
+import Logo from "./icons/Logo.astro";
+import LaurelBranch from "./icons/LaurelBranch.astro";
+---
+<header
+  id="lci-header"
+  class="fixed top-0 inset-x-0 z-30 transition-all duration-300"
+  data-scrolled="false"
+>
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-4">
+    <a href="/" class="flex flex-col items-start group">
+      <Logo size={56} class="transition-transform duration-500 group-hover:rotate-3" />
+      <LaurelBranch size={70} class="-mt-1 opacity-70" />
+    </a>
+
+    <nav aria-label="Navigation principale" class="hidden lg:flex items-center gap-8">
+      <a href="/livres" class="nav-link">Livres</a>
+      <a href="/cafe" class="nav-link">Café</a>
+      <a href="/evenements" class="nav-link">Événements</a>
+      <a href="/artisans" class="nav-link">Artisans</a>
+      <a href="/contact" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="flex items-center gap-1">
+      <a href="/recherche" class="p-2 hover:text-terracotta-400 transition-colors" aria-label="Rechercher">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </a>
+      <a href="/panier" class="relative p-2 hover:text-terracotta-400 transition-colors" aria-label="Panier">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span id="cart-count" class="absolute -top-0.5 -right-0.5 hidden min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta-400 text-cream-50 text-[10px] font-sans font-medium leading-[18px] text-center">0</span>
+      </a>
+      <a href="/compte" class="p-2 hover:text-terracotta-400 transition-colors hidden sm:inline-flex" aria-label="Mon compte">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <button id="lci-burger" class="p-2 lg:hidden" aria-label="Ouvrir le menu" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<aside id="lci-mobile-panel" class="fixed inset-y-0 right-0 z-40 w-[80%] max-w-sm bg-paper border-l border-line shadow-2xl translate-x-full transition-transform duration-300 lg:hidden">
+  <div class="p-6 flex justify-between items-center border-b border-line">
+    <span class="eyebrow">Menu</span>
+    <button id="lci-close" aria-label="Fermer" class="p-2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <nav class="p-6 flex flex-col gap-4">
+    <a href="/livres" class="nav-link text-base py-2">Livres</a>
+    <a href="/cafe" class="nav-link text-base py-2">Café</a>
+    <a href="/evenements" class="nav-link text-base py-2">Événements</a>
+    <a href="/artisans" class="nav-link text-base py-2">Artisans</a>
+    <a href="/contact" class="nav-link text-base py-2">Contact</a>
+    <a href="/compte" class="nav-link text-base py-2">Mon compte</a>
+  </nav>
+</aside>
+<div id="lci-overlay" class="fixed inset-0 z-30 bg-cocoa-900/40 hidden lg:hidden"></div>
+
+<script>
+  // Sticky-header scroll polish lives in src/scripts/reveals.ts (single source of truth).
+  const burger = document.getElementById("lci-burger");
+  const close = document.getElementById("lci-close");
+  const panel = document.getElementById("lci-mobile-panel");
+  const overlay = document.getElementById("lci-overlay");
+  const open = () => { panel?.classList.remove("translate-x-full"); overlay?.classList.remove("hidden"); burger?.setAttribute("aria-expanded","true"); };
+  const closeFn = () => { panel?.classList.add("translate-x-full"); overlay?.classList.add("hidden"); burger?.setAttribute("aria-expanded","false"); };
+  burger?.addEventListener("click", open);
+  close?.addEventListener("click", closeFn);
+  overlay?.addEventListener("click", closeFn);
+
+  // cart count badge
+  try {
+    const raw = localStorage.getItem("lci-cart-v1");
+    const items = raw ? JSON.parse(raw) : [];
+    const count = items.reduce((s: number, i: any) => s + (i.qty || 0), 0);
+    const el = document.getElementById("cart-count");
+    if (el && count > 0) {
+      el.classList.remove("hidden");
+      el.textContent = String(count);
+    }
+  } catch {}
+</script>
+
+<style>
+  #lci-header { padding-top: env(safe-area-inset-top); }
+</style>
