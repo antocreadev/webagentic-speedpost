@@ -1,85 +1,422 @@
 ---
 import Logo from "./icons/Logo.astro";
 import LaurelBranch from "./icons/LaurelBranch.astro";
+import Frise from "./icons/decor/Frise.astro";
+import Ornament2 from "./icons/decor/Ornament2.astro";
+import { coupsDeCoeur } from "@/data/books";
+import { formatPrice } from "@/lib/format";
+
+const featured = coupsDeCoeur().slice(0, 3);
+const genreChips = [
+  { slug: "roman", label: "Roman", color: "terracotta" },
+  { slug: "corse", label: "Corse", color: "sage" },
+  { slug: "jeunesse", label: "Jeunesse", color: "plum" },
+  { slug: "poesie", label: "Poésie", color: "cocoa" },
+  { slug: "polar", label: "Polar", color: "terracotta" },
+];
 ---
 <header
   id="lci-header"
-  class="fixed top-0 inset-x-0 z-30 transition-all duration-300"
+  class="fixed top-0 inset-x-0 z-30 transition-all duration-300 bg-paper/80 backdrop-blur-md border-b border-line/40"
   data-scrolled="false"
 >
-  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-4">
-    <a href="/" class="flex flex-col items-start group">
-      <Logo size={56} class="transition-transform duration-500 group-hover:rotate-3" />
-      <LaurelBranch size={70} class="-mt-1 opacity-70" />
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-4" id="lci-header-inner">
+    <a href="/" class="flex items-center gap-3 group" aria-label="Accueil Les Contes Infusés">
+      <div id="lci-logo-full" class="flex flex-col items-start">
+        <Logo size={56} class="transition-transform duration-500 group-hover:rotate-3" />
+        <LaurelBranch size={70} class="-mt-1 opacity-70" />
+      </div>
+      <div id="lci-logo-mark" class="hidden">
+        <svg viewBox="0 0 80 80" width="40" height="40" aria-hidden="true">
+          <g stroke="#4A2D1F" fill="none" stroke-width="1.2" stroke-linecap="round">
+            <circle cx="40" cy="40" r="34" stroke="#7C4F31" stroke-width="0.6"/>
+            <path d="M 22 46 Q 32 42, 40 44 Q 48 42, 58 46 L 58 56 Q 48 52, 40 54 Q 32 52, 22 56 Z" fill="#FBF6E9"/>
+            <path d="M 40 44 L 40 54"/>
+            <g transform="translate(40,32)">
+              <path d="M -8 4 L -7 12 q 0 3, 3 3 L 4 15 q 3 0, 3 -3 L 8 4 Z"/>
+              <path d="M 8 6 q 4 0, 4 4 q 0 4, -4 4"/>
+              <path d="M -3 0 q -2 -3, 0 -6" stroke-dasharray="1 2"/>
+              <path d="M 3 0 q -2 -3, 0 -6" stroke-dasharray="1 2"/>
+            </g>
+          </g>
+        </svg>
+      </div>
     </a>
 
-    <nav aria-label="Navigation principale" class="hidden lg:flex items-center gap-8">
-      <a href="/livres" class="nav-link">Livres</a>
-      <a href="/cafe" class="nav-link">Café</a>
-      <a href="/evenements" class="nav-link">Événements</a>
+    <nav aria-label="Navigation principale" class="hidden lg:flex items-center gap-7" id="lci-nav">
+      <div class="lci-mega-trigger" data-mega="livres">
+        <a href="/livres" class="nav-link flex items-center gap-1">
+          Livres
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+      <div class="lci-mega-trigger" data-mega="cafe">
+        <a href="/cafe" class="nav-link flex items-center gap-1">
+          Café
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+      <div class="lci-mega-trigger" data-mega="evenements">
+        <a href="/evenements" class="nav-link flex items-center gap-1">
+          Événements
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
       <a href="/artisans" class="nav-link">Artisans</a>
+      <a href="/journal" class="nav-link">Journal</a>
       <a href="/contact" class="nav-link">Contact</a>
     </nav>
 
     <div class="flex items-center gap-1">
-      <a href="/recherche" class="p-2 hover:text-terracotta-400 transition-colors" aria-label="Rechercher">
+      <button id="lci-search-btn" class="p-2 hover:text-terracotta-400 transition-colors" aria-label="Rechercher" aria-expanded="false">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      </a>
-      <a href="/panier" class="relative p-2 hover:text-terracotta-400 transition-colors" aria-label="Panier">
+      </button>
+      <div class="relative group/cart hidden sm:block">
+        <a href="/panier" class="relative p-2 hover:text-terracotta-400 transition-colors inline-flex" aria-label="Panier">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span id="cart-count" class="absolute -top-0.5 -right-0.5 hidden min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta-400 text-cream-50 text-[10px] font-sans font-medium leading-[18px] text-center">0</span>
+        </a>
+        <div id="lci-cart-preview" class="absolute right-0 top-full mt-2 w-80 bg-paper border border-line rounded-2xl shadow-page p-5 opacity-0 invisible group-hover/cart:opacity-100 group-hover/cart:visible transition-all duration-200 z-40">
+          <p class="eyebrow mb-3">Votre panier</p>
+          <div id="lci-cart-items" class="space-y-3 max-h-60 overflow-auto">
+            <p class="font-body italic text-cocoa-400 text-sm" id="lci-cart-empty">Votre panier est encore une page blanche.</p>
+          </div>
+          <div class="mt-4 pt-4 border-t border-line flex items-center justify-between">
+            <span class="font-body text-cocoa-400 text-sm">Total</span>
+            <span class="price-tab text-base" id="lci-cart-total">0,00 €</span>
+          </div>
+          <a href="/panier" class="btn-terracotta w-full justify-center mt-4">Voir le panier</a>
+        </div>
+      </div>
+      <a href="/panier" class="relative p-2 hover:text-terracotta-400 transition-colors sm:hidden" aria-label="Panier">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        <span id="cart-count" class="absolute -top-0.5 -right-0.5 hidden min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta-400 text-cream-50 text-[10px] font-sans font-medium leading-[18px] text-center">0</span>
+        <span id="cart-count-mobile" class="absolute -top-0.5 -right-0.5 hidden min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta-400 text-cream-50 text-[10px] font-sans font-medium leading-[18px] text-center">0</span>
       </a>
       <a href="/compte" class="p-2 hover:text-terracotta-400 transition-colors hidden sm:inline-flex" aria-label="Mon compte">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </a>
-      <button id="lci-burger" class="p-2 lg:hidden" aria-label="Ouvrir le menu" aria-expanded="false">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+      <button id="lci-burger" class="min-tap inline-flex items-center justify-center lg:hidden" aria-label="Ouvrir le menu" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path class="bar bar-1" d="M4 7h16"/>
+          <path class="bar bar-2" d="M4 12h16"/>
+          <path class="bar bar-3" d="M4 17h16"/>
+        </svg>
       </button>
     </div>
   </div>
+
+  {/* Search banner */}
+  <div id="lci-search-banner" class="hidden border-t border-line/60 bg-paper">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8 py-6 flex items-center gap-4">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-cocoa-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <form action="/recherche" method="get" class="flex-1 flex items-center gap-3">
+        <input
+          id="lci-search-input"
+          type="search"
+          name="q"
+          placeholder="Rechercher un livre, un auteur, une recette..."
+          class="flex-1 bg-transparent border-0 outline-none font-display italic text-2xl md:text-3xl text-cocoa-600 placeholder:text-cocoa-200"
+          autocomplete="off"
+        />
+        <button type="submit" class="btn-terracotta hidden sm:inline-flex">Chercher</button>
+      </form>
+      <button id="lci-search-close" class="p-2 hover:text-terracotta-400" aria-label="Fermer la recherche">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="px-5 sm:px-8 pb-5 max-w-5xl mx-auto">
+      <p class="eyebrow mb-2">Suggestions</p>
+      <div class="flex flex-wrap gap-2">
+        <a href="/livres/corse" class="chip hover:border-terracotta-400">Roman corse</a>
+        <a href="/cafe" class="chip hover:border-terracotta-400">Chai latte</a>
+        <a href="/evenements" class="chip hover:border-terracotta-400">Club lecture</a>
+        <a href="/artisans" class="chip hover:border-terracotta-400">Bougies corses</a>
+      </div>
+    </div>
+  </div>
+
+  {/* MEGA Livres */}
+  <div data-mega-panel="livres" class="lci-mega hidden absolute inset-x-0 top-full bg-paper border-t border-line/60 shadow-page">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-10 grid grid-cols-12 gap-10">
+      <div class="col-span-3">
+        <p class="eyebrow mb-4">Genres</p>
+        <div class="flex flex-wrap gap-2">
+          {genreChips.map((g) => (
+            <a href={`/livres/${g.slug}`} class={`chip border-${g.color}-400 text-${g.color}-600 hover:bg-${g.color}-50`}>{g.label}</a>
+          ))}
+          <a href="/livres" class="chip border-cocoa-200 text-cocoa-400 hover:border-terracotta-400">Tout voir</a>
+        </div>
+        <div class="mt-8 opacity-60"><Ornament2 size={140} /></div>
+      </div>
+      <div class="col-span-6">
+        <p class="eyebrow mb-4">Coups de cœur</p>
+        <div class="grid grid-cols-3 gap-4">
+          {featured.map((b) => {
+            const [g1, g2] = b.coverGradient;
+            return (
+              <a href={`/livres/${b.slug}`} class="group block">
+                <div class="aspect-[2/3] rounded-sm overflow-hidden book-3d" style={`background: linear-gradient(155deg, ${g1} 0%, ${g2} 100%)`}>
+                  <div class="h-full flex items-end p-3">
+                    <p class="font-display italic text-cream-50 text-sm leading-tight line-clamp-3">{b.title}</p>
+                  </div>
+                </div>
+                <p class="mt-2 font-body text-cocoa-600 text-xs group-hover:text-terracotta-400 transition-colors">{b.author}</p>
+                <p class="price-tab text-xs">{formatPrice(b.price)}</p>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+      <div class="col-span-3">
+        <p class="eyebrow mb-4">Découvrir</p>
+        <ul class="space-y-3 font-body">
+          <li><a href="/journal" class="hover:text-terracotta-400 inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-terracotta-400"></span>Journal de la maison</a></li>
+          <li><a href="/evenements" class="hover:text-terracotta-400 inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-400"></span>Ateliers d'écriture</a></li>
+          <li><a href="/cafe" class="hover:text-terracotta-400 inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-plum-400"></span>Recettes du café</a></li>
+          <li><a href="/artisans" class="hover:text-terracotta-400 inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cocoa-300"></span>Partenaires & artisans</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {/* MEGA Café */}
+  <div data-mega-panel="cafe" class="lci-mega hidden absolute inset-x-0 top-full bg-paper border-t border-line/60 shadow-page">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-10 grid grid-cols-3 gap-10">
+      <div>
+        <p class="eyebrow mb-4">La carte</p>
+        <ul class="space-y-2 font-body text-sm">
+          <li><a href="/cafe" class="hover:text-terracotta-400">Cafés & expressos</a></li>
+          <li><a href="/cafe" class="hover:text-terracotta-400">Lattes signature</a></li>
+          <li><a href="/cafe" class="hover:text-terracotta-400">Thés & infusions</a></li>
+          <li><a href="/cafe" class="hover:text-terracotta-400">Pâtisseries du jour</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow mb-4">Click & Collect</p>
+        <p class="font-body text-cocoa-400 text-sm mb-3">Commandez votre boisson, on la prépare pour votre arrivée.</p>
+        <a href="/cafe/commander" class="btn-ghost text-xs">Commander</a>
+      </div>
+      <div>
+        <p class="eyebrow mb-4">Recettes du café</p>
+        <ul class="space-y-2 font-body text-sm">
+          <li><a href="/recettes" class="hover:text-terracotta-400">Le chai catte maison</a></li>
+          <li><a href="/recettes" class="hover:text-terracotta-400">Brownie du jeudi</a></li>
+          <li><a href="/recettes" class="hover:text-terracotta-400">Kombucha corse</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {/* MEGA Événements */}
+  <div data-mega-panel="evenements" class="lci-mega hidden absolute inset-x-0 top-full bg-paper border-t border-line/60 shadow-page">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-10 grid grid-cols-2 gap-10">
+      <div>
+        <p class="eyebrow mb-4">Calendrier</p>
+        <p class="font-body text-cocoa-400 text-sm mb-3">Dédicaces, contes du soir, lectures publiques. Toute l'agenda à venir.</p>
+        <a href="/evenements" class="btn-ghost text-xs">Voir le calendrier</a>
+      </div>
+      <div>
+        <p class="eyebrow mb-4">Ateliers récurrents</p>
+        <ul class="space-y-2 font-body text-sm">
+          <li><a href="/evenements" class="hover:text-terracotta-400">Club de lecture, premier jeudi</a></li>
+          <li><a href="/evenements" class="hover:text-terracotta-400">Atelier d'écriture, samedi 14h</a></li>
+          <li><a href="/evenements" class="hover:text-terracotta-400">Heure du conte, mercredi 16h</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="opacity-40 text-cocoa-300 hidden md:block">
+    <Frise width="100%" height={14} repeat={6} class="text-cocoa-300" />
+  </div>
 </header>
 
-<aside id="lci-mobile-panel" class="fixed inset-y-0 right-0 z-40 w-[80%] max-w-sm bg-paper border-l border-line shadow-2xl translate-x-full transition-transform duration-300 lg:hidden">
+<aside id="lci-mobile-panel" class="fixed inset-y-0 right-0 z-40 w-[85%] max-w-sm bg-paper border-l border-line shadow-2xl translate-x-full transition-transform duration-300 lg:hidden overflow-y-auto">
   <div class="p-6 flex justify-between items-center border-b border-line">
     <span class="eyebrow">Menu</span>
     <button id="lci-close" aria-label="Fermer" class="p-2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
   </div>
-  <nav class="p-6 flex flex-col gap-4">
-    <a href="/livres" class="nav-link text-base py-2">Livres</a>
-    <a href="/cafe" class="nav-link text-base py-2">Café</a>
-    <a href="/evenements" class="nav-link text-base py-2">Événements</a>
-    <a href="/artisans" class="nav-link text-base py-2">Artisans</a>
-    <a href="/contact" class="nav-link text-base py-2">Contact</a>
-    <a href="/compte" class="nav-link text-base py-2">Mon compte</a>
+  <nav class="p-6 flex flex-col gap-1">
+    <details class="group border-b border-line/60 py-2">
+      <summary class="nav-link text-base py-2 flex items-center justify-between cursor-pointer list-none">
+        Livres
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="pl-2 py-3 space-y-2 text-sm font-body">
+        <a href="/livres" class="block hover:text-terracotta-400">Tout le catalogue</a>
+        <a href="/livres/corse" class="block hover:text-terracotta-400">Corse</a>
+        <a href="/livres/roman" class="block hover:text-terracotta-400">Roman</a>
+        <a href="/livres/jeunesse" class="block hover:text-terracotta-400">Jeunesse</a>
+        <a href="/livres/poesie" class="block hover:text-terracotta-400">Poésie</a>
+      </div>
+    </details>
+    <details class="group border-b border-line/60 py-2">
+      <summary class="nav-link text-base py-2 flex items-center justify-between cursor-pointer list-none">
+        Café
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="pl-2 py-3 space-y-2 text-sm font-body">
+        <a href="/cafe" class="block hover:text-terracotta-400">La carte</a>
+        <a href="/cafe/commander" class="block hover:text-terracotta-400">Click & Collect</a>
+        <a href="/recettes" class="block hover:text-terracotta-400">Recettes</a>
+      </div>
+    </details>
+    <details class="group border-b border-line/60 py-2">
+      <summary class="nav-link text-base py-2 flex items-center justify-between cursor-pointer list-none">
+        Événements
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="pl-2 py-3 space-y-2 text-sm font-body">
+        <a href="/evenements" class="block hover:text-terracotta-400">Calendrier</a>
+        <a href="/evenements" class="block hover:text-terracotta-400">Ateliers récurrents</a>
+      </div>
+    </details>
+    <a href="/artisans" class="nav-link text-base py-3 border-b border-line/60">Artisans</a>
+    <a href="/journal" class="nav-link text-base py-3 border-b border-line/60">Journal</a>
+    <a href="/contact" class="nav-link text-base py-3 border-b border-line/60">Contact</a>
+    <a href="/compte" class="nav-link text-base py-3">Mon compte</a>
   </nav>
+  <div class="px-6 pt-4 pb-8 border-t border-line/60 mt-4">
+    <p class="eyebrow mb-3">Suivez-nous</p>
+    <div class="flex gap-2 mb-5">
+      <a href="#" aria-label="Instagram" class="min-tap inline-flex items-center justify-center rounded-full border border-line text-cocoa-600 hover:text-terracotta-400 hover:border-terracotta-400">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>
+      </a>
+      <a href="#" aria-label="Facebook" class="min-tap inline-flex items-center justify-center rounded-full border border-line text-cocoa-600 hover:text-terracotta-400 hover:border-terracotta-400">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a href="mailto:contact@lescontesinfuses.corsica" aria-label="Email" class="min-tap inline-flex items-center justify-center rounded-full border border-line text-cocoa-600 hover:text-terracotta-400 hover:border-terracotta-400">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+      </a>
+    </div>
+    <label class="block text-xs font-sans text-cocoa-400 mb-2">Langue</label>
+    <select class="w-full bg-paper border border-line rounded-full px-3 py-2 text-sm font-sans text-cocoa-700">
+      <option>Français</option>
+      <option>Corsu</option>
+      <option>English</option>
+    </select>
+  </div>
 </aside>
 <div id="lci-overlay" class="fixed inset-0 z-30 bg-cocoa-900/40 hidden lg:hidden"></div>
 
 <script>
-  // Sticky-header scroll polish lives in src/scripts/reveals.ts (single source of truth).
   const burger = document.getElementById("lci-burger");
   const close = document.getElementById("lci-close");
   const panel = document.getElementById("lci-mobile-panel");
   const overlay = document.getElementById("lci-overlay");
-  const open = () => { panel?.classList.remove("translate-x-full"); overlay?.classList.remove("hidden"); burger?.setAttribute("aria-expanded","true"); };
-  const closeFn = () => { panel?.classList.add("translate-x-full"); overlay?.classList.add("hidden"); burger?.setAttribute("aria-expanded","false"); };
+  const open = () => { panel?.classList.remove("translate-x-full"); overlay?.classList.remove("hidden"); burger?.setAttribute("aria-expanded","true"); document.body.classList.add("lci-no-scroll"); };
+  const closeFn = () => { panel?.classList.add("translate-x-full"); overlay?.classList.add("hidden"); burger?.setAttribute("aria-expanded","false"); document.body.classList.remove("lci-no-scroll"); };
   burger?.addEventListener("click", open);
   close?.addEventListener("click", closeFn);
   overlay?.addEventListener("click", closeFn);
 
-  // cart count badge
-  try {
-    const raw = localStorage.getItem("lci-cart-v1");
-    const items = raw ? JSON.parse(raw) : [];
-    const count = items.reduce((s: number, i: any) => s + (i.qty || 0), 0);
-    const el = document.getElementById("cart-count");
-    if (el && count > 0) {
-      el.classList.remove("hidden");
-      el.textContent = String(count);
+  // Search banner toggle
+  const searchBtn = document.getElementById("lci-search-btn");
+  const searchBanner = document.getElementById("lci-search-banner");
+  const searchClose = document.getElementById("lci-search-close");
+  const searchInput = document.getElementById("lci-search-input") as HTMLInputElement | null;
+  const openSearch = () => {
+    searchBanner?.classList.remove("hidden");
+    searchBtn?.setAttribute("aria-expanded","true");
+    setTimeout(() => searchInput?.focus(), 50);
+  };
+  const closeSearch = () => {
+    searchBanner?.classList.add("hidden");
+    searchBtn?.setAttribute("aria-expanded","false");
+  };
+  searchBtn?.addEventListener("click", openSearch);
+  searchClose?.addEventListener("click", closeSearch);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !searchBanner?.classList.contains("hidden")) closeSearch();
+  });
+
+  // Mega menu hover/focus
+  const triggers = document.querySelectorAll<HTMLElement>(".lci-mega-trigger");
+  const panels = document.querySelectorAll<HTMLElement>("[data-mega-panel]");
+  let hideTimer: number | null = null;
+  const showMega = (key: string) => {
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    panels.forEach(p => p.classList.toggle("hidden", p.dataset.megaPanel !== key));
+  };
+  const hideMega = () => {
+    hideTimer = window.setTimeout(() => panels.forEach(p => p.classList.add("hidden")), 120);
+  };
+  triggers.forEach(t => {
+    t.addEventListener("mouseenter", () => showMega(t.dataset.mega || ""));
+    t.addEventListener("mouseleave", hideMega);
+    t.addEventListener("focusin", () => showMega(t.dataset.mega || ""));
+  });
+  panels.forEach(p => {
+    p.addEventListener("mouseenter", () => { if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; } });
+    p.addEventListener("mouseleave", hideMega);
+  });
+
+  // Cart preview rendering
+  type CartItem = { slug?: string; title?: string; qty?: number; price?: number };
+  const renderCart = () => {
+    try {
+      const raw = localStorage.getItem("lci-cart-v1");
+      const items: CartItem[] = raw ? JSON.parse(raw) : [];
+      const count = items.reduce((s, i) => s + (i.qty || 0), 0);
+      const total = items.reduce((s, i) => s + (i.qty || 0) * (i.price || 0), 0);
+      const badge = document.getElementById("cart-count");
+      const badgeM = document.getElementById("cart-count-mobile");
+      [badge, badgeM].forEach(el => {
+        if (!el) return;
+        if (count > 0) { el.classList.remove("hidden"); el.textContent = String(count); }
+        else el.classList.add("hidden");
+      });
+      const list = document.getElementById("lci-cart-items");
+      const empty = document.getElementById("lci-cart-empty");
+      const totalEl = document.getElementById("lci-cart-total");
+      if (totalEl) totalEl.textContent = total.toFixed(2).replace(".", ",") + " €";
+      if (list) {
+        if (items.length === 0) {
+          if (empty) empty.classList.remove("hidden");
+        } else {
+          if (empty) empty.classList.add("hidden");
+          const last3 = items.slice(-3);
+          list.innerHTML = last3.map(i => `
+            <div class="flex items-center justify-between gap-3 text-sm">
+              <span class="font-display italic text-cocoa-600 truncate">${(i.title || i.slug || "Article")}</span>
+              <span class="font-sans text-cocoa-400 shrink-0">×${i.qty || 1}</span>
+            </div>
+          `).join("") + (empty ? empty.outerHTML.replace("class=\"", "class=\"hidden ") : "");
+        }
+      }
+    } catch {}
+  };
+  renderCart();
+  window.addEventListener("storage", renderCart);
+
+  // Scroll-shrink header
+  const header = document.getElementById("lci-header");
+  const logoFull = document.getElementById("lci-logo-full");
+  const logoMark = document.getElementById("lci-logo-mark");
+  const onScroll = () => {
+    const scrolled = window.scrollY > 100;
+    header?.setAttribute("data-scrolled", scrolled ? "true" : "false");
+    if (logoFull && logoMark) {
+      logoFull.classList.toggle("hidden", scrolled);
+      logoMark.classList.toggle("hidden", !scrolled);
     }
-  } catch {}
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 </script>
 
 <style>
   #lci-header { padding-top: env(safe-area-inset-top); }
+  #lci-header[data-scrolled="true"] {
+    box-shadow: 0 6px 20px -16px rgba(74, 45, 31, 0.35);
+  }
+  #lci-header[data-scrolled="true"] #lci-header-inner {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+  .lci-mega { animation: mega-in .25s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes mega-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>

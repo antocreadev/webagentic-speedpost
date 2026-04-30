@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Check, Send } from "lucide-react";
+import { toast } from "@/lib/toast";
 
 export default function ContactForm() {
   const [done, setDone] = useState(false);
@@ -25,6 +26,7 @@ export default function ContactForm() {
         const data = Object.fromEntries(new FormData(e.currentTarget).entries());
         console.log("Contact", data);
         setDone(true);
+        toast.success("Message envoyé. Nous revenons vers vous sous 24h.");
       }}
       className="space-y-4"
     >
@@ -57,7 +59,6 @@ export default function ContactForm() {
           <option>Question générale</option>
           <option>Commande de livre</option>
           <option>Événement privé</option>
-          <option>Presse</option>
           <option>Autre</option>
         </select>
       </label>

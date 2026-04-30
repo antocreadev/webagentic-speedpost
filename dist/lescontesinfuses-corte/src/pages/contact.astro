@@ -7,9 +7,9 @@ import Quill from "@/components/icons/Quill.astro";
   title="Contact, Les Contes Infusés, Corte"
   description="Place Paoli, 20250 Corte. Mardi à samedi, 10h à 19h. Email contact@lescontesinfuses.corsica."
 >
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-12 text-center">
-    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Écrire, passer, appeler</span><span class="filet"></span></p>
-    <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-4 leading-[0.95]">
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-12 text-center" data-chapter="1">
+    <p class="eyebrow" data-reveal><span class="filet"></span><span class="mx-3">Écrire, passer, appeler</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-4 leading-[0.95]" data-reveal data-fade-direction="scale">
       Contactez la maison
     </h1>
     <p class="font-body italic text-cocoa-400 mt-4 max-w-xl mx-auto">
@@ -17,7 +17,7 @@ import Quill from "@/components/icons/Quill.astro";
     </p>
   </section>
 
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-16 grid lg:grid-cols-[1.1fr_1fr] gap-10">
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-16 grid lg:grid-cols-[1.1fr_1fr] gap-10" data-chapter="2">
     <div>
       <ContactForm client:load />
     </div>
@@ -72,7 +72,7 @@ import Quill from "@/components/icons/Quill.astro";
         loading="lazy"
       ></iframe>
     </div>
-    <div class="mt-10 grid md:grid-cols-3 gap-6">
+    <div class="mt-10 grid md:grid-cols-3 gap-6" data-stagger="100">
       <div class="bg-cream-50 border border-line rounded-2xl p-6">
         <p class="eyebrow">À pied</p>
         <p class="font-body text-sm text-cocoa-700 mt-2">Cinq minutes depuis la citadelle, en descendant la rue Scoliscia.</p>

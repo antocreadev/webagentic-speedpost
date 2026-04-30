@@ -1,8 +1,11 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { formatPrice } from "@/lib/format";
+import EmptyOrders from "@/components/empty/EmptyOrders.astro";
 
-const orders = [
+const isEmpty = Astro.url.searchParams.get("empty") === "1";
+
+const orders = isEmpty ? [] : [
   { id: "CI-2026-0028", date: "12 avril 2026", total: 47.5, status: "Livrée", statusColor: "sage", items: ["Murtoriu", "Le Petit Prince", "Marque-page cuir Asco"], shipping: "Mondial Relay" },
   { id: "CI-2026-0021", date: "28 mars 2026", total: 22.0, status: "Livrée", statusColor: "sage", items: ["Persepolis intégrale"], shipping: "Click & Collect" },
   { id: "CI-2026-0017", date: "14 mars 2026", total: 64.0, status: "Livrée", statusColor: "sage", items: ["Corse secrète", "Atlas des sentiers"], shipping: "Domicile" },
@@ -15,9 +18,13 @@ const orders = [
     <header class="mb-10">
       <p class="eyebrow"><a href="/compte" class="hover:text-terracotta-400">Compte</a> · Commandes</p>
       <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Mes commandes</h1>
-      <p class="font-body text-cocoa-400 mt-2">Cinq commandes passées depuis l'ouverture du compte.</p>
+      <p class="font-body text-cocoa-400 mt-2">{isEmpty ? "Aucune commande pour l'instant." : "Cinq commandes passées depuis l'ouverture du compte."}</p>
     </header>
 
+    {isEmpty ? (
+      <EmptyOrders />
+    ) : (
+    <>
     <div class="flex flex-wrap gap-2 mb-6">
       <button class="chip border-cocoa-200 text-cocoa-700">Toutes (5)</button>
       <button class="chip">Livrées (4)</button>
@@ -58,5 +65,7 @@ const orders = [
         </tbody>
       </table>
     </div>
+    </>
+    )}
   </section>
 </BaseLayout>

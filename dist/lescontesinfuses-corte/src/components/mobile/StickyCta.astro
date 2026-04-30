@@ -1,0 +1,19 @@
+---
+interface Props {
+  label: string;
+  price?: string;
+  href: string;
+  variant?: "terracotta" | "ghost";
+}
+const { label, price, href, variant = "terracotta" } = Astro.props as Props;
+---
+<div class="touch-only fixed inset-x-0 bottom-[64px] z-20 px-4 pb-2 pt-3 pointer-events-none" style="padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);">
+  <a
+    href={href}
+    class={`pointer-events-auto flex items-center justify-center gap-2 w-full rounded-full text-base font-smallcap tracking-windier uppercase shadow-lg ${variant === "terracotta" ? "bg-terracotta-400 text-cream-50" : "bg-paper text-cocoa-600 border border-line"}`}
+    style="min-height: 56px; padding: 0 1.5rem;"
+  >
+    <span>{label}</span>
+    {price && <span class="font-sans tabular-nums">· {price}</span>}
+  </a>
+</div>

@@ -1,0 +1,85 @@
+---
+interface Props {
+  name?: string;
+  id?: string;
+  accept?: string;
+  multiple?: boolean;
+  required?: boolean;
+  label?: string;
+  hint?: string;
+  class?: string;
+}
+const {
+  name,
+  id = `lci-file-${Math.random().toString(36).slice(2, 8)}`,
+  accept,
+  multiple,
+  required,
+  label = "Glissez un fichier ou cliquez pour parcourir",
+  hint = "PDF, JPG, PNG. 8 Mo max.",
+  class: className = "",
+} = Astro.props;
+---
+<label
+  for={id}
+  class={`lci-drop relative flex flex-col items-center justify-center gap-2 px-6 py-8 rounded-xl border border-dashed border-cocoa-200 bg-cream-50/60 hover:bg-cream-100 hover:border-terracotta-400 transition-colors duration-200 cursor-pointer text-center ${className}`}
+>
+  <span class="lci-drop-icon inline-flex items-center justify-center w-12 h-12 rounded-full bg-cream-100 border border-line text-cocoa-400">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M16 16l-4-4-4 4"/><path d="M12 12v9"/>
+      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+      <path d="M16 16l-4-4-4 4"/>
+    </svg>
+  </span>
+  <span class="font-body text-sm text-cocoa-700">{label}</span>
+  <span class="lci-drop-name font-sans text-[12px] text-terracotta-400 hidden"></span>
+  <span class="lci-drop-hint text-[12px] italic text-cocoa-300">{hint}</span>
+  <input
+    id={id}
+    name={name}
+    type="file"
+    accept={accept}
+    multiple={multiple}
+    required={required}
+    class="absolute inset-0 opacity-0 cursor-pointer"
+  />
+</label>
+
+<style>
+  .lci-drop[data-dragover="true"] {
+    background-color: #F7EFD8;
+    border-color: #C77A4F;
+    border-style: solid;
+  }
+</style>
+
+<script>
+  function bindDrops() {
+    document.querySelectorAll<HTMLLabelElement>(".lci-drop").forEach((drop) => {
+      const input = drop.querySelector<HTMLInputElement>('input[type="file"]');
+      const nameEl = drop.querySelector<HTMLSpanElement>(".lci-drop-name");
+      if (!input || !nameEl) return;
+      drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.dataset.dragover = "true"; });
+      drop.addEventListener("dragleave", () => { drop.dataset.dragover = "false"; });
+      drop.addEventListener("drop", (e) => {
+        e.preventDefault();
+        drop.dataset.dragover = "false";
+        if (e.dataTransfer?.files?.length) {
+          input.files = e.dataTransfer.files;
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      });
+      input.addEventListener("change", () => {
+        if (input.files && input.files.length) {
+          const names = Array.from(input.files).map((f) => f.name).join(", ");
+          nameEl.textContent = names;
+          nameEl.classList.remove("hidden");
+        } else {
+          nameEl.classList.add("hidden");
+        }
+      });
+    });
+  }
+  bindDrops();
+  document.addEventListener("astro:page-load", bindDrops);
+</script>

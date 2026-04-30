@@ -1,0 +1,70 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { articles, categories } from "@/data/journal";
+
+const sorted = [...articles].sort((a, b) => b.date.localeCompare(a.date));
+const fmt = (iso: string) => new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+---
+<BaseLayout title="Le journal, Les Contes Infusés" description="Chroniques, recettes, portraits, sélections : le journal éditorial de la maison.">
+  {/* HERO MAGAZINE MASTHEAD */}
+  <section class="border-b border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-8 md:pt-12 pb-8">
+      <div class="flex items-end justify-between gap-6 flex-wrap">
+        <div>
+          <p class="eyebrow">N° 04, printemps 2026</p>
+          <h1 class="font-display italic text-6xl sm:text-8xl text-cocoa-600 leading-none mt-2">Le Journal</h1>
+        </div>
+        <p class="font-body italic text-cocoa-400 max-w-md">
+          Chroniques, recettes, portraits. On écrit lentement, comme on vend les livres.
+        </p>
+      </div>
+      <div class="mt-6 filet-double flex items-center justify-between text-xs font-sans text-cocoa-400">
+        <span class="font-smallcap tracking-widest uppercase">Édition Corte</span>
+        <span>{sorted.length} articles publiés</span>
+      </div>
+    </div>
+  </section>
+
+  {/* FILTERS (visual, anchor-style) */}
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8">
+    <div class="flex flex-wrap items-center gap-2">
+      {categories.map((c) => (
+        <a href="#articles" class="chip hover:border-terracotta-400 hover:text-terracotta-600 transition">{c}</a>
+      ))}
+      <span class="ml-auto eyebrow">Tri : du plus récent au plus ancien</span>
+    </div>
+  </section>
+
+  {/* GRID 6 ARTICLES, mixed featured */}
+  <section id="articles" class="max-w-6xl mx-auto px-5 sm:px-8 pb-24">
+    <div class="grid md:grid-cols-6 gap-8">
+      {sorted.map((a, i) => {
+        const isFeatured = i === 0;
+        const colSpan = isFeatured ? "md:col-span-6" : i === 1 || i === 2 ? "md:col-span-3" : "md:col-span-2";
+        const ratio = isFeatured ? "aspect-[16/7]" : "aspect-[16/10]";
+        return (
+          <article class={`group ${colSpan}`} data-reveal>
+            <a href={`/journal/${a.slug}`} class="block">
+              <div class={`relative ${ratio} rounded-2xl overflow-hidden shadow-book`} style={`background: linear-gradient(135deg, ${a.gradient[0]}, ${a.gradient[1]})`}>
+                <div class="absolute inset-4 border border-cream-50/15 rounded-xl"></div>
+                <span class="absolute top-4 left-4 chip bg-cream-50/95 border-cream-50">{a.category}</span>
+                <div class="absolute bottom-5 right-5 font-display italic text-cream-50/30 text-7xl select-none leading-none">N°{String(i+1).padStart(2,"0")}</div>
+              </div>
+              <div class="mt-5">
+                <h2 class={`font-display ${isFeatured ? "italic text-4xl sm:text-5xl" : "italic text-2xl"} text-cocoa-600 group-hover:text-terracotta-400 transition leading-tight`}>{a.title}</h2>
+                {isFeatured && <p class="mt-3 font-body text-cocoa-700 text-base sm:text-lg max-w-2xl leading-relaxed">{a.excerpt}</p>}
+                <div class="mt-3 flex items-center gap-3 text-xs font-sans text-cocoa-400">
+                  <span class="font-smallcap tracking-widest uppercase">{fmt(a.date)}</span>
+                  <span class="w-1 h-1 rounded-full bg-line"></span>
+                  <span>{a.author}</span>
+                  <span class="w-1 h-1 rounded-full bg-line"></span>
+                  <span>{a.readingMinutes} min</span>
+                </div>
+              </div>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>

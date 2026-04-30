@@ -1,0 +1,13 @@
+---
+interface Props { size?: number; withName?: boolean; class?: string; }
+const { size = 40, withName = false, class: className = "" } = Astro.props;
+---
+<div class={`flex items-center gap-3 ${className}`} aria-hidden="true">
+  <div class="rounded-full shimmer" style={`width:${size}px;height:${size}px;`}></div>
+  {withName && (
+    <div class="flex-1 space-y-2">
+      <div class="h-3 w-32 shimmer rounded"></div>
+      <div class="h-2.5 w-20 shimmer rounded"></div>
+    </div>
+  )}
+</div>

@@ -1,36 +1,60 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
+import Chip from "@/components/admin/Chip.astro";
 import { books } from "@/data/books";
 import { artisans } from "@/data/artisans";
 import { formatPrice } from "@/lib/format";
 
 const url = new URL(Astro.request.url);
 const onglet = url.searchParams.get("onglet") === "artisans" ? "artisans" : "livres";
+const view = url.searchParams.get("vue") === "grid" ? "grid" : "table";
 
-function stockChip(s: number) {
-  if (s < 3) return { cls: "bg-terracotta-50 text-terracotta-600 border-terracotta-200", label: `${s} restants` };
-  if (s <= 10) return { cls: "bg-cream-200 text-cocoa-600 border-line", label: `${s} en stock` };
-  return { cls: "bg-sage-200 text-sage-600 border-sage-400/40", label: `${s} en stock` };
+function stockTone(s: number): "success" | "warning" | "danger" {
+  if (s < 3) return "danger";
+  if (s <= 10) return "warning";
+  return "success";
+}
+function stockLabel(s: number): string {
+  if (s < 3) return `${s} restants`;
+  return `${s} en stock`;
 }
 ---
-<AdminLayout title="Produits, Admin" section="produits" breadcrumb={[{ label: "Produits" }]}>
+<AdminLayout title="Produits, Admin" section="produits" breadcrumb={[{ label: "Catalogue" }, { label: "Livres et artisans" }]}>
   <header class="flex flex-wrap items-end justify-between gap-4 mb-6">
     <div>
       <p class="eyebrow !text-[10px]">Catalogue</p>
       <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1">Produits</h1>
       <p class="font-body text-cocoa-400 mt-1 text-sm">{books.length} livres + {artisans.length} produits artisans.</p>
     </div>
-    <a href="/admin/produits/nouveau" class="btn-terracotta">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-      Ajouter un produit
-    </a>
+    <div class="flex items-center gap-2">
+      <div class="inline-flex items-center rounded-full border border-line bg-cream-50 p-0.5">
+        <a href={`?onglet=${onglet}&vue=table`} class:list={[
+          "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-smallcap text-[10px] uppercase tracking-widest transition-colors",
+          view === "table" ? "bg-cocoa-700 text-cream-50" : "text-cocoa-400 hover:text-cocoa-700",
+        ]}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          Liste
+        </a>
+        <a href={`?onglet=${onglet}&vue=grid`} class:list={[
+          "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-smallcap text-[10px] uppercase tracking-widest transition-colors",
+          view === "grid" ? "bg-cocoa-700 text-cream-50" : "text-cocoa-400 hover:text-cocoa-700",
+        ]}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
+          Grille
+        </a>
+      </div>
+      <a href="/admin/produits/nouveau" class="btn-terracotta !py-2 !px-4 !text-[11px]">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        Ajouter
+      </a>
+    </div>
   </header>
 
   <div class="flex items-center gap-4 mb-6 border-b border-line">
-    <a href="?onglet=livres" class={`pb-3 text-sm font-smallcap uppercase tracking-widest border-b-2 -mb-px transition-colors ${onglet === "livres" ? "text-terracotta-400 border-terracotta-400" : "text-cocoa-400 border-transparent hover:text-cocoa-700"}`}>
+    <a href={`?onglet=livres&vue=${view}`} class={`pb-3 text-sm font-smallcap uppercase tracking-widest border-b-2 -mb-px transition-colors ${onglet === "livres" ? "text-terracotta-400 border-terracotta-400" : "text-cocoa-400 border-transparent hover:text-cocoa-700"}`}>
       Livres ({books.length})
     </a>
-    <a href="?onglet=artisans" class={`pb-3 text-sm font-smallcap uppercase tracking-widest border-b-2 -mb-px transition-colors ${onglet === "artisans" ? "text-terracotta-400 border-terracotta-400" : "text-cocoa-400 border-transparent hover:text-cocoa-700"}`}>
+    <a href={`?onglet=artisans&vue=${view}`} class={`pb-3 text-sm font-smallcap uppercase tracking-widest border-b-2 -mb-px transition-colors ${onglet === "artisans" ? "text-terracotta-400 border-terracotta-400" : "text-cocoa-400 border-transparent hover:text-cocoa-700"}`}>
       Artisans ({artisans.length})
     </a>
     <div class="ml-auto pb-3">
@@ -41,12 +65,25 @@ function stockChip(s: number) {
     </div>
   </div>
 
-  {onglet === "livres" && (
+  {/* bulk actions bar (table view only) */}
+  {view === "table" && (
+    <div id="lci-bulk-bar" class="hidden mb-3 flex items-center gap-3 rounded-xl border border-terracotta-200 bg-terracotta-50/60 px-4 py-2.5 font-sans text-sm">
+      <span class="text-cocoa-700"><span id="lci-bulk-count" class="font-medium">0</span> sélectionné(s)</span>
+      <div class="ml-auto flex items-center gap-2">
+        <button type="button" class="btn-ghost !py-1.5 !px-3 !text-[10px]">Changer prix</button>
+        <button type="button" class="btn-ghost !py-1.5 !px-3 !text-[10px]">Archiver</button>
+        <button type="button" class="btn-ghost !py-1.5 !px-3 !text-[10px]">Exporter</button>
+      </div>
+    </div>
+  )}
+
+  {onglet === "livres" && view === "table" && (
     <div class="bg-cream-50 border border-line rounded-xl overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm font-sans min-w-[900px]">
+        <table id="prod-tbl" class="w-full text-sm font-sans min-w-[900px]">
           <thead class="bg-cream-100/60 border-b border-line">
             <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400">
+              <th class="w-8 px-4 py-3"><input type="checkbox" id="select-all-prod" class="h-4 w-4 accent-terracotta-400" /></th>
               <th class="px-4 py-3 font-medium w-16">Visuel</th>
               <th class="px-4 py-3 font-medium">Titre</th>
               <th class="px-4 py-3 font-medium">Auteur</th>
@@ -58,38 +95,59 @@ function stockChip(s: number) {
             </tr>
           </thead>
           <tbody class="divide-y divide-line">
-            {books.map(b => {
-              const sc = stockChip(b.stock);
-              return (
-                <tr class="text-cocoa-700 hover:bg-cream-100/40">
-                  <td class="px-4 py-3">
-                    <div class="w-9 h-12 rounded-sm shadow-sm" style={`background: linear-gradient(135deg, ${b.coverGradient[0]}, ${b.coverGradient[1]});`}></div>
-                  </td>
-                  <td class="px-4 py-3 font-medium">{b.title}</td>
-                  <td class="px-4 py-3 text-cocoa-400">{b.author}</td>
-                  <td class="px-4 py-3"><span class="chip">{b.genre}</span></td>
-                  <td class="px-4 py-3 tabular-nums">{formatPrice(b.price)}</td>
-                  <td class="px-4 py-3"><span class={`chip border ${sc.cls}`}>{sc.label}</span></td>
-                  <td class="px-4 py-3">{b.coupDeCoeur ? <span class="chip !text-terracotta-600 !border-terracotta-200 !bg-terracotta-50">★ Coup de cœur</span> : <span class="text-cocoa-400 text-xs">,</span>}</td>
-                  <td class="px-4 py-3">
-                    <div class="flex items-center justify-end gap-1 text-cocoa-400">
-                      <button type="button" aria-label="Voir" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                      </button>
-                      <button type="button" aria-label="Modifier" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-                      </button>
-                      <button type="button" aria-label="Supprimer" class="p-1.5 hover:text-terracotta-600 hover:bg-cream-100 rounded">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+            {books.map(b => (
+              <tr class="text-cocoa-700 hover:bg-cream-100/40 transition-colors">
+                <td class="px-4 py-3"><input type="checkbox" class="lci-row-select h-4 w-4 accent-terracotta-400" /></td>
+                <td class="px-4 py-3">
+                  <div class="w-9 h-12 rounded-sm shadow-sm" style={`background: linear-gradient(135deg, ${b.coverGradient[0]}, ${b.coverGradient[1]});`}></div>
+                </td>
+                <td class="px-4 py-3 font-medium">{b.title}</td>
+                <td class="px-4 py-3 text-cocoa-400">{b.author}</td>
+                <td class="px-4 py-3"><Chip>{b.genre}</Chip></td>
+                <td class="px-4 py-3 tabular-nums">{formatPrice(b.price)}</td>
+                <td class="px-4 py-3"><Chip tone={stockTone(b.stock)} dot>{stockLabel(b.stock)}</Chip></td>
+                <td class="px-4 py-3">{b.coupDeCoeur ? <Chip tone="warning">★ Coup de cœur</Chip> : <span class="text-cocoa-400 text-xs">,</span>}</td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center justify-end gap-1 text-cocoa-400">
+                    <button type="button" aria-label="Voir" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button type="button" aria-label="Modifier" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                    </button>
+                    <button type="button" aria-label="Supprimer" class="p-1.5 hover:text-terracotta-600 hover:bg-cream-100 rounded">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
+    </div>
+  )}
+
+  {onglet === "livres" && view === "grid" && (
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {books.map(b => (
+        <div class="group relative rounded-xl border border-line bg-cream-50 overflow-hidden hover:border-terracotta-400/50 transition-colors">
+          <div class="relative aspect-[3/4] overflow-hidden" style={`background: linear-gradient(135deg, ${b.coverGradient[0]}, ${b.coverGradient[1]});`}>
+            {b.coupDeCoeur && (
+              <span class="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-cream-50/95 px-2 py-0.5 font-smallcap text-[9px] uppercase tracking-windier text-terracotta-600">★ Coup de cœur</span>
+            )}
+            <span class="absolute bottom-2 right-2"><Chip tone={stockTone(b.stock)} dot>{b.stock}</Chip></span>
+          </div>
+          <div class="p-3">
+            <p class="font-display italic text-base text-cocoa-700 leading-tight line-clamp-2">{b.title}</p>
+            <p class="text-[11px] text-cocoa-400 font-sans">{b.author}</p>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-sm tabular-nums text-cocoa-700 font-medium">{formatPrice(b.price)}</span>
+              <span class="text-[10px] text-cocoa-400">{b.genre}</span>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )}
 
@@ -109,32 +167,51 @@ function stockChip(s: number) {
             </tr>
           </thead>
           <tbody class="divide-y divide-line">
-            {artisans.map(a => {
-              const sc = stockChip(a.stock);
-              return (
-                <tr class="text-cocoa-700 hover:bg-cream-100/40">
-                  <td class="px-4 py-3 font-medium">{a.name}</td>
-                  <td class="px-4 py-3 text-cocoa-400">{a.artisan}</td>
-                  <td class="px-4 py-3 text-cocoa-400 text-xs">{a.city}</td>
-                  <td class="px-4 py-3"><span class="chip">{a.category}</span></td>
-                  <td class="px-4 py-3 tabular-nums">{formatPrice(a.price)}</td>
-                  <td class="px-4 py-3"><span class={`chip border ${sc.cls}`}>{sc.label}</span></td>
-                  <td class="px-4 py-3">
-                    <div class="flex items-center justify-end gap-1 text-cocoa-400">
-                      <button type="button" aria-label="Modifier" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-                      </button>
-                      <button type="button" aria-label="Supprimer" class="p-1.5 hover:text-terracotta-600 hover:bg-cream-100 rounded">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+            {artisans.map(a => (
+              <tr class="text-cocoa-700 hover:bg-cream-100/40 transition-colors">
+                <td class="px-4 py-3 font-medium">{a.name}</td>
+                <td class="px-4 py-3 text-cocoa-400">{a.artisan}</td>
+                <td class="px-4 py-3 text-cocoa-400 text-xs">{a.city}</td>
+                <td class="px-4 py-3"><Chip>{a.category}</Chip></td>
+                <td class="px-4 py-3 tabular-nums">{formatPrice(a.price)}</td>
+                <td class="px-4 py-3"><Chip tone={stockTone(a.stock)} dot>{stockLabel(a.stock)}</Chip></td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center justify-end gap-1 text-cocoa-400">
+                    <button type="button" aria-label="Modifier" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                    </button>
+                    <button type="button" aria-label="Supprimer" class="p-1.5 hover:text-terracotta-600 hover:bg-cream-100 rounded">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
     </div>
   )}
+
+  <script is:inline>
+    (() => {
+      const tbl = document.getElementById("prod-tbl");
+      if (!tbl) return;
+      const all = document.getElementById("select-all-prod");
+      const bar = document.getElementById("lci-bulk-bar");
+      const count = document.getElementById("lci-bulk-count");
+      function refresh() {
+        const c = tbl.querySelectorAll(".lci-row-select:checked").length;
+        if (count) count.textContent = String(c);
+        if (bar) bar.classList.toggle("hidden", c === 0);
+      }
+      all?.addEventListener("change", (e) => {
+        tbl.querySelectorAll(".lci-row-select").forEach((cb) => { cb.checked = e.target.checked; });
+        refresh();
+      });
+      tbl.addEventListener("change", (e) => {
+        if (e.target?.classList?.contains("lci-row-select")) refresh();
+      });
+    })();
+  </script>
 </AdminLayout>

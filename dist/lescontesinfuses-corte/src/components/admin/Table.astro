@@ -1,0 +1,135 @@
+---
+// Simple, elegant admin table. JS-free baseline; sortable adds a small client script.
+interface Column {
+  key: string;
+  label: string;
+  align?: "left" | "right" | "center";
+  sortable?: boolean;
+  className?: string;
+  /** Optional renderer name resolved client-side (kept simple for SSR) */
+}
+interface Props {
+  columns: Column[];
+  rows: Record<string, any>[];
+  sortable?: boolean;
+  selectable?: boolean;
+  rowHrefKey?: string; // if provided, each row becomes a link via JS
+  emptyLabel?: string;
+  id?: string;
+}
+const {
+  columns,
+  rows,
+  sortable = false,
+  selectable = false,
+  emptyLabel = "Aucune donnée à afficher.",
+  id = `tbl-${Math.random().toString(36).slice(2, 7)}`,
+} = Astro.props as Props;
+---
+<div class="overflow-hidden rounded-xl border border-line bg-cream-50">
+  <div class="overflow-x-auto">
+    <table id={id} class="lci-admin-table w-full min-w-[720px] font-sans text-sm">
+      <thead class="border-b border-line bg-cream-100/60">
+        <tr class="text-left font-smallcap text-[10px] uppercase tracking-windier text-cocoa-400">
+          {selectable && (
+            <th class="w-8 px-4 py-3">
+              <input type="checkbox" data-select-all class="h-4 w-4 accent-terracotta-400" aria-label="Tout sélectionner" />
+            </th>
+          )}
+          {columns.map((c, i) => (
+            <th
+              class:list={[
+                "px-4 py-3 font-medium",
+                c.align === "right" && "text-right",
+                c.align === "center" && "text-center",
+              ]}
+            >
+              {sortable && c.sortable !== false ? (
+                <button
+                  type="button"
+                  data-sort={c.key}
+                  data-col={i + (selectable ? 1 : 0)}
+                  class="inline-flex items-center gap-1 hover:text-cocoa-700 transition-colors"
+                >
+                  {c.label}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-40">
+                    <path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>
+                  </svg>
+                </button>
+              ) : (
+                <span>{c.label}</span>
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-line">
+        {rows.length === 0 ? (
+          <tr>
+            <td colspan={columns.length + (selectable ? 1 : 0)} class="px-4 py-10 text-center text-cocoa-400">{emptyLabel}</td>
+          </tr>
+        ) : rows.map((r) => (
+          <tr class="text-cocoa-700 transition-colors hover:bg-cream-100/60">
+            {selectable && (
+              <td class="w-8 px-4 py-3">
+                <input type="checkbox" data-row class="h-4 w-4 accent-terracotta-400" aria-label="Sélectionner la ligne" />
+              </td>
+            )}
+            {columns.map((c) => (
+              <td class:list={[
+                "px-4 py-3",
+                c.align === "right" && "text-right tabular-nums",
+                c.align === "center" && "text-center",
+                c.className,
+              ]} set:html={r[c.key] ?? ""}>
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+{sortable && (
+  <script is:inline define:vars={{ tableId: id }}>
+    (() => {
+      const tbl = document.getElementById(tableId);
+      if (!tbl) return;
+      const tbody = tbl.querySelector("tbody");
+      if (!tbody) return;
+      let lastKey = "";
+      let dir = 1;
+      tbl.querySelectorAll("[data-sort]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-sort");
+          const colIdx = parseInt(btn.getAttribute("data-col") || "0", 10);
+          if (lastKey === key) dir = -dir; else { lastKey = key; dir = 1; }
+          const rows = Array.from(tbody.querySelectorAll("tr"));
+          rows.sort((a, b) => {
+            const av = a.children[colIdx]?.textContent?.trim() || "";
+            const bv = b.children[colIdx]?.textContent?.trim() || "";
+            const an = parseFloat(av.replace(/[^0-9,.\-]/g, "").replace(",", "."));
+            const bn = parseFloat(bv.replace(/[^0-9,.\-]/g, "").replace(",", "."));
+            if (!isNaN(an) && !isNaN(bn)) return (an - bn) * dir;
+            return av.localeCompare(bv, "fr") * dir;
+          });
+          rows.forEach((r) => tbody.appendChild(r));
+        });
+      });
+      const all = tbl.querySelector("[data-select-all]");
+      if (all) {
+        all.addEventListener("change", (e) => {
+          const checked = e.target.checked;
+          tbl.querySelectorAll("[data-row]").forEach((cb) => { cb.checked = checked; });
+          tbl.dispatchEvent(new CustomEvent("lci:selection-change", { bubbles: true, detail: { count: checked ? tbl.querySelectorAll("[data-row]").length : 0 } }));
+        });
+      }
+      tbl.querySelectorAll("[data-row]").forEach((cb) => {
+        cb.addEventListener("change", () => {
+          const count = tbl.querySelectorAll("[data-row]:checked").length;
+          tbl.dispatchEvent(new CustomEvent("lci:selection-change", { bubbles: true, detail: { count } }));
+        });
+      });
+    })();
+  </script>
+)}

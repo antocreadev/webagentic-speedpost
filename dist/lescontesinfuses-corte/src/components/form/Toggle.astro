@@ -1,0 +1,36 @@
+---
+interface Props {
+  name?: string;
+  id?: string;
+  checked?: boolean;
+  value?: string;
+  label?: string;
+  description?: string;
+  class?: string;
+}
+const { name, id, checked, value, label, description, class: className = "" } = Astro.props;
+---
+<label class={`lci-toggle inline-flex items-start gap-3 cursor-pointer select-none ${className}`}>
+  <input
+    type="checkbox"
+    role="switch"
+    name={name}
+    id={id}
+    checked={checked}
+    value={value}
+    class="peer sr-only"
+  />
+  <span class="lci-track relative shrink-0 mt-0.5 inline-flex items-center w-[40px] h-[22px] rounded-full bg-cocoa-200/70 transition-colors duration-200 peer-checked:bg-terracotta-400 peer-focus-visible:ring-2 peer-focus-visible:ring-terracotta-400/40">
+    <span class="lci-thumb absolute left-0.5 inline-block w-[18px] h-[18px] rounded-full bg-cream-50 shadow-sm transition-transform duration-200"></span>
+  </span>
+  {(label || description) && (
+    <span class="block leading-tight">
+      {label && <span class="block font-body text-sm text-cocoa-700">{label}</span>}
+      {description && <span class="block text-[12px] text-cocoa-300 italic mt-0.5">{description}</span>}
+    </span>
+  )}
+</label>
+
+<style>
+  .peer:checked ~ .lci-track .lci-thumb { transform: translateX(18px); }
+</style>

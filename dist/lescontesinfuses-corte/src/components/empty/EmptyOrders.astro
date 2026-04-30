@@ -1,0 +1,26 @@
+---
+import EmptyState from "./EmptyState.astro";
+---
+<EmptyState
+  title="Aucune commande, pour l'instant"
+  description="Vos prochaines lectures et carnets s'afficheront ici, avec leur statut, leur suivi et un petit mot de notre part."
+  ctaLabel="Découvrir le catalogue"
+  ctaHref="/livres"
+  secondaryLabel="Carte café"
+  secondaryHref="/cafe"
+>
+  <div slot="icon" class="relative">
+    <svg width="120" height="100" viewBox="0 0 120 100" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="lci-box" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#F2E7C4"/>
+          <stop offset="100%" stop-color="#E5CDB1"/>
+        </linearGradient>
+      </defs>
+      <path d="M20 35 L60 20 L100 35 L100 80 L60 95 L20 80 Z" fill="url(#lci-box)" stroke="#7C4F31" stroke-width="1.2" stroke-linejoin="round"/>
+      <path d="M20 35 L60 50 L100 35" stroke="#7C4F31" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+      <line x1="60" y1="50" x2="60" y2="95" stroke="#7C4F31" stroke-width="1.2"/>
+      <path d="M44 28 L60 33 L76 28" stroke="#C77A4F" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+</EmptyState>

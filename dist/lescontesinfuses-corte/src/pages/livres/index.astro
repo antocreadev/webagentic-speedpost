@@ -9,27 +9,27 @@ import { genres } from "@/data/genres";
   title="La bibliothèque, catalogue, Les Contes Infusés"
   description="Tous les livres de la librairie : 24 titres à Corte, romans, polars, BD, beaux-livres, jeunesse, poésie, Corse."
 >
-  <section class="relative">
+  <section class="relative" data-chapter="1">
     <div class="absolute inset-x-0 top-0 h-72 bg-cream-100/40 border-b border-line pointer-events-none" aria-hidden="true"></div>
     <div class="relative max-w-7xl mx-auto px-5 sm:px-8 pt-10 pb-6 text-center">
-      <div class="flex justify-center mb-4 opacity-70">
+      <div class="flex justify-center mb-4 opacity-70" data-parallax="0.3">
         <LaceMedallion size={84} />
       </div>
-      <p class="eyebrow">
+      <p class="eyebrow" data-reveal data-fade-direction="up">
         <span class="filet"></span>
         <span class="mx-3">Catalogue</span>
         <span class="filet"></span>
       </p>
-      <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-4 leading-[0.95]">
+      <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-4 leading-[0.95]" data-reveal data-fade-direction="scale">
         La bibliothèque
       </h1>
-      <p class="font-body italic text-cocoa-400 mt-4 max-w-xl mx-auto">
+      <p class="font-body italic text-cocoa-400 mt-4 max-w-xl mx-auto" data-reveal data-fade-direction="up" style="transition-delay:120ms">
         Vingt-quatre titres choisis avec lenteur. Romans, poésie, beaux-livres, voix corses. Ce que nous aurions envie de vous tendre, en main propre.
       </p>
     </div>
   </section>
 
-  <section class="max-w-7xl mx-auto px-5 sm:px-8 py-12">
+  <section class="max-w-7xl mx-auto px-5 sm:px-8 py-12" data-chapter="2">
     <BookCatalog books={books} genres={genres} client:load />
   </section>
 </BaseLayout>

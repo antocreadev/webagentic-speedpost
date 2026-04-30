@@ -3,8 +3,10 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Bookmark from "../components/Bookmark.tsx";
-import CursorTeacup from "../components/CursorTeacup.tsx";
 import SplashLoader from "../components/SplashLoader.tsx";
+import BottomNav from "../components/mobile/BottomNav.astro";
+import CartDrawer from "../components/mobile/CartDrawer.tsx";
+import ToastContainer from "../components/islands/ToastContainer.tsx";
 import { ClientRouter } from "astro:transitions";
 
 interface Props {
@@ -44,16 +46,36 @@ const {
   </head>
   <body class="bg-paper text-cocoa-700 font-body antialiased min-h-screen flex flex-col">
     <Header />
-    <main class="flex-1 pt-24">
+    <main class="flex-1 pt-24 pb-20 md:pb-0">
       <slot />
     </main>
     <Footer />
     <Bookmark client:idle />
-    <CursorTeacup client:idle />
     <SplashLoader client:load />
+    <BottomNav />
+    <CartDrawer client:idle />
+    <ToastContainer client:idle />
+
+    <span class="bookmark-chapter-badge" data-bookmark-chapter aria-hidden="true"></span>
 
     <script>
       import "../scripts/reveals.ts";
+      import "../scripts/scroll-effects.ts";
+    </script>
+    <script>
+      // Bookmark chapter badge (Roman numerals based on data-current-chapter)
+      const ROMAN: Record<string, string> = { "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V", "6": "VI", "7": "VII", "8": "VIII" };
+      function syncBadge() {
+        const badge = document.querySelector<HTMLElement>("[data-bookmark-chapter]");
+        if (!badge) return;
+        const ch = document.body.getAttribute("data-current-chapter") || "";
+        if (!ch) { badge.textContent = ""; return; }
+        badge.textContent = `Chap. ${ROMAN[ch] || ch}`;
+      }
+      window.addEventListener("lci:chapter", syncBadge);
+      document.addEventListener("astro:page-load", () => { syncBadge(); });
+      if (document.readyState !== "loading") syncBadge();
+      else document.addEventListener("DOMContentLoaded", syncBadge);
     </script>
   </body>
 </html>

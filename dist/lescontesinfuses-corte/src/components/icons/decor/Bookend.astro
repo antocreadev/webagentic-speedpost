@@ -1,0 +1,27 @@
+---
+interface Props { size?: number; class?: string; }
+const { size = 80, class: className = "" } = Astro.props;
+---
+<svg viewBox="0 0 80 80" width={size} height={size} class={className} aria-hidden="true">
+  <g stroke="currentColor" stroke-width="0.8" fill="none" stroke-linecap="round">
+    {/* base */}
+    <path d="M6 70 L 74 70"/>
+    <path d="M10 70 L 10 64 L 70 64 L 70 70"/>
+    {/* left bookend */}
+    <path d="M14 64 L 14 22 q 0 -6, 6 -8 L 26 14 L 26 64"/>
+    <path d="M18 22 q 0 -3, 4 -4"/>
+    {/* books */}
+    <path d="M30 64 L 30 30 L 36 30 L 36 64"/>
+    <path d="M38 64 L 38 26 L 44 26 L 44 64"/>
+    <path d="M46 64 L 46 32 L 52 32 L 52 64"/>
+    <path d="M30 36 L 36 36"/>
+    <path d="M38 32 L 44 32"/>
+    <path d="M46 38 L 52 38"/>
+    {/* right bookend */}
+    <path d="M66 64 L 66 22 q 0 -6, -6 -8 L 54 14 L 54 64"/>
+    <path d="M62 22 q 0 -3, -4 -4"/>
+    {/* ornament tops */}
+    <circle cx="20" cy="12" r="2"/>
+    <circle cx="60" cy="12" r="2"/>
+  </g>
+</svg>

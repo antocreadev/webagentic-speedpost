@@ -1,0 +1,71 @@
+---
+import SectionDivider from "./SectionDivider.astro";
+interface Props {
+  tone?: "paper" | "cocoa" | "cream-tinted" | "terracotta-tinted";
+  dividerTop?: boolean;
+  dividerBottom?: boolean;
+  pinHeight?: number;
+  eyebrow?: string;
+  title?: string;
+  kicker?: string;
+  chapter?: string;
+  class?: string;
+  containerClass?: string;
+  id?: string;
+}
+const {
+  tone = "paper",
+  dividerTop = false,
+  dividerBottom = false,
+  pinHeight,
+  eyebrow,
+  title,
+  kicker,
+  chapter,
+  class: className = "",
+  containerClass = "max-w-7xl mx-auto px-5 sm:px-8 py-20",
+  id,
+} = Astro.props;
+---
+<section
+  id={id}
+  class={`tone-${tone} ${className}`}
+  data-chapter={chapter}
+  data-scene-pin={pinHeight ? String(pinHeight) : undefined}
+>
+  {dividerTop && <SectionDivider />}
+  <div class={containerClass}>
+    {(eyebrow || title || kicker) && (
+      <header class="text-center mb-12">
+        {eyebrow && (
+          <p class="eyebrow" data-reveal data-fade-direction="up">
+            <span class="filet"></span>
+            <span class="mx-3">{eyebrow}</span>
+            <span class="filet"></span>
+          </p>
+        )}
+        {title && (
+          <h2
+            class="font-display italic text-4xl md:text-6xl text-cocoa-600 mt-3"
+            data-reveal
+            data-fade-direction="left"
+          >
+            {title}
+          </h2>
+        )}
+        {kicker && (
+          <p
+            class="font-body italic text-cocoa-400 max-w-xl mx-auto mt-4"
+            data-reveal
+            data-fade-direction="up"
+            style="transition-delay:120ms"
+          >
+            {kicker}
+          </p>
+        )}
+      </header>
+    )}
+    <slot />
+  </div>
+  {dividerBottom && <SectionDivider />}
+</section>

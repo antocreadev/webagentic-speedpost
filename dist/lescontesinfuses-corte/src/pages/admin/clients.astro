@@ -1,5 +1,7 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
+import Chip from "@/components/admin/Chip.astro";
+import CustomerPanel from "@/components/islands/CustomerPanel.tsx";
 import { adminCustomers } from "@/data/admin";
 import { formatPrice } from "@/lib/format";
 ---
@@ -10,7 +12,7 @@ import { formatPrice } from "@/lib/format";
       <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1">Clients</h1>
       <p class="font-body text-cocoa-400 mt-1 text-sm">{adminCustomers.length} clients enregistrés, conformes RGPD pour {adminCustomers.filter(c => c.consent === "OK").length} d'entre eux.</p>
     </div>
-    <button type="button" class="btn-ghost">
+    <button type="button" class="btn-ghost !py-2 !px-4 !text-[11px]">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Exporter CSV
     </button>
@@ -45,7 +47,10 @@ import { formatPrice } from "@/lib/format";
         </thead>
         <tbody class="divide-y divide-line">
           {adminCustomers.map(c => (
-            <tr class="text-cocoa-700 hover:bg-cream-100/40">
+            <tr
+              class="text-cocoa-700 hover:bg-cream-100/40 transition-colors cursor-pointer lci-cust-row"
+              data-email={c.email}
+            >
               <td class="px-4 py-3">
                 <div class="flex items-center gap-3">
                   <div class="w-8 h-8 rounded-full bg-gradient-to-br from-terracotta-400 to-cocoa-500 flex items-center justify-center text-cream-50 text-xs font-medium shrink-0">
@@ -59,18 +64,18 @@ import { formatPrice } from "@/lib/format";
               <td class="px-4 py-3 text-right tabular-nums font-medium">{formatPrice(c.total)}</td>
               <td class="px-4 py-3 text-xs text-cocoa-400 tabular-nums">{c.last}</td>
               <td class="px-4 py-3">
-                <span class={`chip border ${c.consent === "OK" ? "bg-sage-200 text-sage-600 border-sage-400/40" : "bg-terracotta-50 text-terracotta-600 border-terracotta-200"}`}>
+                <Chip tone={c.consent === "OK" ? "success" : "warning"} dot>
                   {c.consent === "OK" ? "Consentement OK" : "À renouveler"}
-                </span>
+                </Chip>
               </td>
               <td class="px-4 py-3">
                 <div class="flex items-center justify-end gap-1 text-cocoa-400">
-                  <button aria-label="Voir" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                  <button aria-label="Voir la fiche" class="lci-cust-btn p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded" data-email={c.email}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                   </button>
-                  <button aria-label="Email" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
+                  <a href={`mailto:${c.email}`} aria-label="Email" class="p-1.5 hover:text-terracotta-400 hover:bg-cream-100 rounded">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                  </button>
+                  </a>
                 </div>
               </td>
             </tr>
@@ -79,4 +84,17 @@ import { formatPrice } from "@/lib/format";
       </table>
     </div>
   </div>
+
+  <CustomerPanel client:idle customers={adminCustomers} />
+
+  <script is:inline>
+    document.querySelectorAll(".lci-cust-row, .lci-cust-btn").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        const email = el.getAttribute("data-email");
+        if (!email) return;
+        e.stopPropagation();
+        window.dispatchEvent(new CustomEvent("lci:open-customer", { detail: { email } }));
+      });
+    });
+  </script>
 </AdminLayout>

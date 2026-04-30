@@ -1,0 +1,77 @@
+---
+interface Props {
+  eyebrow: string;
+  value: string;
+  delta?: { value: string; trend: "up" | "down" | "neutral" };
+  spark?: number[];
+  tone?: "terracotta" | "sage" | "plum" | "cocoa";
+  hint?: string;
+}
+const { eyebrow, value, delta, spark = [], tone = "terracotta", hint } = Astro.props as Props;
+const accent: Record<string, string> = {
+  terracotta: "#C77A4F",
+  sage: "#8A9876",
+  plum: "#8E6C90",
+  cocoa: "#7C4F31",
+};
+const stroke = accent[tone];
+
+// Build sparkline path
+let sparkPath = "";
+let areaPath = "";
+if (spark.length > 1) {
+  const w = 120;
+  const h = 36;
+  const min = Math.min(...spark);
+  const max = Math.max(...spark);
+  const range = max - min || 1;
+  const points = spark.map((v, i) => {
+    const x = (i / (spark.length - 1)) * w;
+    const y = h - ((v - min) / range) * h;
+    return [x, y];
+  });
+  sparkPath = points.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" ");
+  areaPath = `${sparkPath} L ${w} ${h} L 0 ${h} Z`;
+}
+
+const trendColor = delta?.trend === "up" ? "text-sage-600" : delta?.trend === "down" ? "text-terracotta-600" : "text-cocoa-400";
+---
+<div class="relative overflow-hidden rounded-xl border border-line bg-cream-50 p-5">
+  <div
+    class="absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-50"
+    style={`background: radial-gradient(circle, ${stroke}22 0%, transparent 70%);`}
+  ></div>
+  <p class="font-smallcap text-[10px] uppercase tracking-windier text-cocoa-400">{eyebrow}</p>
+  <div class="mt-2 flex items-end justify-between gap-3">
+    <p class="font-display italic text-[34px] leading-none text-cocoa-700 tabular-nums">{value}</p>
+    {spark.length > 1 && (
+      <svg viewBox="0 0 120 36" width="80" height="26" preserveAspectRatio="none" class="shrink-0">
+        <defs>
+          <linearGradient id={`g-${eyebrow.replace(/\s+/g, "")}`} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color={stroke} stop-opacity="0.25" />
+            <stop offset="100%" stop-color={stroke} stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={areaPath} fill={`url(#g-${eyebrow.replace(/\s+/g, "")})`} />
+        <path d={sparkPath} fill="none" stroke={stroke} stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    )}
+  </div>
+  <div class="mt-2 flex items-center gap-2 text-xs font-sans">
+    {delta && (
+      <span class:list={[trendColor, "inline-flex items-center gap-1 font-medium tabular-nums"]}>
+        {delta.trend === "up" && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        )}
+        {delta.trend === "down" && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></svg>
+        )}
+        {delta.trend === "neutral" && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        )}
+        {delta.value}
+      </span>
+    )}
+    {hint && <span class="text-cocoa-400">{hint}</span>}
+  </div>
+</div>

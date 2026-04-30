@@ -1,0 +1,20 @@
+---
+interface Props { size?: number; class?: string; }
+const { size = 70, class: className = "" } = Astro.props;
+---
+<svg viewBox="0 0 80 80" width={size} height={size} class={className} aria-hidden="true">
+  <g stroke="currentColor" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    {/* pot */}
+    <path d="M18 50 L 22 72 q 0 4, 4 4 L 54 76 q 4 0, 4 -4 L 62 50 Z"/>
+    <ellipse cx="40" cy="50" rx="22" ry="4"/>
+    <path d="M22 56 L 58 56" opacity="0.6"/>
+    {/* ink surface */}
+    <ellipse cx="40" cy="50" rx="16" ry="2.4" fill="currentColor" stroke="none" opacity="0.25"/>
+    {/* quill */}
+    <path d="M44 48 Q 56 30, 70 6"/>
+    <path d="M70 6 Q 60 12, 52 22 Q 46 30, 44 48 Z"/>
+    <path d="M50 28 q 6 -4, 12 -10"/>
+    <path d="M48 36 q 6 -4, 12 -10"/>
+    <path d="M46 42 q 4 -3, 8 -7"/>
+  </g>
+</svg>

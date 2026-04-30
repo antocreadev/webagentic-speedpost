@@ -1,0 +1,63 @@
+---
+interface Props {
+  name?: string;
+  id?: string;
+  placeholder?: string;
+  required?: boolean;
+  rows?: number;
+  maxlength?: number;
+  value?: string;
+  class?: string;
+}
+const {
+  name,
+  id,
+  placeholder,
+  required = false,
+  rows = 4,
+  maxlength,
+  value,
+  class: className = "",
+} = Astro.props;
+const counterId = id ? `${id}-counter` : undefined;
+---
+<div class="relative">
+  <textarea
+    name={name}
+    id={id}
+    rows={rows}
+    placeholder={placeholder}
+    required={required}
+    maxlength={maxlength}
+    data-counter-target={counterId}
+    class={`lci-textarea w-full bg-transparent border border-cocoa-200/60 rounded-md px-3 py-2.5 font-body text-[15px] text-cocoa-700 placeholder:text-cocoa-200 placeholder:italic focus:outline-none focus:border-terracotta-400 transition-colors duration-200 resize-y ${className}`}
+  >{value}</textarea>
+  {maxlength && (
+    <span
+      id={counterId}
+      class="pointer-events-none absolute bottom-1.5 right-2.5 text-[11px] font-sans tabular-nums text-cocoa-300"
+    >0 / {maxlength}</span>
+  )}
+</div>
+
+<style>
+  [data-field-state="error"] .lci-textarea { border-color: #9A4F2A; }
+  [data-field-state="success"] .lci-textarea { border-color: #5A6647; }
+</style>
+
+<script>
+  function bindCounters() {
+    document.querySelectorAll<HTMLTextAreaElement>("textarea[data-counter-target]").forEach((ta) => {
+      const id = ta.dataset.counterTarget;
+      if (!id) return;
+      const el = document.getElementById(id);
+      if (!el) return;
+      const max = ta.maxLength;
+      const update = () => { el.textContent = `${ta.value.length} / ${max}`; };
+      ta.addEventListener("input", update);
+      update();
+    });
+  }
+  bindCounters();
+  document.addEventListener("astro:page-load", bindCounters);
+</script>

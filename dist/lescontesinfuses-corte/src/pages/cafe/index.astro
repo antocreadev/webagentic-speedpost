@@ -5,6 +5,7 @@ import CoffeeBean from "@/components/icons/CoffeeBean.astro";
 import BoissonCard from "@/components/cards/BoissonCard.astro";
 import MenuLightbox from "@/components/islands/MenuLightbox.tsx";
 import { cafe } from "@/data/cafe";
+import SectionDivider from "@/components/SectionDivider.astro";
 
 const cats: { slug: any; label: string; tagline: string }[] = [
   { slug: "cafe", label: "Café", tagline: "Pure origine, lait vapeur, mousse fine." },
@@ -21,7 +22,7 @@ const laits = ["Vache", "Avoine", "Riz", "Amande", "Coco"];
   title="Notre café, carte complète, Les Contes Infusés"
   description="La carte du café : pure origine, lait vapeur, kombuchas, thés glacés maison, desserts. Place Paoli, Corte."
 >
-  <section class="relative overflow-hidden border-b border-line">
+  <section class="relative overflow-hidden border-b border-line" data-chapter="1">
     <span class="bean-drift" style="top: 70%; left: 8%;"><CoffeeBean size={28} /></span>
     <span class="bean-drift b2" style="top: 30%; left: 18%;"><CoffeeBean size={22} /></span>
     <span class="bean-drift b3" style="top: 80%; left: 35%;"><CoffeeBean size={18} /></span>
@@ -30,13 +31,13 @@ const laits = ["Vache", "Avoine", "Riz", "Amande", "Coco"];
     <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 pb-16 grid lg:grid-cols-[1fr_auto] items-center gap-10 relative">
       <div>
         <p class="eyebrow"><span class="filet"></span><span class="mx-3">Carte</span><span class="filet"></span></p>
-        <h1 class="font-display italic text-5xl md:text-8xl text-cocoa-600 mt-4 leading-[0.95]">Notre café</h1>
-        <p class="font-script text-3xl md:text-4xl text-terracotta-400 mt-4">Tiré, infusé, partagé.</p>
+        <h1 class="font-display italic text-5xl md:text-8xl text-cocoa-600 mt-4 leading-[0.95]" data-reveal data-fade-direction="left">Notre café</h1>
+        <p class="font-script text-3xl md:text-4xl text-terracotta-400 mt-4" data-reveal data-fade-direction="up" style="transition-delay:150ms">Tiré, infusé, partagé.</p>
         <p class="font-body italic text-cocoa-400 mt-4 max-w-lg">
           On choisit le grain comme on choisit un livre. Italie du Nord pour la machine, Éthiopie pour la douceur, infusions du jardin pour la pause longue.
         </p>
       </div>
-      <div class="opacity-80">
+      <div class="opacity-80" data-parallax="0.4">
         <Teapot size={200} />
       </div>
     </div>
@@ -53,17 +54,19 @@ const laits = ["Vache", "Avoine", "Riz", "Amande", "Coco"];
     </div>
   </section>
 
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 space-y-20 pb-20">
-    {cats.map((c) => (
+  <SectionDivider ornament="leaf" />
+
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 space-y-20 pb-20" data-chapter="3">
+    {cats.map((c, i) => (
       <section>
         <header class="flex items-end justify-between gap-4 border-b border-line pb-3 mb-8">
           <div>
-            <p class="eyebrow">{c.tagline}</p>
-            <h3 class="font-display italic text-3xl md:text-5xl text-cocoa-600 mt-1">{c.label}</h3>
+            <p class="eyebrow" data-reveal data-fade-direction="up">{c.tagline}</p>
+            <h3 class="font-display italic text-3xl md:text-5xl text-cocoa-600 mt-1" data-reveal data-fade-direction="left">{c.label}</h3>
           </div>
           <CoffeeBean size={36} class="opacity-60" />
         </header>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" data-stagger="80">
           {cafe.filter((it) => it.category === c.slug).map((it) => <BoissonCard item={it} />)}
         </div>
       </section>

@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
+import CommandPalette from "@/components/islands/CommandPalette.tsx";
+import ToastHost from "@/components/islands/Toast.tsx";
 
 interface Props {
   title?: string;
@@ -9,15 +11,47 @@ interface Props {
 }
 
 const { title = "Admin, Les Contes Infusés", section = "dashboard", breadcrumb = [] } = Astro.props;
+const pathname = Astro.url.pathname;
 
-const nav = [
+// Auto breadcrumb fallback if not provided
+const autoCrumbs = breadcrumb.length === 0
+  ? pathname.split("/").filter(Boolean).slice(1).map((part) => ({
+      label: part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, " "),
+    }))
+  : breadcrumb;
+
+interface NavItem {
+  id: string;
+  label: string;
+  href?: string;
+  icon: string;
+  children?: { id: string; label: string; href: string }[];
+}
+
+const nav: NavItem[] = [
   { id: "dashboard", label: "Tableau de bord", href: "/admin", icon: "layout-dashboard" },
   { id: "commandes", label: "Commandes", href: "/admin/commandes", icon: "shopping-bag" },
-  { id: "produits", label: "Produits", href: "/admin/produits", icon: "book-open" },
+  {
+    id: "catalogue",
+    label: "Catalogue",
+    icon: "book-open",
+    children: [
+      { id: "produits", label: "Livres et artisans", href: "/admin/produits" },
+      { id: "stocks", label: "Stocks", href: "/admin/stocks" },
+      { id: "etiquettes", label: "Étiquettes", href: "/admin/etiquettes" },
+    ],
+  },
   { id: "evenements", label: "Événements", href: "/admin/evenements", icon: "calendar" },
-  { id: "stocks", label: "Stocks", href: "/admin/stocks", icon: "package" },
-  { id: "etiquettes", label: "Étiquettes", href: "/admin/etiquettes", icon: "tag" },
   { id: "clients", label: "Clients", href: "/admin/clients", icon: "users" },
+  {
+    id: "communication",
+    label: "Communication",
+    icon: "mail",
+    children: [
+      { id: "newsletter", label: "Newsletter", href: "/admin" },
+      { id: "reseaux", label: "Réseaux", href: "/admin" },
+    ],
+  },
 ];
 
 const icons: Record<string, string> = {
@@ -25,10 +59,31 @@ const icons: Record<string, string> = {
   "shopping-bag": '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
   "book-open": '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
   calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
-  package: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/>',
-  tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
   users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  chevron: '<path d="m9 18 6-6-6-6"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  menu: '<path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/>',
+  "life-buoy": '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/>',
+  sparkles: '<path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><path d="m5.6 5.6 2.1 2.1"/><path d="m16.3 16.3 2.1 2.1"/><path d="m5.6 18.4 2.1-2.1"/><path d="m16.3 7.7 2.1-2.1"/>',
 };
+
+function isActive(item: NavItem): boolean {
+  if (section === item.id) return true;
+  if (item.children) return item.children.some((c) => c.id === section);
+  return false;
+}
+
+function isChildActive(child: { id: string }) {
+  return section === child.id;
+}
+
+const notifications = [
+  { tone: "warning", label: "3 commandes Mondial Relay à expédier", hint: "Prêt pour bordereau", href: "/admin/etiquettes" },
+  { tone: "info", label: "2 inscriptions club lecture en attente", hint: "Confirmer la jauge", href: "/admin/evenements" },
+  { tone: "danger", label: "Stock alerte : 2 livres sous le seuil", hint: "Mémoires d'Hadrien, Persepolis", href: "/admin/stocks" },
+];
 ---
 <!DOCTYPE html>
 <html lang="fr">
@@ -50,75 +105,236 @@ const icons: Record<string, string> = {
   <body class="bg-cream-50 text-cocoa-700 font-sans min-h-screen">
     <div class="flex min-h-screen">
       {/* Sidebar */}
-      <aside class="hidden lg:flex flex-col w-64 bg-cocoa-700 text-cream-100 sticky top-0 h-screen">
-        <div class="px-6 py-6 border-b border-cream-100/10">
-          <p class="font-display italic text-2xl text-cream-50 leading-none">Les Contes</p>
-          <p class="font-display italic text-2xl text-terracotta-200 leading-none">Infusés</p>
-          <p class="mt-2 font-smallcap tracking-windier text-[10px] text-cream-100/60 uppercase">Espace administration</p>
-        </div>
-        <nav class="flex-1 p-4 space-y-1">
-          {nav.map(item => (
+      <aside id="lci-admin-sidebar" class="hidden lg:flex flex-col w-64 bg-cocoa-700 text-cream-100 sticky top-0 h-screen">
+        <a href="/admin" class="flex items-center gap-3 px-6 py-5 border-b border-cream-100/10 hover:opacity-90 transition-opacity">
+          <span class="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-cream-100/40 bg-cocoa-800/40">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2E7C4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h12a4 4 0 0 1 0 8H4z"/>
+              <path d="M16 9h2a2 2 0 0 1 0 4h-2"/>
+              <path d="M5 14v5h10v-5"/>
+              <path d="M8 3c0 1.5 1 1.5 1 3"/>
+              <path d="M12 3c0 1.5 1 1.5 1 3"/>
+            </svg>
+          </span>
+          <div class="leading-tight">
+            <p class="font-display italic text-lg text-cream-50">Les Contes</p>
+            <p class="font-display italic text-lg text-terracotta-200 -mt-1">Infusés</p>
+          </div>
+        </a>
+        <p class="px-6 pt-4 pb-2 font-smallcap tracking-windier text-[10px] text-cream-100/40 uppercase">Espace administration</p>
+        <nav class="flex-1 overflow-y-auto p-3 space-y-0.5" aria-label="Navigation principale">
+          {nav.map(item => item.children ? (
+            <details class="group" open={isActive(item)}>
+              <summary class:list={[
+                "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm cursor-pointer list-none transition-colors",
+                isActive(item) ? "text-cream-50" : "text-cream-100/75 hover:text-cream-50 hover:bg-cocoa-600/40",
+              ]}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
+                <span class="flex-1">{item.label}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-90 opacity-60" set:html={icons.chevron} />
+              </summary>
+              <ul class="mt-0.5 ml-3 border-l border-cream-100/10 pl-3 space-y-0.5">
+                {item.children.map(c => (
+                  <li>
+                    <a
+                      href={c.href}
+                      class:list={[
+                        "block rounded-md px-3 py-1.5 text-[13px] transition-colors",
+                        isChildActive(c)
+                          ? "bg-terracotta-400/15 text-cream-50"
+                          : "text-cream-100/65 hover:text-cream-50 hover:bg-cocoa-600/40",
+                      ]}
+                    >{c.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ) : (
             <a
               href={item.href}
-              class={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${section === item.id ? 'bg-cocoa-600 text-cream-50' : 'text-cream-100/75 hover:bg-cocoa-600/60 hover:text-cream-50'}`}
+              class:list={[
+                "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors",
+                isActive(item)
+                  ? "bg-terracotta-400/15 text-cream-50 shadow-[inset_2px_0_0_0_#C77A4F]"
+                  : "text-cream-100/75 hover:bg-cocoa-600/40 hover:text-cream-50",
+              ]}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
               <span>{item.label}</span>
             </a>
           ))}
         </nav>
-        <div class="p-4 border-t border-cream-100/10">
-          <a href="/" class="flex items-center gap-2 text-xs text-cream-100/60 hover:text-cream-50 transition-colors">
+        <div class="border-t border-cream-100/10 p-3 space-y-0.5 text-xs">
+          <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-md text-cream-100/65 hover:text-cream-50 hover:bg-cocoa-600/40">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons["life-buoy"]} />
+            Centre d'aide
+          </a>
+          <a href="#" class="flex items-center justify-between gap-2 px-3 py-2 rounded-md text-cream-100/65 hover:text-cream-50 hover:bg-cocoa-600/40">
+            <span class="flex items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons.sparkles} />
+              Note de version
+            </span>
+            <span class="rounded-full bg-terracotta-400/30 px-1.5 py-px font-mono text-[10px] text-terracotta-200">0.4</span>
+          </a>
+          <a href="/" class="flex items-center gap-2 px-3 py-2 rounded-md text-cream-100/55 hover:text-cream-50 hover:bg-cocoa-600/40">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             Retour au site public
           </a>
         </div>
       </aside>
 
+      {/* Mobile drawer */}
+      <div id="lci-mobile-drawer" class="hidden fixed inset-0 z-40 lg:hidden">
+        <div data-close-drawer class="absolute inset-0 bg-cocoa-900/40"></div>
+        <aside class="relative w-72 max-w-[85%] h-full bg-cocoa-700 text-cream-100 overflow-y-auto p-4">
+          <p class="font-display italic text-xl text-cream-50 px-2 mb-4">Les Contes Infusés</p>
+          <nav class="space-y-0.5">
+            {nav.map(item => item.children ? (
+              <details class="group" open={isActive(item)}>
+                <summary class="flex items-center gap-3 px-3 py-2 rounded-md text-sm cursor-pointer list-none text-cream-100/80">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
+                  <span class="flex-1">{item.label}</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-90" set:html={icons.chevron} />
+                </summary>
+                <ul class="mt-0.5 ml-3 border-l border-cream-100/10 pl-3 space-y-0.5">
+                  {item.children.map(c => (
+                    <li><a href={c.href} class={`block rounded-md px-3 py-1.5 text-[13px] ${isChildActive(c) ? "bg-terracotta-400/15 text-cream-50" : "text-cream-100/65"}`}>{c.label}</a></li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <a href={item.href} class:list={["flex items-center gap-3 px-3 py-2 rounded-md text-sm", isActive(item) ? "bg-terracotta-400/15 text-cream-50" : "text-cream-100/80"]}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </aside>
+      </div>
+
       <div class="flex-1 flex flex-col min-w-0">
         {/* Topbar */}
-        <header class="sticky top-0 z-20 bg-paper/95 backdrop-blur border-b border-line">
+        <header class="sticky top-0 z-30 bg-paper/90 backdrop-blur border-b border-line">
           <div class="flex items-center justify-between gap-4 px-5 lg:px-8 h-16">
             <div class="flex items-center gap-3 min-w-0">
-              <button class="lg:hidden p-2 -ml-2" aria-label="Menu">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+              <button id="lci-burger" class="lg:hidden p-2 -ml-2 text-cocoa-700" aria-label="Ouvrir le menu">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" set:html={icons.menu} />
               </button>
-              <nav aria-label="Fil d'Ariane" class="hidden md:flex items-center gap-2 text-xs text-cocoa-400 truncate">
-                <a href="/admin" class="hover:text-terracotta-400">Admin</a>
-                {breadcrumb.map(b => (
+              <nav aria-label="Fil d'Ariane" class="hidden md:flex items-center gap-1.5 text-xs font-sans text-cocoa-400 truncate min-w-0">
+                <a href="/admin" class="hover:text-terracotta-400 transition-colors">Admin</a>
+                {autoCrumbs.map(b => (
                   <>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
-                    {b.href ? <a href={b.href} class="hover:text-terracotta-400">{b.label}</a> : <span class="text-cocoa-700 font-medium">{b.label}</span>}
+                    <span class="text-cocoa-200 select-none">›</span>
+                    {b.href ? <a href={b.href} class="hover:text-terracotta-400 transition-colors">{b.label}</a> : <span class="text-cocoa-700 font-medium truncate">{b.label}</span>}
                   </>
                 ))}
               </nav>
             </div>
-            <div class="flex items-center gap-3">
-              <div class="hidden sm:flex items-center gap-2 px-3 h-9 bg-cream-100 border border-line rounded-full w-64">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="search" placeholder="Rechercher commande, livre, client..." class="bg-transparent outline-none text-sm flex-1 placeholder:text-cocoa-400/70" />
-              </div>
-              <button class="relative p-2" aria-label="Notifications">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                <span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-terracotta-400"></span>
+            <div class="flex items-center gap-2">
+              <button
+                id="lci-cmdk-trigger"
+                class="hidden sm:flex items-center gap-2 pl-3 pr-2 h-9 bg-cream-100/80 border border-line rounded-full w-72 text-left text-cocoa-400 hover:border-terracotta-400/50 transition-colors group"
+                aria-label="Ouvrir la palette de commandes"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={icons.search} />
+                <span class="text-sm flex-1 group-hover:text-cocoa-700 transition-colors">Rechercher partout...</span>
+                <kbd class="hidden md:inline-flex items-center gap-0.5 rounded bg-cream-50 border border-line px-1.5 py-0.5 text-[10px] font-sans">⌘K</kbd>
               </button>
-              <div class="flex items-center gap-2 pl-3 border-l border-line">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-terracotta-400 to-cocoa-500 flex items-center justify-center text-cream-50 text-xs font-medium">PA</div>
-                <div class="hidden sm:block leading-tight">
-                  <p class="text-sm text-cocoa-700">Paul-Antoine</p>
-                  <p class="text-[10px] text-cocoa-400">Gérant</p>
+
+              <details class="relative" id="lci-notif">
+                <summary class="list-none cursor-pointer relative p-2 rounded-md hover:bg-cream-100 transition-colors" aria-label="Notifications">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={icons.bell} />
+                  <span class="absolute top-1.5 right-1.5 inline-flex items-center justify-center min-w-[15px] h-[15px] px-1 rounded-full bg-terracotta-400 text-[9px] font-bold text-cream-50 leading-none">{notifications.length}</span>
+                </summary>
+                <div class="absolute right-0 mt-2 w-80 bg-cream-50 border border-line rounded-xl shadow-[0_18px_40px_-15px_rgba(74,45,31,0.35)] overflow-hidden z-50">
+                  <div class="px-4 py-3 border-b border-line flex items-center justify-between">
+                    <p class="font-display italic text-base text-cocoa-700">Notifications</p>
+                    <span class="font-smallcap text-[10px] uppercase tracking-windier text-cocoa-400">{notifications.length} nouvelles</span>
+                  </div>
+                  <ul class="divide-y divide-line max-h-80 overflow-y-auto">
+                    {notifications.map(n => (
+                      <li>
+                        <a href={n.href} class="flex items-start gap-3 px-4 py-3 hover:bg-cream-100/60 transition-colors">
+                          <span class:list={[
+                            "mt-1.5 inline-block h-2 w-2 rounded-full shrink-0",
+                            n.tone === "warning" && "bg-terracotta-400",
+                            n.tone === "info" && "bg-plum-400",
+                            n.tone === "danger" && "bg-terracotta-600",
+                          ]}></span>
+                          <div class="flex-1 min-w-0">
+                            <p class="text-sm text-cocoa-700 font-sans leading-snug">{n.label}</p>
+                            <p class="text-[11px] text-cocoa-400 mt-0.5">{n.hint}</p>
+                          </div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <div class="px-4 py-2 border-t border-line bg-cream-100/40 text-center">
+                    <a href="#" class="text-xs text-terracotta-400 hover:text-cocoa-700 font-smallcap uppercase tracking-widest">Tout marquer lu</a>
+                  </div>
                 </div>
-              </div>
+              </details>
+
+              <details class="relative" id="lci-avatar">
+                <summary class="list-none cursor-pointer flex items-center gap-2 pl-2 pr-1 py-1 border-l border-line hover:bg-cream-100 rounded-r-md">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-terracotta-400 to-cocoa-500 flex items-center justify-center text-cream-50 text-xs font-medium">PA</div>
+                  <div class="hidden sm:block leading-tight text-left">
+                    <p class="text-sm text-cocoa-700">Paul-Antoine</p>
+                    <p class="text-[10px] text-cocoa-400">Gérant</p>
+                  </div>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-cocoa-400 hidden sm:block"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <div class="absolute right-0 mt-2 w-56 bg-cream-50 border border-line rounded-xl shadow-[0_18px_40px_-15px_rgba(74,45,31,0.35)] overflow-hidden z-50">
+                  <div class="px-4 py-3 border-b border-line">
+                    <p class="text-sm text-cocoa-700 font-medium">Paul-Antoine Battesti</p>
+                    <p class="text-[11px] text-cocoa-400">paul-antoine@lescontesinfuses.corsica</p>
+                  </div>
+                  <ul class="py-1 text-sm">
+                    <li><a href="#" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Mon profil</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Paramètres</a></li>
+                    <li><a href="#" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Préférences notifications</a></li>
+                  </ul>
+                  <div class="border-t border-line py-1">
+                    <a href="/" class="block px-4 py-2 text-sm text-terracotta-600 hover:bg-cream-100/60">Déconnexion</a>
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
         </header>
         <main class="flex-1 px-5 lg:px-8 py-8 max-w-[1400px] w-full">
           <slot />
         </main>
-        <footer class="px-5 lg:px-8 py-6 text-xs text-cocoa-400 border-t border-line bg-cream-100/40">
-          <p>Espace admin Les Contes Infusés, version mock 0.1. Connexion LibriSoft, à venir.</p>
+        <footer class="px-5 lg:px-8 py-6 text-xs text-cocoa-400 border-t border-line bg-cream-100/40 flex items-center justify-between flex-wrap gap-2">
+          <p>Espace admin Les Contes Infusés, version mock 0.4. Connexion LibriSoft, en cours de raccord.</p>
+          <p class="font-mono">build 2026.04.20</p>
         </footer>
       </div>
     </div>
+
+    <CommandPalette client:idle />
+    <ToastHost client:idle />
+
+    <script is:inline>
+      // Mobile drawer + outside-click for details menus
+      document.addEventListener("click", (e) => {
+        const t = e.target;
+        if (t.closest && t.closest("#lci-burger")) {
+          document.getElementById("lci-mobile-drawer")?.classList.toggle("hidden");
+          return;
+        }
+        if (t.dataset && t.dataset.closeDrawer !== undefined) {
+          document.getElementById("lci-mobile-drawer")?.classList.add("hidden");
+          return;
+        }
+        // close open <details> dropdowns when clicking outside
+        document.querySelectorAll("#lci-notif[open], #lci-avatar[open]").forEach((d) => {
+          if (!d.contains(t)) d.removeAttribute("open");
+        });
+      });
+      document.getElementById("lci-cmdk-trigger")?.addEventListener("click", () => {
+        window.dispatchEvent(new CustomEvent("lci:command-palette"));
+      });
+    </script>
   </body>
 </html>

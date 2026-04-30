@@ -1,0 +1,40 @@
+---
+interface Option { value: string; label: string; }
+interface Props {
+  name?: string;
+  id?: string;
+  required?: boolean;
+  options: Option[];
+  value?: string;
+  placeholder?: string;
+  class?: string;
+}
+const { name, id, required, options, value, placeholder = "Choisir...", class: className = "" } = Astro.props;
+---
+<div class={`relative lci-select-wrap ${className}`}>
+  <select
+    name={name}
+    id={id}
+    required={required}
+    class="lci-select appearance-none w-full bg-transparent border border-cocoa-200/60 rounded-md pl-3 pr-9 py-2.5 font-body text-[15px] text-cocoa-700 focus:outline-none focus:border-terracotta-400 transition-colors duration-200 cursor-pointer"
+  >
+    {placeholder && <option value="" disabled selected={!value}>{placeholder}</option>}
+    {options.map((o) => (
+      <option value={o.value} selected={value === o.value}>{o.label}</option>
+    ))}
+  </select>
+  <svg
+    aria-hidden="true"
+    class="lci-select-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-cocoa-300 transition-transform duration-200"
+    width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+  ><polyline points="6 9 12 15 18 9"/></svg>
+</div>
+
+<style>
+  .lci-select-wrap:focus-within .lci-select-chevron {
+    transform: translateY(-50%) rotate(180deg);
+    color: #C77A4F;
+  }
+  [data-field-state="error"] .lci-select { border-color: #9A4F2A; }
+  [data-field-state="success"] .lci-select { border-color: #5A6647; }
+</style>

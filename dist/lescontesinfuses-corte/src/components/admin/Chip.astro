@@ -1,0 +1,26 @@
+---
+interface Props {
+  tone?: "success" | "warning" | "danger" | "info" | "neutral";
+  dot?: boolean;
+  className?: string;
+}
+const { tone = "neutral", dot = false, className = "" } = Astro.props as Props;
+const styles: Record<string, string> = {
+  success: "bg-sage-200/70 text-sage-600 border-sage-400/40",
+  warning: "bg-terracotta-50 text-terracotta-600 border-terracotta-200",
+  danger: "bg-terracotta-50 text-terracotta-600 border-terracotta-400/60",
+  info: "bg-plum-200/50 text-plum-600 border-plum-200",
+  neutral: "bg-cream-100 text-cocoa-400 border-line",
+};
+const dotColor: Record<string, string> = {
+  success: "bg-sage-400",
+  warning: "bg-terracotta-400",
+  danger: "bg-terracotta-600",
+  info: "bg-plum-400",
+  neutral: "bg-cocoa-200",
+};
+---
+<span class:list={["inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-sans text-[11px] font-medium leading-none whitespace-nowrap", styles[tone], className]}>
+  {dot && <span class:list={["h-1.5 w-1.5 rounded-full", dotColor[tone]]}></span>}
+  <slot />
+</span>

@@ -1,0 +1,87 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { articles } from "@/data/journal";
+
+export async function getStaticPaths() {
+  return articles
+    .filter((a) => a.body && a.body.length)
+    .map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+
+const { article } = Astro.props as any;
+const fmt = (iso: string) => new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+const related = articles.filter((a) => a.slug !== article.slug).slice(0, 3);
+---
+<BaseLayout title={`${article.title}, Le Journal`} description={article.excerpt}>
+  <article>
+    {/* BREADCRUMB */}
+    <nav class="max-w-3xl mx-auto px-5 sm:px-8 pt-6 text-xs font-sans text-cocoa-400">
+      <a href="/journal" class="hover:text-terracotta-400">Journal</a>
+      <span class="mx-2">/</span>
+      <span class="font-smallcap tracking-widest uppercase">{article.category}</span>
+    </nav>
+
+    {/* HEADER */}
+    <header class="max-w-3xl mx-auto px-5 sm:px-8 py-10 text-center">
+      <p class="eyebrow"><span class="filet"></span><span class="mx-3">{article.category}</span><span class="filet"></span></p>
+      <h1 class="font-display italic text-4xl sm:text-6xl md:text-7xl text-cocoa-600 mt-5 leading-[1.05]">{article.title}</h1>
+      <div class="mt-7 flex items-center justify-center gap-3 text-xs font-sans text-cocoa-400">
+        <span>{article.author}</span>
+        <span class="w-1 h-1 rounded-full bg-line"></span>
+        <span class="font-smallcap tracking-widest uppercase">{fmt(article.date)}</span>
+        <span class="w-1 h-1 rounded-full bg-line"></span>
+        <span>{article.readingMinutes} min de lecture</span>
+      </div>
+    </header>
+
+    {/* HERO IMAGE */}
+    <div class="max-w-5xl mx-auto px-5 sm:px-8 mb-14">
+      <div class="aspect-[16/8] rounded-3xl shadow-page relative overflow-hidden" style={`background: linear-gradient(135deg, ${article.gradient[0]}, ${article.gradient[1]})`}>
+        <div class="absolute inset-6 border border-cream-50/20 rounded-2xl"></div>
+        <span class="absolute bottom-6 right-8 font-display italic text-cream-50/25 text-9xl leading-none select-none">«»</span>
+      </div>
+    </div>
+
+    {/* BODY */}
+    <div class="max-w-2xl mx-auto px-5 sm:px-8 pb-16">
+      {article.body.map((p: string, i: number) => {
+        const pq = i === 2 ? article.pullQuotes?.[0] : i === 5 ? article.pullQuotes?.[1] : null;
+        return (
+          <>
+            {i === 0 ? (
+              <p class="font-body text-[18px] leading-[1.85] text-cocoa-700 first-letter:font-display first-letter:italic first-letter:text-[6rem] first-letter:leading-[0.8] first-letter:float-left first-letter:mr-3 first-letter:mt-2 first-letter:text-terracotta-400">
+                {p}
+              </p>
+            ) : (
+              <p class="mt-6 font-body text-[18px] leading-[1.85] text-cocoa-700">{p}</p>
+            )}
+            {pq && (
+              <aside class="my-12 py-8 border-y border-line text-center">
+                <p class="font-display italic text-2xl sm:text-3xl text-terracotta-400 leading-relaxed">« {pq} »</p>
+              </aside>
+            )}
+          </>
+        );
+      })}
+    </div>
+
+    {/* RELATED */}
+    <section class="bg-cream-100/70 border-t border-line py-16">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        <p class="eyebrow">À lire aussi</p>
+        <h2 class="font-display italic text-3xl text-cocoa-600 mt-2 mb-8">Trois autres articles</h2>
+        <div class="grid sm:grid-cols-3 gap-6">
+          {related.map((r) => (
+            <a href={`/journal/${r.slug}`} class="group">
+              <div class="aspect-[16/10] rounded-xl shadow-book relative overflow-hidden" style={`background: linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})`}>
+                <span class="absolute top-3 left-3 chip bg-cream-50/95">{r.category}</span>
+              </div>
+              <h3 class="font-display italic text-xl text-cocoa-600 mt-3 group-hover:text-terracotta-400 transition">{r.title}</h3>
+              <p class="text-xs font-sans text-cocoa-400 mt-1">{r.author} · {fmt(r.date)}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

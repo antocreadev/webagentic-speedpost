@@ -1,0 +1,41 @@
+---
+interface Props {
+  name?: string;
+  id?: string;
+  required?: boolean;
+  checked?: boolean;
+  value?: string;
+  label?: string;
+  class?: string;
+}
+const { name, id, required, checked, value, label, class: className = "" } = Astro.props;
+---
+<label class={`lci-checkbox inline-flex items-start gap-2.5 cursor-pointer select-none ${className}`}>
+  <input
+    type="checkbox"
+    name={name}
+    id={id}
+    required={required}
+    checked={checked}
+    value={value}
+    class="peer sr-only"
+  />
+  <span class="lci-cbox relative shrink-0 mt-0.5 inline-flex items-center justify-center w-[18px] h-[18px] rounded-[4px] border border-cocoa-200 bg-cream-50 transition-colors duration-200 peer-checked:bg-terracotta-400 peer-checked:border-terracotta-400 peer-focus-visible:ring-2 peer-focus-visible:ring-terracotta-400/40">
+    <svg class="lci-check" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FBF6E9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </span>
+  {label && <span class="font-body text-sm text-cocoa-700 leading-snug">{label}</span>}
+  <slot />
+</label>
+
+<style>
+  .lci-check {
+    stroke-dasharray: 26;
+    stroke-dashoffset: 26;
+    transition: stroke-dashoffset .3s cubic-bezier(.2,.7,.2,1);
+  }
+  .peer:checked ~ .lci-cbox .lci-check {
+    stroke-dashoffset: 0;
+  }
+</style>

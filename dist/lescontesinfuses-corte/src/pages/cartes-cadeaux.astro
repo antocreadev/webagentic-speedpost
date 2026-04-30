@@ -1,0 +1,32 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import GiftCardPreview from "@/components/islands/GiftCardPreview.tsx";
+---
+<BaseLayout title="Cartes cadeaux, Les Contes Infusés" description="Offrez une carte cadeau dématérialisée ou imprimée, valable un an sur les livres, le café, les artisans et les événements.">
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-8 md:pt-16 pb-10 text-center">
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Cartes cadeaux</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl sm:text-7xl text-cocoa-600 mt-4">Offrir un peu de lenteur</h1>
+    <p class="font-body italic text-cocoa-400 max-w-2xl mx-auto mt-6 text-lg">
+      Valable un an sur tout le catalogue : livres, boissons, pâtisseries, artisans, événements. À recevoir par email instantanément ou en carte papier livrée chez vous.
+    </p>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-24">
+    <GiftCardPreview client:load />
+  </section>
+
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 pb-24">
+    <div class="grid sm:grid-cols-3 gap-6 text-center">
+      {[
+        { t: "Validité", d: "1 an à compter de l'achat. Utilisable en plusieurs fois." },
+        { t: "Sans frais", d: "Pas de frais cachés. Le montant offert est intégralement disponible." },
+        { t: "En boutique aussi", d: "La carte fonctionne en ligne et au comptoir, scan du code QR." },
+      ].map((b) => (
+        <div class="bg-cream-50 border border-line rounded-2xl p-6">
+          <p class="eyebrow">{b.t}</p>
+          <p class="font-body text-cocoa-700 mt-2 text-sm">{b.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

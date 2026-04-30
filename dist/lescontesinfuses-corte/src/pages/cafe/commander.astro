@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import QuickOrder from "@/components/islands/QuickOrder.tsx";
+import StickyCta from "@/components/mobile/StickyCta.astro";
 import { cafe } from "@/data/cafe";
 const items = cafe.filter((c) => c.category !== "the"); // Damman is single line, garde tout sinon
 ---
@@ -23,4 +24,5 @@ const items = cafe.filter((c) => c.category !== "the"); // Damman is single line
     </div>
     <QuickOrder items={cafe} client:load />
   </section>
+  <StickyCta label="Récupérer dans 15 min" href="/panier" />
 </BaseLayout>

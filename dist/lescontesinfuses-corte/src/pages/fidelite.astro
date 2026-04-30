@@ -1,0 +1,98 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Coffee, BookOpen, Gift, Bookmark, Mail } from "lucide-react";
+---
+<BaseLayout title="Programme fidélité, Les Contes Infusés" description="Un café offert tous les 10 cafés. Un bon de 5€ tous les 5 livres. Plus quelques attentions discrètes pour les habitués.">
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-8 md:pt-16 pb-12 text-center">
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Fidélité</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl sm:text-7xl text-cocoa-600 mt-4">Dix tasses, un livre offert.</h1>
+    <p class="font-body italic text-cocoa-400 max-w-2xl mx-auto mt-6 text-lg">
+      Un programme simple, sans abonnement, sans application. Un tampon par passage, et la suite vient toute seule.
+    </p>
+  </section>
+
+  {/* Two-column rules */}
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 py-12">
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="bg-cream-50 border border-line rounded-2xl p-10 shadow-book">
+        <div class="w-14 h-14 rounded-full bg-terracotta-400 text-cream-50 flex items-center justify-center mb-6"><Coffee size={26} /></div>
+        <p class="eyebrow">Côté café</p>
+        <h2 class="font-display italic text-3xl text-cocoa-600 mt-2">1 café = 1 tampon</h2>
+        <p class="font-body text-cocoa-700 mt-4">Toutes les boissons chaudes comptent : espresso, cappuccino, chocolat, chai, matcha. Les tisanes aussi. Au 10ème tampon, la boisson est offerte.</p>
+      </div>
+      <div class="bg-cream-50 border border-line rounded-2xl p-10 shadow-book">
+        <div class="w-14 h-14 rounded-full bg-sage-400 text-cream-50 flex items-center justify-center mb-6"><BookOpen size={26} /></div>
+        <p class="eyebrow">Côté livres</p>
+        <h2 class="font-display italic text-3xl text-cocoa-600 mt-2">1 livre = 1 tampon</h2>
+        <p class="font-body text-cocoa-700 mt-4">Chaque achat de livre donne un tampon, indépendamment du prix. Au 5ème tampon, un bon de 5€ valable sur l'ensemble du catalogue.</p>
+      </div>
+    </div>
+  </section>
+
+  {/* CARTE TAMPONS SVG */}
+  <section class="max-w-3xl mx-auto px-5 sm:px-8 py-12">
+    <div class="rounded-3xl bg-gradient-to-br from-cream-100 via-cream-50 to-terracotta-50 border border-line p-8 shadow-page">
+      <div class="flex items-baseline justify-between border-b border-line pb-4 mb-6">
+        <p class="font-smallcap tracking-windier uppercase text-xs text-cocoa-600">Carte fidélité café</p>
+        <p class="font-display italic text-cocoa-400">N° 0428</p>
+      </div>
+      <svg viewBox="0 0 600 200" class="w-full h-auto">
+        <defs>
+          <pattern id="tampon" patternUnits="userSpaceOnUse" width="60" height="60">
+            <circle cx="30" cy="30" r="24" fill="none" stroke="#C77A4F" strokeWidth="1.2" strokeDasharray="2 3" />
+          </pattern>
+        </defs>
+        {Array.from({ length: 10 }).map((_, i) => {
+          const cx = 60 + (i % 5) * 110;
+          const cy = i < 5 ? 60 : 150;
+          const stamped = i < 6;
+          return (
+            <g>
+              <circle cx={cx} cy={cy} r="36" fill="none" stroke="#D9C8A8" strokeWidth="1.5" strokeDasharray="3 3" />
+              {stamped && (
+                <g>
+                  <circle cx={cx} cy={cy} r="30" fill="#C77A4F" opacity="0.85" />
+                  {/* Cup icon */}
+                  <path d={`M${cx-12} ${cy-6} L${cx+10} ${cy-6} L${cx+8} ${cy+10} L${cx-10} ${cy+10} Z`} fill="none" stroke="#FBF6E9" strokeWidth="1.5" />
+                  <path d={`M${cx+10} ${cy-3} Q${cx+18} ${cy} ${cx+10} ${cy+6}`} fill="none" stroke="#FBF6E9" strokeWidth="1.5" />
+                  <text x={cx} y={cy+3} textAnchor="middle" fontFamily="Cormorant Garamond" fontStyle="italic" fontSize="12" fill="#FBF6E9">{i+1}</text>
+                </g>
+              )}
+              {!stamped && (
+                <text x={cx} y={cy+5} textAnchor="middle" fontFamily="Cormorant Garamond" fontSize="20" fill="#C9A37D">{i+1}</text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+      <div class="mt-6 flex items-center justify-between text-sm">
+        <p class="font-body italic text-cocoa-400">6 tasses sur 10. Plus que 4.</p>
+        <span class="chip border-terracotta-400 text-terracotta-600">Membre depuis février 2026</span>
+      </div>
+    </div>
+  </section>
+
+  {/* AVANTAGES ADDITIONNELS */}
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 py-16">
+    <p class="eyebrow text-center"><span class="filet"></span><span class="mx-3">Petites attentions</span><span class="filet"></span></p>
+    <h2 class="font-display italic text-4xl text-cocoa-600 text-center mt-4 mb-12">Quelques avantages discrets</h2>
+    <div class="grid sm:grid-cols-3 gap-6">
+      {[
+        { icon: Gift, title: "Avant-premières", text: "Inscriptions ouvertes 24h plus tôt aux soirées et dédicaces, dans la limite des places disponibles." },
+        { icon: Mail, title: "Newsletter privée", text: "Une lettre mensuelle dédiée aux membres : nouveautés en avant-première, coups de cœur de l'équipe." },
+        { icon: Bookmark, title: "Marque-page collector", text: "Un marque-page numéroté offert chaque année à Noël, illustré par un artiste corse différent." },
+      ].map(({ icon: Icon, title, text }) => (
+        <div class="bg-cream-100 rounded-2xl p-7 border border-line">
+          <Icon size={26} className="text-terracotta-400" />
+          <h3 class="font-display italic text-2xl text-cocoa-600 mt-4">{title}</h3>
+          <p class="font-body text-cocoa-700 text-sm mt-2 leading-relaxed">{text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="text-center pb-24">
+    <a href="/compte" class="btn-terracotta">Créer mon compte</a>
+    <p class="mt-4 text-sm text-cocoa-400 font-body italic">Inscription gratuite, désinscription en un clic.</p>
+  </section>
+</BaseLayout>

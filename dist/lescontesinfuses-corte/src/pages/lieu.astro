@@ -1,0 +1,70 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Teapot from "@/components/icons/Teapot.astro";
+import Quill from "@/components/icons/Quill.astro";
+import LaurelBranch from "@/components/icons/LaurelBranch.astro";
+import LaceMedallion from "@/components/icons/LaceMedallion.astro";
+import { Accessibility } from "lucide-react";
+
+const rooms = [
+  { name: "À l'extérieur", text: "Une vitrine en bois peinte ocre, deux tables sur le trottoir aux beaux jours, une ardoise calligraphiée à la craie chaque matin. La porte est ouverte dès qu'il fait plus de 16 degrés.", gradient: ["#E2B594", "#C77A4F"], icon: "laurel" },
+  { name: "L'entrée", text: "Un sas en pierre, un meuble bas couvert de coups de cœur du jour. À gauche, un panier avec quelques livres d'occasion à 2€. Tapis sisal pour les jours de pluie.", gradient: ["#C9A37D", "#7C4F31"], icon: "medallion" },
+  { name: "Le coin café", text: "Quatre tables rondes en chêne brut, banquette en velours côtelé sage, comptoir en zinc patiné, machine à espresso vissée comme un petit moteur de bateau. Six tabourets pour les habitués pressés.", gradient: ["#5C3820", "#3A2014"], icon: "teapot" },
+  { name: "La salle de lecture", text: "Cinq fauteuils dépareillés chinés à Bastia, deux lampes à abat-jour vert, bibliothèques jusqu'au plafond, échelle en bois pour atteindre les rayons hauts. C'est ici qu'on lit.", gradient: ["#8A9876", "#5A6647"], icon: "quill" },
+  { name: "Le carré jeunesse", text: "Un tapis en laine, deux poufs poire, des étagères basses à hauteur d'enfant, et un petit théâtre de marionnettes sorti pour les samedis matin contes. Jouets en bois, pas d'écrans.", gradient: ["#C7CDB7", "#8A9876"], icon: "medallion" },
+  { name: "Le coin événements", text: "Au fond, sous la verrière, 25 chaises pliantes alignées les vendredis soirs. Un micro discret, une lampe de pupitre. C'est petit, c'est exactement ce qu'il faut.", gradient: ["#8E6C90", "#5E456A"], icon: "laurel" },
+];
+---
+<BaseLayout title="Le lieu, visite virtuelle" description="Six pièces, six ambiances. Visite guidée des Contes Infusés, depuis le trottoir jusqu'au coin lecture.">
+  {/* HERO */}
+  <section class="relative">
+    <div class="aspect-[16/8] sm:aspect-[16/6] relative overflow-hidden bg-gradient-to-br from-cocoa-700 via-cocoa-500 to-terracotta-600">
+      <div class="absolute inset-0 scrim"></div>
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-cream-100 px-5">
+        <p class="eyebrow text-cream-100/60"><span class="filet"></span><span class="mx-3">Le lieu</span><span class="filet"></span></p>
+        <h1 class="font-display italic text-5xl sm:text-7xl md:text-8xl mt-4 leading-none">Six pièces à visiter</h1>
+        <p class="font-script text-3xl text-terracotta-200 mt-4">De la rue au coin lecture.</p>
+      </div>
+    </div>
+  </section>
+
+  {/* SECTIONS, asymmetric per room */}
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-16 space-y-24">
+    {rooms.map((r, i) => (
+      <section class={`grid md:grid-cols-12 gap-10 items-center ${i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`} data-reveal>
+        <div class={`md:col-span-7 ${i % 2 === 1 ? "md:pr-0 md:pl-8" : ""}`}>
+          <div class="aspect-[5/4] rounded-3xl shadow-page overflow-hidden relative" style={`background: linear-gradient(135deg, ${r.gradient[0]}, ${r.gradient[1]})`}>
+            <div class="absolute inset-5 border border-cream-50/20 rounded-2xl"></div>
+            <div class="absolute bottom-6 left-6 text-cream-100/85">
+              <p class="font-script text-3xl">N° {i+1}</p>
+            </div>
+            <div class="absolute top-6 right-6 opacity-60">
+              {r.icon === "teapot" && <Teapot size={70} />}
+              {r.icon === "quill" && <Quill size={70} />}
+              {r.icon === "medallion" && <LaceMedallion size={70} />}
+              {r.icon === "laurel" && <LaurelBranch size={120} />}
+            </div>
+          </div>
+        </div>
+        <div class="md:col-span-5">
+          <p class="eyebrow">Pièce {String(i+1).padStart(2,"0")}</p>
+          <h2 class="font-display italic text-4xl sm:text-5xl text-cocoa-600 mt-3">{r.name}</h2>
+          <span class="filet w-24 mt-4 block"></span>
+          <p class="mt-5 font-body text-lg leading-[1.85] text-cocoa-700">{r.text}</p>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  {/* ACCESSIBILITY */}
+  <section class="bg-sage-200/40 border-y border-sage-400/40 py-16">
+    <div class="max-w-4xl mx-auto px-5 sm:px-8 text-center">
+      <div class="w-16 h-16 mx-auto rounded-full bg-sage-400 text-cream-50 flex items-center justify-center mb-5"><Accessibility size={28} /></div>
+      <p class="eyebrow">Accessibilité</p>
+      <h2 class="font-display italic text-4xl text-cocoa-600 mt-2">Un lieu qui s'ouvre largement</h2>
+      <p class="font-body text-cocoa-700 mt-5 leading-relaxed max-w-2xl mx-auto">
+        Entrée plain-pied sans marche, allées de 1m20 minimum, toilettes accessibles équipées, comptoir bas pour fauteuil roulant, menu en gros caractères disponible sur demande, boucle magnétique pour les soirées contes. Si quelque chose nous échappe, dites-le, nous corrigerons.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

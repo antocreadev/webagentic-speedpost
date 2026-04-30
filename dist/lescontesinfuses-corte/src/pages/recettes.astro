@@ -1,0 +1,148 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { Coffee, Cake, Snowflake } from "lucide-react";
+
+const recettes = [
+  {
+    slug: "cappuccino-catte",
+    title: "Cappuccino Catte maison",
+    type: "café",
+    time: "12 min",
+    color: "#C77A4F",
+    desc: "Espresso et lait châtaigne mousseux, signature de la maison.",
+    ingredients: ["18 g de café fraîchement moulu", "220 ml de lait châtaigne", "1 cuillère de sirop châtaigne maison", "Pincée de cannelle"],
+    steps: ["Tirer un espresso double bien serré.", "Chauffer le lait châtaigne à 65°C, mousser à la main.", "Verser le sirop au fond de la tasse.", "Ajouter l'espresso, puis le lait moussé en latte art.", "Saupoudrer de cannelle, servir immédiatement."],
+  },
+  {
+    slug: "chai-catte",
+    title: "Chai Catte épicé",
+    type: "café",
+    time: "20 min",
+    color: "#7C4F31",
+    desc: "Mélange thé noir, lait châtaigne, cardamome, gingembre, cannelle.",
+    ingredients: ["1 cuillère de thé noir Assam", "300 ml de lait châtaigne", "5 cosses de cardamome", "1 cm de gingembre frais", "1 bâton de cannelle", "1 cuillère de miel"],
+    steps: ["Concasser cardamome et gingembre.", "Faire chauffer le lait avec les épices 10 min à feu doux.", "Ajouter le thé noir, infuser 4 min.", "Filtrer, sucrer au miel.", "Servir dans une tasse haute."],
+  },
+  {
+    slug: "matcha-vanille",
+    title: "Matcha latte vanille",
+    type: "café",
+    time: "8 min",
+    color: "#8A9876",
+    desc: "Matcha cérémonial fouetté, lait d'avoine, gousse de vanille.",
+    ingredients: ["1 cuillère de matcha cérémonial", "60 ml d'eau à 75°C", "200 ml de lait d'avoine", "1/4 de gousse de vanille", "1 cuillère de sirop d'érable"],
+    steps: ["Tamiser le matcha dans un bol.", "Ajouter l'eau et fouetter au chasen en M.", "Chauffer le lait avec la vanille fendue.", "Verser le matcha sur le lait dans une tasse.", "Sucrer au sirop, servir."],
+  },
+  {
+    slug: "cookies-fleur-de-sel",
+    title: "Cookies fleur de sel",
+    type: "dessert",
+    time: "35 min",
+    color: "#E2B594",
+    desc: "Cookies épais, cœur fondant, fleur de sel sur le dessus.",
+    ingredients: ["180 g farine T65", "100 g beurre demi-sel", "80 g sucre cassonade", "1 œuf", "120 g pépites chocolat noir 70%", "Fleur de sel de Guérande"],
+    steps: ["Mélanger beurre pommade et sucre.", "Ajouter l'œuf, puis la farine.", "Incorporer les pépites, former 8 boules.", "Reposer 30 min au frais.", "Cuire 12 min à 180°C, fleur de sel à la sortie."],
+  },
+  {
+    slug: "brownie-chataigne",
+    title: "Brownie corse châtaigne",
+    type: "dessert",
+    time: "50 min",
+    color: "#5C3820",
+    desc: "Chocolat noir, farine de châtaigne, éclats de noisettes corses.",
+    ingredients: ["200 g chocolat noir 70%", "150 g beurre", "3 œufs", "150 g sucre roux", "80 g farine de châtaigne", "60 g noisettes torréfiées"],
+    steps: ["Fondre chocolat et beurre au bain-marie.", "Battre œufs et sucre jusqu'à blanchir.", "Mélanger les deux, ajouter la farine.", "Verser dans un moule chemisé, parsemer de noisettes.", "Cuire 25 min à 175°C, attendre 1h avant de démouler."],
+  },
+  {
+    slug: "granite-cafe",
+    title: "Granité café",
+    type: "froid",
+    time: "4h (dont gel)",
+    color: "#3A2014",
+    desc: "Le café froid italien, gratté à la fourchette pour des cristaux légers.",
+    ingredients: ["500 ml de café fort refroidi", "60 g de sucre", "1 cuillère de cacao amer", "Crème montée pour servir"],
+    steps: ["Dissoudre sucre et cacao dans le café chaud.", "Refroidir, verser dans un plat large.", "Geler 1h, gratter à la fourchette.", "Répéter toutes les 30 min, 3 fois.", "Servir en verres avec crème montée."],
+  },
+];
+
+const filters = [
+  { id: "tous", label: "Tous", icon: null },
+  { id: "café", label: "Café", icon: Coffee },
+  { id: "dessert", label: "Dessert", icon: Cake },
+  { id: "froid", label: "Boisson froide", icon: Snowflake },
+];
+---
+<BaseLayout title="Recettes du café, carnet maison" description="Six recettes maison : cappuccino Catte, chai épicé, matcha latte, cookies, brownie, granité.">
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 pt-8 md:pt-16 pb-10 text-center">
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Carnet de recettes</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl sm:text-7xl text-cocoa-600 mt-4">Le carnet du comptoir</h1>
+    <p class="font-body italic text-cocoa-400 max-w-xl mx-auto mt-6 text-lg">
+      Six recettes copiées d'un vieux cahier qu'on garde sous le comptoir, à reproduire chez vous.
+    </p>
+  </section>
+
+  {/* FILTERS (visual chips, anchor) */}
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 py-6">
+    <div class="flex flex-wrap items-center gap-2 justify-center">
+      {filters.map((f) => (
+        <a href={`#${f.id}`} class="chip hover:border-terracotta-400 hover:text-terracotta-600 transition flex items-center gap-1.5">
+          {f.icon && <f.icon size={12} />}{f.label}
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {/* MOSAIC of carnet cards */}
+  <section id="tous" class="max-w-6xl mx-auto px-5 sm:px-8 py-12 pb-24">
+    <div class="grid md:grid-cols-2 gap-8">
+      {recettes.map((r, i) => (
+        <article id={r.type} class="bg-cream-50 border border-line rounded-2xl shadow-book overflow-hidden flex flex-col" data-reveal>
+          {/* Carnet header with stitches */}
+          <header class="px-7 pt-7 pb-5 border-b border-dashed border-line relative">
+            <div class="absolute top-0 left-0 right-0 h-2" style={`background-image: repeating-linear-gradient(90deg, ${r.color} 0 6px, transparent 6px 14px)`}></div>
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1">
+                <p class="eyebrow" style={`color:${r.color}`}>Recette N° {String(i+1).padStart(2,"0")}</p>
+                <h2 class="font-display italic text-3xl text-cocoa-600 mt-2 leading-tight">{r.title}</h2>
+                <p class="font-body text-cocoa-700 text-sm mt-2">{r.desc}</p>
+              </div>
+              {/* Mini SVG drink illustration */}
+              <svg viewBox="0 0 80 80" class="w-20 h-20 shrink-0">
+                <circle cx="40" cy="42" r="22" fill="none" stroke={r.color} strokeWidth="1.5" />
+                <path d="M22 42 L 22 56 Q 40 64 58 56 L 58 42 Z" fill={r.color} opacity="0.85" />
+                <path d="M58 44 Q 70 46 70 52 Q 70 58 58 56" fill="none" stroke={r.color} strokeWidth="1.5" />
+                <path d="M30 24 Q 32 18 28 14" fill="none" stroke={r.color} strokeWidth="1" opacity="0.6" />
+                <path d="M40 22 Q 42 16 38 12" fill="none" stroke={r.color} strokeWidth="1" opacity="0.6" />
+                <path d="M50 24 Q 52 18 48 14" fill="none" stroke={r.color} strokeWidth="1" opacity="0.6" />
+              </svg>
+            </div>
+            <p class="text-xs font-sans text-cocoa-400 mt-3"><span class="font-smallcap tracking-widest uppercase">Préparation</span> · {r.time}</p>
+          </header>
+
+          <div class="p-7 space-y-3 text-sm">
+            <details class="group" open={i === 0}>
+              <summary class="cursor-pointer font-smallcap tracking-widest uppercase text-xs text-cocoa-600 hover:text-terracotta-400 transition list-none flex items-center justify-between py-2 border-b border-line/60">
+                Ingrédients <span class="font-display italic text-base normal-case tracking-normal text-cocoa-400 group-open:rotate-90 transition">›</span>
+              </summary>
+              <ul class="mt-3 space-y-1.5 font-body text-cocoa-700">
+                {r.ingredients.map((it) => (
+                  <li class="flex gap-2"><span style={`color:${r.color}`}>·</span>{it}</li>
+                ))}
+              </ul>
+            </details>
+            <details class="group">
+              <summary class="cursor-pointer font-smallcap tracking-widest uppercase text-xs text-cocoa-600 hover:text-terracotta-400 transition list-none flex items-center justify-between py-2 border-b border-line/60">
+                Étapes <span class="font-display italic text-base normal-case tracking-normal text-cocoa-400 group-open:rotate-90 transition">›</span>
+              </summary>
+              <ol class="mt-3 space-y-2 font-body text-cocoa-700 list-none counter-reset:[step]">
+                {r.steps.map((s, j) => (
+                  <li class="flex gap-3"><span class="font-display italic text-xl leading-none w-5 shrink-0" style={`color:${r.color}`}>{j+1}</span><span>{s}</span></li>
+                ))}
+              </ol>
+            </details>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,104 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LaceMedallion from "@/components/icons/LaceMedallion.astro";
+import { Mail } from "lucide-react";
+
+const team = [
+  {
+    name: "Anna Filippi",
+    role: "Libraire, sélectionneuse",
+    gradient: ["#5C3820", "#3A2014"],
+    bio: "Vingt ans en librairie indépendante, à Lyon puis à Bastia. Anna choisit les livres avec une exigence douce, un goût marqué pour la littérature insulaire et une tendresse particulière pour la poésie.",
+    favorite: "Fureur et mystère, René Char",
+    quote: "Lire, c'est se faire de la place.",
+    initials: "AF",
+  },
+  {
+    name: "Saveriu Pieri",
+    role: "Barista",
+    gradient: ["#C77A4F", "#9A4F2A"],
+    bio: "Formé à Naples, passé par deux torréfacteurs ajacciens, Saveriu sait tirer un espresso à la seconde près. Il a inventé pour la maison le cappuccino Catte au lait châtaigne.",
+    favorite: "Cappuccino Catte 4€",
+    quote: "Un bon café, c'est d'abord du temps.",
+    initials: "SP",
+  },
+  {
+    name: "Letizia Mariotti",
+    role: "Apprentie pâtissière",
+    gradient: ["#E2B594", "#C77A4F"],
+    bio: "En apprentissage à l'école hôtelière de Bastia, Letizia signe la pâtisserie qui change chaque semaine. Son cookie châtaigne fleur de sel a déjà ses fidèles.",
+    favorite: "Brownie corse châtaigne",
+    quote: "Je cuisine ce que ma grand-mère m'a appris.",
+    initials: "LM",
+  },
+  {
+    name: "Paul-Antoine Casta",
+    role: "Animateur soirées contes",
+    gradient: ["#8E6C90", "#5E456A"],
+    bio: "Comédien et conteur, Paul-Antoine anime les vendredis soirs : lectures à voix haute, soirées contes pour adultes, ateliers d'écriture. Voix grave, tempo lent, rires assurés.",
+    favorite: "Le sermon sur la chute de Rome, Jérôme Ferrari",
+    quote: "Une histoire dite, c'est une braise gardée.",
+    initials: "PC",
+  },
+];
+---
+<BaseLayout title="L'équipe, Les Contes Infusés" description="Quatre personnes derrière la maison : Anna, Saveriu, Letizia, Paul-Antoine.">
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-8 md:pt-16 pb-10 text-center">
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">L'équipe</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl sm:text-7xl text-cocoa-600 mt-4">Quatre personnes, un comptoir</h1>
+    <p class="font-body italic text-cocoa-400 max-w-2xl mx-auto mt-6 text-lg">
+      C'est à peu près la bonne taille pour faire les choses bien. Chacun a sa table, son rayon, ses lectures.
+    </p>
+  </section>
+
+  {/* CARDS GRID, ID CARDS */}
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-12">
+    <div class="grid sm:grid-cols-2 gap-8">
+      {team.map((m, i) => (
+        <article class="bg-cream-50 rounded-2xl border border-line shadow-book overflow-hidden flex flex-col" data-reveal>
+          {/* Pseudo-photo gradient */}
+          <div class="relative aspect-[4/3]" style={`background: linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})`}>
+            <div class="absolute inset-4 border border-cream-50/25 rounded-xl"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <div class="w-24 h-24 rounded-full bg-cream-50/15 border border-cream-50/40 flex items-center justify-center font-display italic text-4xl text-cream-100">
+                {m.initials}
+              </div>
+              <p class="font-script text-2xl text-cream-100 mt-3 opacity-90">{m.name.split(" ")[0]}</p>
+            </div>
+            <span class="absolute top-4 left-4 bg-cream-50 text-cocoa-600 text-[10px] font-sans font-semibold px-2 py-1 rounded tracking-widest uppercase">N° {String(i+1).padStart(2,"0")}</span>
+          </div>
+
+          <div class="p-7 flex-1 flex flex-col">
+            <p class="font-smallcap tracking-windier text-xs text-terracotta-600 uppercase">{m.role}</p>
+            <h2 class="font-display italic text-3xl text-cocoa-600 mt-1">{m.name}</h2>
+            <span class="filet w-24 mt-3 block"></span>
+            <p class="font-body text-cocoa-700 mt-4 text-sm leading-relaxed flex-1">{m.bio}</p>
+            <div class="mt-5 pt-5 border-t border-line/70 grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <p class="eyebrow">Favori</p>
+                <p class="font-body italic text-cocoa-600 mt-1">{m.favorite}</p>
+              </div>
+              <div>
+                <p class="eyebrow">Devise</p>
+                <p class="font-script text-xl text-terracotta-400 leading-none mt-1">« {m.quote} »</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  {/* JOIN THE TEAM */}
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-20 text-center">
+    <div class="flex justify-center mb-6 opacity-80"><LaceMedallion size={100} /></div>
+    <p class="eyebrow">Nous rejoindre</p>
+    <h2 class="font-display italic text-4xl sm:text-5xl text-cocoa-600 mt-4">Une 5ème place au comptoir ?</h2>
+    <p class="font-body text-cocoa-700 max-w-xl mx-auto mt-6 text-lg leading-relaxed">
+      Nous n'embauchons pas en permanence, mais nous lisons toutes les candidatures spontanées. Si la maison vous parle, écrivez-nous une lettre, vraiment, racontez ce que vous aimez lire et ce que vous aimeriez faire ici.
+    </p>
+    <a href="mailto:contact@lescontesinfuses.corsica?subject=Candidature spontanée" class="btn-terracotta mt-10">
+      <Mail size={16} /> Écrire une lettre
+    </a>
+  </section>
+</BaseLayout>

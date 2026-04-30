@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+const { title, description, ctaLabel, ctaHref } = Astro.props as Props;
+---
+<div class="flex flex-col items-center justify-center rounded-xl border border-dashed border-line bg-cream-50 px-8 py-14 text-center">
+  <div class="relative mb-5 flex h-20 w-20 items-center justify-center">
+    <span class="absolute inset-0 rounded-full border border-line"></span>
+    <span class="absolute inset-1.5 rounded-full border border-dashed border-cocoa-200/60"></span>
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#7C4F31" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+    </svg>
+  </div>
+  <h3 class="font-display italic text-2xl text-cocoa-700">{title}</h3>
+  {description && <p class="mt-2 max-w-md font-sans text-sm text-cocoa-400">{description}</p>}
+  {ctaLabel && ctaHref && (
+    <a href={ctaHref} class="btn-terracotta mt-5">{ctaLabel}</a>
+  )}
+</div>

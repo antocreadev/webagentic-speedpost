@@ -1,0 +1,42 @@
+---
+interface Props {
+  label?: string;
+  hint?: string;
+  error?: string;
+  success?: string;
+  htmlFor?: string;
+  required?: boolean;
+  class?: string;
+}
+const { label, hint, error, success, htmlFor, required, class: className = "" } = Astro.props;
+const state = error ? "error" : success ? "success" : "idle";
+---
+<div class={`lci-field ${className}`} data-field-state={state}>
+  {label && (
+    <label
+      for={htmlFor}
+      class="block font-smallcap uppercase tracking-widest text-[11px] text-cocoa-400 mb-1.5"
+    >
+      <span>{label}</span>
+      {required && <span class="text-terracotta-400 ml-0.5" aria-hidden="true">*</span>}
+    </label>
+  )}
+  <div class="relative">
+    <slot />
+  </div>
+  {hint && !error && !success && (
+    <p class="mt-1.5 text-[13px] font-body italic text-cocoa-300 leading-snug">{hint}</p>
+  )}
+  {error && (
+    <p class="mt-1.5 flex items-center gap-1.5 text-[13px] font-sans text-terracotta-600 leading-snug">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>{error}</span>
+    </p>
+  )}
+  {success && !error && (
+    <p class="mt-1.5 flex items-center gap-1.5 text-[13px] font-sans text-sage-600 leading-snug">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>{success}</span>
+    </p>
+  )}
+</div>

@@ -1,69 +1,203 @@
 ---
 import LaceMedallion from "./icons/LaceMedallion.astro";
-import Newsletter from "./Newsletter.astro";
+import LaurelBranch from "./icons/LaurelBranch.astro";
+import Frise from "./icons/decor/Frise.astro";
+import Drapery from "./icons/decor/Drapery.astro";
+import Ornament1 from "./icons/decor/Ornament1.astro";
+import Stamp from "./icons/decor/Stamp.astro";
 ---
-<footer class="bg-cocoa-800 text-cream-100 mt-24">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-20 pb-10">
-    <div class="flex justify-center mb-10 opacity-90">
-      <LaceMedallion size={130} />
-    </div>
+<footer class="relative bg-cocoa-800 text-cream-100 mt-24">
+  {/* Drapery top */}
+  <div class="text-cream-100/30 -mt-px">
+    <Drapery height={48} />
+  </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 border-y border-cream-100/15 py-12">
+  {/* Newsletter promotional banner */}
+  <div class="relative bg-cocoa-900 border-y border-cream-100/10 overflow-hidden">
+    <div class="absolute -left-10 top-1/2 -translate-y-1/2 text-cream-100/10 hidden md:block">
+      <LaurelBranch size={260} />
+    </div>
+    <div class="absolute -right-10 top-1/2 -translate-y-1/2 text-cream-100/10 hidden md:block">
+      <LaurelBranch size={260} flip />
+    </div>
+    <div class="relative max-w-5xl mx-auto px-5 sm:px-8 py-14 text-center">
+      <div class="flex justify-center mb-4 text-cream-100/40">
+        <LaceMedallion size={120} />
+      </div>
+      <p class="font-smallcap tracking-windier text-xs text-terracotta-200 uppercase">Gazette saisonnière</p>
+      <h3 class="font-display italic text-3xl md:text-5xl text-cream-50 mt-3">Recevez la gazette de mai en avant-première</h3>
+      <p class="mt-3 font-body text-cream-100/70 max-w-xl mx-auto">Coups de cœur, agenda des dédicaces, recettes du café et nouveautés des artisans. Une fois par mois, jamais plus.</p>
+      <form
+        class="mt-7 max-w-xl mx-auto flex flex-col sm:flex-row gap-3"
+        onsubmit="event.preventDefault(); const b=this.querySelector('button'); b.textContent='Bien reçu, à très vite';"
+      >
+        <label class="sr-only" for="footer-nl">Votre email</label>
+        <input id="footer-nl" type="email" required placeholder="votre.email@exemple.fr"
+          class="flex-1 px-5 py-3 rounded-full bg-cocoa-700 border border-cream-100/15 text-cream-50 placeholder:text-cream-100/40 focus:outline-none focus:border-terracotta-400 font-sans text-sm" />
+        <button type="submit" class="btn-terracotta justify-center">S'inscrire</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-10">
+    {/* 5 columns */}
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10 pb-12 border-b border-cream-100/15">
       <div>
         <p class="font-smallcap tracking-windier text-xs text-cream-100/60">À propos</p>
         <ul class="mt-4 space-y-2 text-sm font-body">
-          <li><a href="/histoire" class="hover:text-terracotta-200 transition">Notre histoire</a></li>
+          <li><a href="/a-propos" class="hover:text-terracotta-200 transition">Notre histoire</a></li>
           <li><a href="/equipe" class="hover:text-terracotta-200 transition">L'équipe</a></li>
-          <li><a href="/presse" class="hover:text-terracotta-200 transition">Presse</a></li>
-          <li><a href="/recrutement" class="hover:text-terracotta-200 transition">Nous rejoindre</a></li>
+          <li><a href="/partenaires" class="hover:text-terracotta-200 transition">Partenaires</a></li>
+          <li><a href="/faq" class="hover:text-terracotta-200 transition">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Découvrir</p>
+        <ul class="mt-4 space-y-2 text-sm font-body">
+          <li><a href="/journal" class="hover:text-terracotta-200 transition">Journal</a></li>
+          <li><a href="/ateliers" class="hover:text-terracotta-200 transition">Ateliers</a></li>
+          <li><a href="/recettes" class="hover:text-terracotta-200 transition">Recettes</a></li>
+          <li><a href="/lieu" class="hover:text-terracotta-200 transition">Le lieu</a></li>
+          <li><a href="/fidelite" class="hover:text-terracotta-200 transition">Fidélité</a></li>
         </ul>
       </div>
       <div>
         <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Boutique</p>
         <ul class="mt-4 space-y-2 text-sm font-body">
-          <li><a href="/livres" class="hover:text-terracotta-200 transition">Catalogue</a></li>
-          <li><a href="/artisans" class="hover:text-terracotta-200 transition">Artisans corses</a></li>
+          <li><a href="/livres" class="hover:text-terracotta-200 transition">Livres</a></li>
           <li><a href="/cafe" class="hover:text-terracotta-200 transition">Carte café</a></li>
+          <li><a href="/artisans" class="hover:text-terracotta-200 transition">Artisans corses</a></li>
           <li><a href="/cartes-cadeaux" class="hover:text-terracotta-200 transition">Cartes cadeaux</a></li>
         </ul>
       </div>
       <div>
         <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Visiter</p>
         <ul class="mt-4 space-y-2 text-sm font-body">
-          <li>Place Paoli</li>
-          <li>20250 Corte</li>
-          <li class="pt-1 text-cream-100/70">Mardi à samedi</li>
-          <li class="text-cream-100/70">10h-13h, 14h-19h</li>
+          <li>Place Paoli, 20250 Corte</li>
+          <li class="text-cream-100/70">Mardi à samedi</li>
+          <li class="text-cream-100/70">10h, 13h et 14h, 19h</li>
+          <li><a href="/acces" class="hover:text-terracotta-200 transition">Comment venir</a></li>
+          <li><a href="/accessibilite" class="hover:text-terracotta-200 transition">Accessibilité</a></li>
         </ul>
       </div>
       <div>
-        <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Légal</p>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60">Compte</p>
         <ul class="mt-4 space-y-2 text-sm font-body">
-          <li><a href="/mentions-legales" class="hover:text-terracotta-200 transition">Mentions légales</a></li>
-          <li><a href="/cgv" class="hover:text-terracotta-200 transition">CGV</a></li>
-          <li><a href="/rgpd" class="hover:text-terracotta-200 transition">RGPD</a></li>
-          <li><a href="/cookies" class="hover:text-terracotta-200 transition">Cookies</a></li>
+          <li><a href="/compte" class="hover:text-terracotta-200 transition">Mon compte</a></li>
+          <li><a href="/compte/commandes" class="hover:text-terracotta-200 transition">Mes commandes</a></li>
+          <li><a href="/compte/donnees" class="hover:text-terracotta-200 transition">Données (RGPD)</a></li>
+          <li><a href="/compte/preferences" class="hover:text-terracotta-200 transition">Préférences</a></li>
+          <li><a href="/deconnexion" class="hover:text-terracotta-200 transition">Déconnexion</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="py-12 border-b border-cream-100/15">
-      <Newsletter compact />
+    {/* Social + Stamp */}
+    <div class="py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8 border-b border-cream-100/15">
+      <div>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60 mb-4">Nous suivre</p>
+        <div class="flex items-center gap-2">
+          <a href="https://instagram.com" aria-label="Instagram" class="lci-social relative p-3 rounded-full border border-cream-100/15 hover:text-terracotta-200 hover:border-terracotta-200 transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>
+            <span class="lci-social-decor"><Ornament1 size={70} /></span>
+          </a>
+          <a href="https://facebook.com" aria-label="Facebook" class="lci-social relative p-3 rounded-full border border-cream-100/15 hover:text-terracotta-200 hover:border-terracotta-200 transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            <span class="lci-social-decor"><Ornament1 size={70} /></span>
+          </a>
+          <a href="https://babelio.com" aria-label="Babelio" class="lci-social relative p-3 rounded-full border border-cream-100/15 hover:text-terracotta-200 hover:border-terracotta-200 transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span class="lci-social-decor"><Ornament1 size={70} /></span>
+          </a>
+        </div>
+      </div>
+      <div class="text-cream-100/50">
+        <Stamp size={110} />
+      </div>
+      <div>
+        <p class="font-smallcap tracking-windier text-xs text-cream-100/60 mb-3">Paiement & livraison</p>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-cream-100/15 text-xs font-sans text-cream-100/80">
+            <svg width="22" height="14" viewBox="0 0 32 20" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="31" height="19" rx="2"/><path d="M0 6h32" stroke-width="2"/><rect x="3" y="11" width="6" height="3" fill="currentColor" stroke="none"/></svg>
+            CB
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-cream-100/15 text-xs font-sans text-cream-100/80">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 11V7a5 5 0 0 1 10 0v4"/><path d="M7 11h10l-1 9H8z"/></svg>
+            PayPal
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-cream-100/15 text-xs font-sans text-cream-100/80">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 18a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/><path d="M15 18a2 2 0 1 0 4 0 2 2 0 0 0-4 0z"/><path d="M3 6h12v12"/><path d="M15 9h4l3 3v6h-3"/></svg>
+            Mondial Relay
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-cream-100/15 text-xs font-sans text-cream-100/80">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10v10h18V10"/><path d="m2 10 10-7 10 7"/></svg>
+            Domicile
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-cream-100/15 text-xs font-sans text-cream-100/80">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/></svg>
+            Click & Collect
+          </span>
+        </div>
+      </div>
     </div>
 
-    <div class="pt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-sans text-cream-100/60">
+    {/* Decorative frieze */}
+    <div class="py-8 text-cream-100/30">
+      <Frise width="100%" height={20} repeat={6} />
+    </div>
+
+    {/* Copyright + lang switcher */}
+    <div class="pt-2 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-sans text-cream-100/60">
       <p>© 2026 Les Contes Infusés, Corte. Tous droits réservés.</p>
-      <p>
+      <div class="flex items-center gap-4">
+        <a href="/mentions-legales" class="hover:text-terracotta-200">Mentions</a>
+        <a href="/cgv" class="hover:text-terracotta-200">CGV</a>
+        <a href="/rgpd" class="hover:text-terracotta-200">RGPD</a>
+        <a href="/cookies" class="hover:text-terracotta-200">Cookies</a>
         <a href="mailto:contact@lescontesinfuses.corsica" class="hover:text-terracotta-200">contact@lescontesinfuses.corsica</a>
-      </p>
-      <div class="flex gap-3">
-        <a href="#" aria-label="Instagram" class="p-2 hover:text-terracotta-200">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>
-        </a>
-        <a href="#" aria-label="Facebook" class="p-2 hover:text-terracotta-200">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        </a>
+      </div>
+      <div class="inline-flex rounded-full border border-cream-100/15 overflow-hidden font-smallcap tracking-widest text-[10px]" role="group" aria-label="Langue">
+        <button class="px-3 py-1.5 bg-cream-100/10 text-cream-50">FR</button>
+        <button class="px-3 py-1.5 hover:bg-cream-100/5">CO</button>
+        <button class="px-3 py-1.5 hover:bg-cream-100/5">EN</button>
       </div>
     </div>
   </div>
+
+  {/* Back to top button */}
+  <button
+    type="button"
+    onclick="window.scrollTo({top:0, behavior:'smooth'})"
+    aria-label="Revenir en haut de la page"
+    class="lci-backtop fixed bottom-6 left-6 z-30 w-12 h-12 rounded-full bg-paper border border-line text-cocoa-600 shadow-page hover:border-terracotta-400 hover:text-terracotta-400 transition-all flex items-center justify-center"
+  >
+    <span class="absolute inset-0 -m-2 text-cocoa-200 opacity-50 pointer-events-none flex items-center justify-center">
+      <LaurelBranch size={70} />
+    </span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="relative"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
 </footer>
+
+<style>
+  .lci-social { color: #FBF6E9; isolation: isolate; }
+  .lci-social-decor {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(199, 122, 79, 0.5);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity .3s ease, transform .3s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .lci-social:hover .lci-social-decor {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+  @media print {
+    .lci-backtop { display: none !important; }
+  }
+</style>

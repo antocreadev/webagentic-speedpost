@@ -1,0 +1,27 @@
+---
+interface Props { query?: string; }
+const { query } = Astro.props;
+---
+<div class="max-w-xl mx-auto text-center py-12">
+  <div class="flex justify-center mb-6">
+    <span class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-cream-100 border border-line text-cocoa-300">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </span>
+  </div>
+  <p class="eyebrow"><span class="filet"></span><span class="mx-3">Aucun résultat</span><span class="filet"></span></p>
+  <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600 mt-3">
+    {query ? `Rien sous "${query}"` : "Rien à montrer pour l'instant"}
+  </h2>
+  <p class="font-body text-cocoa-400 mt-4">
+    Essayez un autre mot, un nom d'auteur, une thématique. Ou laissez-nous vous guider.
+  </p>
+  <div class="mt-6 flex flex-wrap justify-center gap-2">
+    <a href="/livres" class="chip hover:border-terracotta-400 hover:text-terracotta-400 transition-colors">Livres</a>
+    <a href="/evenements" class="chip hover:border-terracotta-400 hover:text-terracotta-400 transition-colors">Événements</a>
+    <a href="/artisans" class="chip hover:border-terracotta-400 hover:text-terracotta-400 transition-colors">Artisans</a>
+    <a href="/cafe" class="chip hover:border-terracotta-400 hover:text-terracotta-400 transition-colors">Carte café</a>
+  </div>
+</div>

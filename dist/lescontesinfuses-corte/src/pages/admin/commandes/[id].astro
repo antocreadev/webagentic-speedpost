@@ -1,6 +1,8 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
 import LabelModal from "@/components/islands/LabelModal.tsx";
+import Card from "@/components/admin/Card.astro";
+import Chip from "@/components/admin/Chip.astro";
 import { adminOrders } from "@/data/admin";
 import { formatPrice, formatDate } from "@/lib/format";
 
@@ -17,18 +19,18 @@ const delivery = order.delivery === "click" ? 0 : order.delivery === "domicile" 
 const tva = +(subtotal * 0.055 + delivery * 0.20).toFixed(2);
 const total = subtotal + delivery;
 
-const timeline = [
-  { date: "2026-04-20T09:12", label: "Commande passée par le client", actor: "Pierre Antonelli" },
-  { date: "2026-04-20T09:14", label: "Paiement validé (Stripe, CB)", actor: "Système" },
-  { date: "2026-04-20T09:30", label: "Email de confirmation envoyé", actor: "Système" },
-  { date: "2026-04-20T10:05", label: "Commande prise en charge en boutique", actor: "Paul-Antoine" },
+const activity = [
+  { date: "20/04 09:12", label: "Commande passée par le client", actor: "Pierre Antonelli", tone: "info" },
+  { date: "20/04 09:14", label: "Paiement validé (Stripe, CB ****1234)", actor: "Système", tone: "success" },
+  { date: "20/04 09:30", label: "Email de confirmation envoyé", actor: "Système", tone: "info" },
+  { date: "20/04 10:05", label: "Prise en charge en boutique", actor: "Paul-Antoine", tone: "warning" },
 ];
 
-function statusChip(s: string) {
-  if (s === "À traiter") return "bg-terracotta-50 text-terracotta-600 border-terracotta-200";
-  if (s === "Préparée") return "bg-cream-200 text-cocoa-600 border-line";
-  if (s === "Expédiée") return "bg-plum-200/60 text-plum-600 border-plum-200";
-  return "bg-sage-200 text-sage-600 border-sage-400/40";
+function statusTone(s: string): "success" | "warning" | "info" | "neutral" {
+  if (s === "À traiter") return "warning";
+  if (s === "Préparée") return "neutral";
+  if (s === "Expédiée") return "info";
+  return "success";
 }
 
 const tracking = order.tracking ?? "MR-2026-0099501";
@@ -37,17 +39,22 @@ const tracking = order.tracking ?? "MR-2026-0099501";
   <header class="flex flex-wrap items-end justify-between gap-4 mb-7">
     <div>
       <p class="eyebrow !text-[10px]">Commande</p>
-      <h1 class="font-display italic text-3xl md:text-4xl text-cocoa-700 mt-1 font-mono not-italic">{order.id}</h1>
+      <h1 class="font-mono not-italic text-2xl md:text-3xl text-cocoa-700 mt-1 font-medium">{order.id}</h1>
       <p class="text-sm text-cocoa-400 font-sans mt-1">Passée le {formatDate(order.date, "long")}</p>
     </div>
-    <span class={`chip border !text-sm !py-1.5 !px-3 ${statusChip(order.status)}`}>{order.status}</span>
+    <div class="flex items-center gap-2">
+      <Chip tone={statusTone(order.status)} dot>{order.status}</Chip>
+      <button type="button" class="btn-ghost !py-2 !px-4 !text-[11px]">Imprimer la facture</button>
+    </div>
   </header>
 
-  <div class="grid lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-6">
-      <section class="bg-cream-50 border border-line rounded-xl p-6">
-        <h2 class="font-display italic text-xl text-cocoa-700 mb-4">Articles</h2>
-        <table class="w-full text-sm font-sans">
+  <div class="grid lg:grid-cols-[1fr_320px] gap-6">
+    <div class="space-y-6 min-w-0">
+      <Card>
+        <div slot="header">
+          <h2 class="font-display italic text-xl text-cocoa-700">Articles</h2>
+        </div>
+        <table class="w-full text-sm font-sans -mt-3">
           <thead>
             <tr class="text-left text-[10px] uppercase tracking-widest text-cocoa-400 border-b border-line">
               <th class="py-2 pr-4 font-medium">Article</th>
@@ -73,50 +80,84 @@ const tracking = order.tracking ?? "MR-2026-0099501";
           <div class="flex justify-between text-cocoa-400 text-xs"><span>Dont TVA</span><span class="tabular-nums">{formatPrice(tva)}</span></div>
           <div class="flex justify-between font-display italic text-xl text-cocoa-700 pt-2 border-t border-dashed border-line"><span>Total TTC</span><span class="tabular-nums">{formatPrice(total)}</span></div>
         </div>
-      </section>
+      </Card>
 
-      <section class="bg-cream-50 border border-line rounded-xl p-6">
-        <h2 class="font-display italic text-xl text-cocoa-700 mb-4">Historique</h2>
-        <ol class="space-y-4 relative">
-          <span class="absolute left-1.5 top-2 bottom-2 w-px bg-line"></span>
-          {timeline.map(t => (
-            <li class="flex gap-4 pl-6 relative">
-              <span class="absolute left-0 top-1.5 w-3 h-3 rounded-full bg-terracotta-400 border-2 border-cream-50"></span>
-              <div class="flex-1">
-                <p class="text-sm text-cocoa-700 font-sans">{t.label}</p>
-                <p class="text-[11px] text-cocoa-400 mt-0.5 font-sans tabular-nums">{t.date} · {t.actor}</p>
-              </div>
+      <Card>
+        <div slot="header" class="flex items-center justify-between">
+          <h2 class="font-display italic text-xl text-cocoa-700">Client</h2>
+          <a href="/admin/clients" class="text-xs text-terracotta-400 hover:text-cocoa-700 font-smallcap uppercase tracking-widest">Fiche complète</a>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <p class="font-medium text-cocoa-700">{order.customer}</p>
+            <a href={`mailto:${order.email}`} class="text-sm text-cocoa-400 hover:text-terracotta-400">{order.email}</a>
+            <p class="eyebrow !text-[10px] mt-4">Adresse de livraison</p>
+            <p class="text-sm text-cocoa-700 mt-1.5 leading-snug">
+              {order.address.street}<br />
+              {order.address.zip} {order.address.city}
+            </p>
+          </div>
+          <div>
+            <p class="eyebrow !text-[10px]">Expédition</p>
+            <p class="text-sm text-cocoa-700 mt-1.5">{order.delivery === "click" ? "Click & Collect, à retirer en boutique" : order.delivery === "domicile" ? "Domicile, Colissimo" : "Mondial Relay"}</p>
+            <label class="block mt-3 text-[10px] uppercase tracking-widest text-cocoa-400 font-sans">N° de suivi</label>
+            <input type="text" value={tracking} class="mt-1 w-full px-3 py-2 bg-cream-100 border border-line rounded-md text-sm font-mono focus:outline-none focus:border-terracotta-400" />
+          </div>
+        </div>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <LabelModal client:idle orderId={order.id} tracking={tracking} customer={order.customer} street={order.address.street} zip={order.address.zip} city={order.address.city} />
+          <button type="button" class="btn-ghost !py-2 !px-4 !text-[11px]">Marquer préparée</button>
+          <button type="button" class="btn-ghost !py-2 !px-4 !text-[11px]">Marquer expédiée</button>
+          <button type="button" class="btn-ghost !py-2 !px-4 !text-[11px]">Renvoyer email confirmation</button>
+        </div>
+      </Card>
+    </div>
+
+    <aside class="lg:sticky lg:top-20 self-start space-y-5">
+      <Card padded={false}>
+        <div slot="header" class="flex items-center justify-between">
+          <h2 class="font-display italic text-xl text-cocoa-700">Fil d'activité</h2>
+          <Chip tone="info">{activity.length}</Chip>
+        </div>
+        <ol class="relative px-6 py-5">
+          <span class="absolute left-[26px] top-7 bottom-7 w-px bg-line" aria-hidden="true"></span>
+          {activity.map(a => (
+            <li class="relative pl-8 pb-4 last:pb-0">
+              <span class:list={[
+                "absolute left-0 top-1 inline-flex h-4 w-4 items-center justify-center rounded-full border-2 border-cream-50",
+                a.tone === "success" && "bg-sage-400",
+                a.tone === "warning" && "bg-terracotta-400",
+                a.tone === "info" && "bg-plum-400",
+                a.tone === "neutral" && "bg-cocoa-200",
+              ]}></span>
+              <p class="text-sm text-cocoa-700 font-sans leading-snug">{a.label}</p>
+              <p class="text-[11px] text-cocoa-400 mt-0.5 font-sans tabular-nums">{a.date} · {a.actor}</p>
             </li>
           ))}
         </ol>
-      </section>
-    </div>
-
-    <aside class="space-y-6">
-      <section class="bg-cream-50 border border-line rounded-xl p-6">
-        <h2 class="font-display italic text-xl text-cocoa-700 mb-3">Client</h2>
-        <p class="font-medium text-cocoa-700 text-sm">{order.customer}</p>
-        <p class="text-sm text-cocoa-400">{order.email}</p>
-        <p class="eyebrow !text-[10px] mt-5">Adresse de livraison</p>
-        <p class="text-sm text-cocoa-700 mt-2 leading-snug">
-          {order.address.street}<br />
-          {order.address.zip} {order.address.city}
-        </p>
-      </section>
-
-      <section class="bg-cream-50 border border-line rounded-xl p-6">
-        <h2 class="font-display italic text-xl text-cocoa-700 mb-3">Expédition</h2>
-        <p class="text-sm text-cocoa-700">Mode : {order.delivery === "click" ? "Click & Collect" : order.delivery === "domicile" ? "Domicile (Colissimo)" : "Mondial Relay"}</p>
-        <label class="block mt-4 text-[10px] uppercase tracking-widest text-cocoa-400 font-sans">N° de suivi</label>
-        <input type="text" value={tracking} class="mt-1 w-full px-3 py-2 bg-cream-100 border border-line rounded-md text-sm font-mono focus:outline-none focus:border-terracotta-400" />
-        <div class="mt-5">
-          <LabelModal client:idle orderId={order.id} tracking={tracking} customer={order.customer} street={order.address.street} zip={order.address.zip} city={order.address.city} />
+        <div slot="footer">
+          <form id="lci-note-form" class="flex flex-col gap-2">
+            <label class="font-smallcap text-[10px] uppercase tracking-windier text-cocoa-400">Note interne</label>
+            <textarea
+              name="note"
+              rows="2"
+              placeholder="Ajouter une note pour l'équipe..."
+              class="w-full px-3 py-2 bg-cream-50 border border-line rounded-md text-sm font-sans focus:outline-none focus:border-terracotta-400 resize-none"
+            ></textarea>
+            <button type="submit" class="self-end btn-ghost !py-1.5 !px-3 !text-[10px]">Ajouter au fil</button>
+          </form>
         </div>
-        <div class="grid grid-cols-2 gap-2 mt-3">
-          <button type="button" class="btn-ghost !text-[11px] !py-2 !px-3 justify-center">Marquer préparée</button>
-          <button type="button" class="btn-ghost !text-[11px] !py-2 !px-3 justify-center">Marquer expédiée</button>
-        </div>
-      </section>
+      </Card>
     </aside>
   </div>
+
+  <script is:inline>
+    document.getElementById("lci-note-form")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const t = e.target.note.value.trim();
+      if (!t) return;
+      window.__lciToast?.success("Note ajoutée au fil d'activité", t.slice(0, 60));
+      e.target.reset();
+    });
+  </script>
 </AdminLayout>

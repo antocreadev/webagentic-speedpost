@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AlertCircle, X } from "lucide-react";
+import { toast } from "@/lib/toast";
 
 export default function DeleteAccountModal() {
   const [open, setOpen] = useState(false);
@@ -60,7 +61,7 @@ export default function DeleteAccountModal() {
                   <button
                     type="button"
                     disabled={text !== "SUPPRIMER"}
-                    onClick={() => setDone(true)}
+                    onClick={() => { setDone(true); toast.error("Action irréversible.", "Votre demande de suppression est enregistrée."); }}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-600 text-cream-50 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-cocoa-700 transition-colors text-xs uppercase tracking-widest font-smallcap"
                   >
                     Confirmer la suppression

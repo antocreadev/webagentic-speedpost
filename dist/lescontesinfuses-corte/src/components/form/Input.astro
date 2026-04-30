@@ -1,0 +1,54 @@
+---
+interface Props {
+  type?: string;
+  name?: string;
+  id?: string;
+  placeholder?: string;
+  required?: boolean;
+  value?: string;
+  pattern?: string;
+  autocomplete?: string;
+  inputmode?: string;
+  class?: string;
+}
+const {
+  type = "text",
+  name,
+  id,
+  placeholder,
+  required = false,
+  value,
+  pattern,
+  autocomplete,
+  inputmode,
+  class: className = "",
+} = Astro.props;
+---
+<input
+  type={type}
+  name={name}
+  id={id}
+  placeholder={placeholder}
+  required={required}
+  value={value}
+  pattern={pattern}
+  autocomplete={autocomplete}
+  inputmode={inputmode as any}
+  class={`lci-input w-full bg-transparent border-0 border-b border-cocoa-200/70 px-0.5 py-2 font-body text-[15px] text-cocoa-700 placeholder:text-cocoa-200 placeholder:italic focus:outline-none focus:border-terracotta-400 transition-colors duration-200 ${className}`}
+/>
+
+<style>
+  .lci-input {
+    background-image: linear-gradient(to right, #C77A4F, #C77A4F);
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    transition: background-size 220ms cubic-bezier(.2,.7,.2,1), border-color 200ms ease;
+  }
+  .lci-input:focus {
+    background-size: 100% 1px;
+    border-bottom-color: transparent;
+  }
+  [data-field-state="error"] .lci-input { border-bottom-color: #9A4F2A; }
+  [data-field-state="success"] .lci-input { border-bottom-color: #5A6647; }
+</style>

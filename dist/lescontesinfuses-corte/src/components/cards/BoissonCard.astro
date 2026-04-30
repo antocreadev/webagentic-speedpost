@@ -1,8 +1,10 @@
 ---
 import { formatPrice } from "@/lib/format";
 import type { CafeItem } from "@/data/cafe";
-interface Props { item: CafeItem; }
-const { item } = Astro.props;
+
+type Variant = "default" | "mini" | "feature";
+interface Props { item: CafeItem; variant?: Variant; hot?: boolean; loading?: boolean; }
+const { item, variant = "default", hot, loading = false } = Astro.props;
 
 const palette: Record<string, [string, string]> = {
   espresso: ["#3A2014", "#4A2D1F"],
@@ -24,28 +26,170 @@ const palette: Record<string, [string, string]> = {
   eau: ["#C7CDB7", "#8A9876"],
 };
 const [c1, c2] = palette[item.imageKey] ?? ["#C9A37D", "#7C4F31"];
+
+// Auto-detect "hot" if not explicitly set
+const isHot = hot ?? (item.category === "cafe" && !["icetea", "iceteaMaison"].includes(item.imageKey));
+const hasAllergens = item.allergens && item.allergens.length > 0;
 ---
-<article class="group bg-cream-50 border border-line rounded-2xl p-5 transition-all hover:border-terracotta-400 hover:-translate-y-0.5">
-  <div class="flex items-start gap-4">
-    <div class="shrink-0 w-16 h-16 rounded-full overflow-hidden flex items-center justify-center" style={`background: radial-gradient(circle at 30% 30%, ${c1}, ${c2})`}>
-      {/* simple flat illustration: cup */}
-      <svg viewBox="0 0 40 40" width="36" height="36" fill="none" stroke="#FBF6E9" stroke-width="1.2" stroke-linecap="round">
+{loading ? (
+  <article class="bg-cream-50 border border-line rounded-2xl p-5 animate-pulse" aria-busy="true">
+    <div class="flex items-start gap-4">
+      <div class="w-16 h-16 rounded-full bg-cream-200" />
+      <div class="flex-1 space-y-2">
+        <div class="h-4 w-2/3 bg-cream-200 rounded" />
+        <div class="h-3 w-1/2 bg-cream-100 rounded" />
+        <div class="h-3 w-20 bg-cream-200 rounded mt-3" />
+      </div>
+    </div>
+  </article>
+) : variant === "mini" ? (
+  <article class="bc-card group flex items-center gap-3 bg-cream-50 border border-line rounded-full pl-2 pr-4 py-2 transition-all hover:border-terracotta-400">
+    <div class="relative shrink-0 w-10 h-10 rounded-full overflow-hidden flex items-center justify-center" style={`background: radial-gradient(circle at 30% 30%, ${c1}, ${c2})`}>
+      <svg viewBox="0 0 40 40" width="22" height="22" fill="none" stroke="#FBF6E9" stroke-width="1.4" stroke-linecap="round">
         <path d="M10 16 L 12 30 Q 12 34, 16 34 L 24 34 Q 28 34, 28 30 L 30 16 Z"/>
-        <path d="M30 20 q 5 0, 5 4 q 0 4, -5 4"/>
-        <ellipse cx="20" cy="16" rx="10" ry="1.6" fill="#FBF6E9" opacity=".4" stroke="none"/>
       </svg>
     </div>
     <div class="flex-1 min-w-0">
-      <div class="flex items-baseline justify-between gap-3">
-        <h3 class="font-display italic text-lg text-cocoa-600 leading-tight">{item.name}</h3>
-        <span class="price-tab text-sm shrink-0">{formatPrice(item.price)}</span>
-      </div>
-      <p class="text-xs text-cocoa-400 mt-1 line-clamp-2">{item.ingredients.join(", ")}</p>
-      <button type="button" data-add-cart={item.slug} data-price={item.price} data-name={item.name}
-        class="mt-3 inline-flex items-center gap-1.5 text-xs font-smallcap tracking-widest uppercase text-terracotta-600 hover:text-cocoa-600 transition-colors">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-        Ajouter
-      </button>
+      <p class="font-display italic text-sm text-cocoa-600 leading-tight truncate">{item.name}</p>
     </div>
-  </div>
-</article>
+    <span class="price-tab text-xs shrink-0 tabular-nums">{formatPrice(item.price)}</span>
+  </article>
+) : (
+  <article class={`bc-card group bg-cream-50 border border-line rounded-2xl ${variant === "feature" ? "p-6" : "p-5"} transition-all hover:border-terracotta-400 hover:-translate-y-0.5`}>
+    <div class={`flex ${variant === "feature" ? "flex-col sm:flex-row sm:items-start" : "items-start"} gap-4`}>
+      <div class={`relative shrink-0 ${variant === "feature" ? "w-24 h-24" : "w-16 h-16"} rounded-full overflow-hidden flex items-center justify-center`} style={`background: radial-gradient(circle at 30% 30%, ${c1}, ${c2})`}>
+        {/* Foam circles animated on hover */}
+        <span aria-hidden="true" class="bc-foam bc-foam-1"></span>
+        <span aria-hidden="true" class="bc-foam bc-foam-2"></span>
+        <span aria-hidden="true" class="bc-foam bc-foam-3"></span>
+
+        {/* Steam (above pastille) for hot drinks */}
+        {isHot && (
+          <svg class="absolute -top-3 left-1/2 -translate-x-1/2 pointer-events-none" width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+            <path class="bc-steam bc-s1" d="M5 13 Q 3 9, 5 6 Q 7 3, 5 0" stroke="#7C4F31" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
+            <path class="bc-steam bc-s2" d="M9 13 Q 11 9, 9 6 Q 7 3, 9 0" stroke="#7C4F31" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
+            <path class="bc-steam bc-s3" d="M13 13 Q 11 9, 13 6 Q 15 3, 13 0" stroke="#7C4F31" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
+          </svg>
+        )}
+
+        {/* Cup illustration */}
+        <svg class="relative z-10" viewBox="0 0 40 40" width={variant === "feature" ? "52" : "36"} height={variant === "feature" ? "52" : "36"} fill="none" stroke="#FBF6E9" stroke-width="1.2" stroke-linecap="round">
+          <path d="M10 16 L 12 30 Q 12 34, 16 34 L 24 34 Q 28 34, 28 30 L 30 16 Z"/>
+          <path d="M30 20 q 5 0, 5 4 q 0 4, -5 4"/>
+          <ellipse cx="20" cy="16" rx="10" ry="1.6" fill="#FBF6E9" opacity=".4" stroke="none"/>
+        </svg>
+
+        {/* Liquid fill overlay (animation on add) */}
+        <span aria-hidden="true" class="bc-fill"></span>
+      </div>
+
+      <div class="flex-1 min-w-0">
+        <div class="flex items-baseline justify-between gap-3">
+          <h3 class={`font-display italic ${variant === "feature" ? "text-2xl" : "text-lg"} text-cocoa-600 leading-tight`}>{item.name}</h3>
+          <span class={`price-tab ${variant === "feature" ? "text-base" : "text-sm"} shrink-0 tabular-nums`}>{formatPrice(item.price)}</span>
+        </div>
+        <p class={`text-xs text-cocoa-400 mt-1 ${variant === "feature" ? "line-clamp-none" : "line-clamp-2"}`}>{item.ingredients.join(", ")}</p>
+
+        <div class="mt-2 flex flex-wrap items-center gap-2">
+          {hasAllergens && (
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sage-200/40 border border-sage-400 text-sage-600 text-[10px]" title={`Contient : ${item.allergens.join(", ")}`}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Allergènes
+            </span>
+          )}
+          {item.signature && (
+            <span class="chip border-terracotta-200 text-terracotta-600">Signature</span>
+          )}
+        </div>
+
+        <div class="mt-3 flex items-center gap-3">
+          <button type="button" data-add-cart={item.slug} data-price={item.price} data-name={item.name}
+            class="bc-add inline-flex items-center gap-1.5 text-xs font-smallcap tracking-widest uppercase text-terracotta-600 hover:text-cocoa-600 transition-colors">
+            <span class="bc-add-default inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              Ajouter
+            </span>
+            <span class="bc-add-done hidden items-center gap-1.5 px-3 py-1 rounded-full bg-terracotta-400 text-cream-50">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+              Ajouté
+            </span>
+          </button>
+          {variant === "feature" && (
+            <a href="/cafe/commander" class="text-xs font-smallcap tracking-widest uppercase text-cocoa-400 hover:text-cocoa-600 underline-offset-4 hover:underline">Composer</a>
+          )}
+        </div>
+      </div>
+    </div>
+  </article>
+)}
+
+<style is:global>
+  .bc-foam {
+    position: absolute;
+    border-radius: 9999px;
+    background: rgba(251, 246, 233, 0.35);
+    pointer-events: none;
+    opacity: 0;
+  }
+  .bc-foam-1 { width: 40%; height: 40%; left: 18%; bottom: 8%; }
+  .bc-foam-2 { width: 26%; height: 26%; left: 50%; bottom: 14%; }
+  .bc-foam-3 { width: 18%; height: 18%; left: 30%; bottom: 28%; }
+  .bc-card:hover .bc-foam { animation: bc-foam-rise 4s ease-in-out infinite; }
+  .bc-card:hover .bc-foam-2 { animation-delay: -1.3s; }
+  .bc-card:hover .bc-foam-3 { animation-delay: -2.6s; }
+  @keyframes bc-foam-rise {
+    0% { transform: translateY(8%) scale(.7); opacity: 0; }
+    35% { opacity: .9; }
+    100% { transform: translateY(-40%) scale(1.1); opacity: 0; }
+  }
+
+  .bc-steam {
+    transform-origin: center bottom;
+    animation: bc-steam-rise 3.2s ease-out infinite;
+  }
+  .bc-s2 { animation-delay: -1s; }
+  .bc-s3 { animation-delay: -2s; }
+  @keyframes bc-steam-rise {
+    0% { opacity: 0; transform: translateY(2px) scaleY(.6); }
+    30% { opacity: .55; }
+    100% { opacity: 0; transform: translateY(-8px) scaleY(1.2); }
+  }
+
+  .bc-fill {
+    position: absolute;
+    left: 22%; right: 22%;
+    bottom: 22%;
+    height: 0%;
+    background: linear-gradient(180deg, rgba(199,122,79,.7), rgba(154,79,42,.85));
+    border-radius: 0 0 6px 6px;
+    pointer-events: none;
+    transition: height 600ms cubic-bezier(.2,.7,.2,1);
+    z-index: 5;
+  }
+  .bc-card.is-added .bc-fill { height: 38%; }
+  .bc-card.is-added .bc-add-default { display: none !important; }
+  .bc-card.is-added .bc-add-done { display: inline-flex !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bc-foam, .bc-steam { animation: none !important; }
+    .bc-fill { transition: none !important; }
+  }
+</style>
+
+<script>
+  // Toggle "Ajouté" briefly on add-cart click (capture phase, doesn't break existing cart store)
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest("[data-add-cart]") as HTMLElement | null;
+    if (!btn) return;
+    const card = btn.closest(".bc-card");
+    if (!card) return;
+    card.classList.add("is-added");
+    window.setTimeout(() => card.classList.remove("is-added"), 1500);
+    const name = btn.getAttribute("data-name") || "Boisson";
+    const w = window as any;
+    if (w.__lciToast) {
+      w.__lciToast.success(`${name} ajouté au panier`);
+    }
+  }, true);
+</script>

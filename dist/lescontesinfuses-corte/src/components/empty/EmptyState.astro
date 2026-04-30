@@ -1,0 +1,35 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  class?: string;
+}
+const {
+  title,
+  description,
+  ctaLabel,
+  ctaHref,
+  secondaryLabel,
+  secondaryHref,
+  class: className = "",
+} = Astro.props;
+---
+<div class={`relative max-w-xl mx-auto text-center py-14 ${className}`}>
+  <div class="flex justify-center mb-6">
+    <slot name="icon" />
+  </div>
+  <p class="eyebrow"><span class="filet"></span><span class="mx-3">Pour l'instant</span><span class="filet"></span></p>
+  <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600 mt-3 leading-[1.05]">{title}</h2>
+  {description && <p class="font-body text-cocoa-400 mt-4 max-w-md mx-auto">{description}</p>}
+  <slot />
+  {(ctaLabel || secondaryLabel) && (
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+      {ctaLabel && ctaHref && <a href={ctaHref} class="btn-terracotta">{ctaLabel}</a>}
+      {secondaryLabel && secondaryHref && <a href={secondaryHref} class="btn-ghost">{secondaryLabel}</a>}
+    </div>
+  )}
+</div>

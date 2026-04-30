@@ -1,0 +1,43 @@
+---
+interface Props {
+  tone?: "default" | "warning" | "success" | "info" | "danger" | "dark";
+  className?: string;
+  padded?: boolean;
+}
+const { tone = "default", className = "", padded = true } = Astro.props as Props;
+const toneRing: Record<string, string> = {
+  default: "border-line",
+  warning: "border-terracotta-200",
+  success: "border-sage-400/60",
+  info: "border-plum-200",
+  danger: "border-terracotta-400/70",
+  dark: "border-cocoa-700",
+};
+const toneBar: Record<string, string> = {
+  default: "bg-line",
+  warning: "bg-terracotta-400",
+  success: "bg-sage-400",
+  info: "bg-plum-400",
+  danger: "bg-terracotta-600",
+  dark: "bg-cocoa-700",
+};
+const bg = tone === "dark" ? "bg-cocoa-700 text-cream-100" : "bg-cream-50";
+const hasHeader = Astro.slots.has("header");
+const hasFooter = Astro.slots.has("footer");
+---
+<div class:list={["relative overflow-hidden rounded-xl border", toneRing[tone], bg, className]}>
+  <span class:list={["absolute left-0 top-0 h-full w-[2px]", toneBar[tone]]} aria-hidden="true"></span>
+  {hasHeader && (
+    <div class={`px-6 pt-5 pb-3 border-b ${tone === "dark" ? "border-cream-100/10" : "border-line"}`}>
+      <slot name="header" />
+    </div>
+  )}
+  <div class={padded ? "p-6" : ""}>
+    <slot />
+  </div>
+  {hasFooter && (
+    <div class={`px-6 py-3 border-t ${tone === "dark" ? "border-cream-100/10 bg-cocoa-800/40" : "border-line bg-cream-100/40"}`}>
+      <slot name="footer" />
+    </div>
+  )}
+</div>

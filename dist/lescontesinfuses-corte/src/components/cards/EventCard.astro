@@ -1,35 +1,176 @@
 ---
 import { formatDate, formatPrice } from "@/lib/format";
 import type { Event } from "@/data/events";
-interface Props { event: Event; }
-const { event } = Astro.props;
+
+type Variant = "default" | "featured" | "list";
+interface Props { event: Event; variant?: Variant; loading?: boolean; }
+const { event, variant = "default", loading = false } = Astro.props;
+
 const day = formatDate(event.date, "day");
 const month = formatDate(event.date, "month");
 const time = new Date(event.date).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 const remaining = event.capacity - event.registered;
+const fillPct = Math.min(100, Math.round((event.registered / Math.max(1, event.capacity)) * 100));
+const lowSeats = remaining > 0 && remaining / event.capacity < 0.2;
+
+const now = Date.now();
+const eventTs = new Date(event.date).getTime();
+const daysUntil = Math.round((eventTs - now) / 86400000);
+const soon = daysUntil >= 0 && daysUntil <= 3;
 ---
-<a href={`/evenements/${event.slug}`} class="block group">
-  <article class="relative bg-cream-50 border border-line rounded-2xl p-6 transition-all duration-300 group-hover:border-terracotta-400 group-hover:-translate-y-0.5 group-hover:shadow-page">
+{loading ? (
+  <div class="bg-cream-50 border border-line rounded-2xl p-6 animate-pulse" aria-busy="true">
     <div class="flex items-start gap-6">
-      <div class="text-center shrink-0 px-3 border-r border-line pr-6">
-        <div class="font-display italic text-5xl text-cocoa-600 leading-none">{day}</div>
-        <div class="eyebrow mt-1">{month}</div>
-      </div>
-      <div class="flex-1 min-w-0">
-        <p class="eyebrow">{event.hostedAt === "horsLesMurs" ? "Hors les murs" : "Boutique"}</p>
-        <h3 class="font-display italic text-xl md:text-2xl text-cocoa-600 mt-1 leading-tight group-hover:text-terracotta-400 transition-colors">{event.title}</h3>
-        <p class="text-sm text-cocoa-400 mt-2 line-clamp-2">{event.description}</p>
-        <div class="mt-4 flex flex-wrap items-center gap-2">
-          <span class="chip">{event.location}</span>
-          <span class="chip">{time}, {event.duration} min</span>
-          <span class={`chip ${event.price === 0 ? "border-sage-400 text-sage-600" : "border-terracotta-200 text-terracotta-600"}`}>
-            {event.price === 0 ? "Gratuit" : formatPrice(event.price)}
-          </span>
-          {remaining <= 5 && remaining > 0 && (
-            <span class="chip border-terracotta-400 text-terracotta-600">{remaining} places</span>
-          )}
-        </div>
+      <div class="w-16 h-20 bg-cream-200 rounded" />
+      <div class="flex-1 space-y-3">
+        <div class="h-3 w-1/3 bg-cream-200 rounded" />
+        <div class="h-5 w-3/4 bg-cream-200 rounded" />
+        <div class="h-3 w-2/3 bg-cream-100 rounded" />
+        <div class="h-2 w-full bg-cream-100 rounded mt-4" />
       </div>
     </div>
-  </article>
-</a>
+  </div>
+) : variant === "featured" ? (
+  <a href={`/evenements/${event.slug}`} class="block group">
+    <article class="relative overflow-hidden rounded-3xl border border-line shadow-book bg-cream-50 transition-all duration-300 group-hover:shadow-page group-hover:-translate-y-0.5">
+      <div class="relative aspect-[16/10] md:aspect-[2/1]" style={`background: linear-gradient(135deg, ${event.hostedAt === "horsLesMurs" ? "#8A9876" : "#7C4F31"} 0%, #4A2D1F 100%)`}>
+        <div class="absolute inset-0 scrim"></div>
+        {/* Calendar sticker */}
+        <div class="absolute top-6 left-6 md:top-8 md:left-8 z-10">
+          <Fragment set:html={`
+            <div style="background:#FBF6E9;border:1px solid #D9C8A8;border-radius:14px;padding:14px 18px 12px;box-shadow:0 14px 30px -14px rgba(74,45,31,.45);position:relative;">
+              <div style="position:absolute;left:8px;right:8px;top:-5px;display:flex;justify-content:space-between;">
+                <span style="width:6px;height:10px;border:1px solid #C9A37D;border-radius:3px;background:#FBF6E9;"></span>
+                <span style="width:6px;height:10px;border:1px solid #C9A37D;border-radius:3px;background:#FBF6E9;"></span>
+              </div>
+              <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:42px;line-height:1;color:#4A2D1F;text-align:center;">${day}</div>
+              <div style="font-family:'Cormorant SC',serif;text-transform:uppercase;letter-spacing:.24em;font-size:10px;color:#7C4F31;text-align:center;margin-top:4px;">${month}</div>
+            </div>
+          `} />
+        </div>
+        {soon && (
+          <span class="absolute top-6 right-6 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-terracotta-400 text-cream-50 text-[10px] font-smallcap tracking-widest uppercase shadow-md" style="animation:ec-soft-pulse 2.4s ease-in-out infinite">
+            <span class="w-1.5 h-1.5 rounded-full bg-cream-50"></span>
+            Bientôt
+          </span>
+        )}
+        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-cream-50">
+          <p class="font-smallcap tracking-windier uppercase text-[11px] opacity-85">{event.hostedAt === "horsLesMurs" ? "Hors les murs" : "À la boutique"}</p>
+          <h3 class="font-display italic text-3xl md:text-5xl leading-tight mt-1">{event.title}</h3>
+          <p class="text-sm md:text-base mt-3 max-w-2xl opacity-90 line-clamp-2">{event.description}</p>
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            <span class="chip bg-cream-50/10 border-cream-50/30 text-cream-50">{event.location}</span>
+            <span class="chip bg-cream-50/10 border-cream-50/30 text-cream-50">{time}, {event.duration} min</span>
+            <span class="chip bg-cream-50/10 border-cream-50/30 text-cream-50">{event.price === 0 ? "Gratuit" : formatPrice(event.price)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-5 md:p-6 flex items-center justify-between gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between text-[11px] font-sans text-cocoa-400 tabular-nums">
+            <span>{event.registered} / {event.capacity} places</span>
+            {lowSeats && <span class="text-terracotta-600 font-smallcap tracking-widest uppercase text-[10px]">Dernières places</span>}
+          </div>
+          <div class="mt-1.5 h-px bg-line relative overflow-hidden">
+            <div class="absolute inset-y-0 left-0 bg-terracotta-400 transition-all duration-500" style={`width:${fillPct}%`}></div>
+          </div>
+        </div>
+        <span class="btn-ghost shrink-0">Voir</span>
+      </div>
+    </article>
+  </a>
+) : variant === "list" ? (
+  <a href={`/evenements/${event.slug}`} class="block group">
+    <article class="relative flex items-center gap-4 bg-cream-50 border border-line rounded-xl px-4 py-3 transition-all duration-200 hover:border-terracotta-400 hover:bg-cream-100/40">
+      <div class="text-center shrink-0 w-12">
+        <div class="font-display italic text-2xl text-cocoa-600 leading-none">{day}</div>
+        <div class="font-smallcap text-[9px] tracking-widest uppercase text-cocoa-400 mt-0.5">{month}</div>
+      </div>
+      <div class="w-px h-10 bg-line"></div>
+      <div class="flex-1 min-w-0">
+        <p class="font-display italic text-cocoa-600 leading-tight truncate group-hover:text-terracotta-400 transition-colors">{event.title}</p>
+        <p class="text-[11px] text-cocoa-400 mt-0.5 tabular-nums">{time}, {event.duration} min : {event.location}</p>
+      </div>
+      <span class="price-tab text-sm shrink-0">{event.price === 0 ? "Gratuit" : formatPrice(event.price)}</span>
+    </article>
+  </a>
+) : (
+  <a href={`/evenements/${event.slug}`} class="block group">
+    <article class="relative bg-cream-50 border border-line rounded-2xl p-6 transition-all duration-300 group-hover:border-terracotta-400 group-hover:-translate-y-0.5 group-hover:shadow-page overflow-hidden">
+      {/* Animated thread border on hover (top + right slivers) */}
+      <span aria-hidden="true" class="ec-thread ec-thread-t"></span>
+      <span aria-hidden="true" class="ec-thread ec-thread-r"></span>
+
+      <div class="flex items-start gap-6">
+        {/* Spiral calendar */}
+        <div class="text-center shrink-0 relative">
+          <div class="relative px-3 pr-6 border-r border-line">
+            <div class="absolute -top-2 left-0 right-6 flex justify-between px-1.5">
+              <span class="block w-1.5 h-2.5 rounded-full border border-cocoa-200 bg-cream-50"></span>
+              <span class="block w-1.5 h-2.5 rounded-full border border-cocoa-200 bg-cream-50"></span>
+              <span class="block w-1.5 h-2.5 rounded-full border border-cocoa-200 bg-cream-50"></span>
+            </div>
+            <div class="font-display italic text-5xl text-cocoa-600 leading-none mt-1">{day}</div>
+            <div class="font-smallcap text-[10px] tracking-widest uppercase text-cocoa-400 mt-1">{month}</div>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <p class="eyebrow">{event.hostedAt === "horsLesMurs" ? "Hors les murs" : "Boutique"}</p>
+            {soon && (
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-terracotta-50 border border-terracotta-200 text-terracotta-600 font-smallcap text-[9px] tracking-widest uppercase" style="animation:ec-soft-pulse 2.4s ease-in-out infinite">
+                <span class="w-1 h-1 rounded-full bg-terracotta-400"></span>
+                Bientôt
+              </span>
+            )}
+            {lowSeats && (
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-terracotta-400 text-cream-50 font-smallcap text-[9px] tracking-widest uppercase">
+                Dernières places
+              </span>
+            )}
+          </div>
+          <h3 class="font-display italic text-xl md:text-2xl text-cocoa-600 mt-1 leading-tight group-hover:text-terracotta-400 transition-colors">{event.title}</h3>
+          <p class="text-sm text-cocoa-400 mt-2 line-clamp-2">{event.description}</p>
+          <div class="mt-4 flex flex-wrap items-center gap-2">
+            <span class="chip">{event.location}</span>
+            <span class="chip">{time}, {event.duration} min</span>
+            <span class={`chip ${event.price === 0 ? "border-sage-400 text-sage-600" : "border-terracotta-200 text-terracotta-600"}`}>
+              {event.price === 0 ? "Gratuit" : formatPrice(event.price)}
+            </span>
+          </div>
+          {/* Capacity bar */}
+          <div class="mt-4">
+            <div class="flex items-center justify-between text-[10px] font-sans text-cocoa-400 tabular-nums">
+              <span>{event.registered} / {event.capacity} places</span>
+              <span>{remaining} restantes</span>
+            </div>
+            <div class="mt-1 h-px bg-line relative overflow-hidden">
+              <div class="absolute inset-y-0 left-0 bg-terracotta-400 transition-all duration-500" style={`width:${fillPct}%`}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </a>
+)}
+
+<style is:global>
+  @keyframes ec-soft-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .75; transform: scale(1.03); }
+  }
+  .ec-thread {
+    position: absolute;
+    background: #C77A4F;
+    opacity: 0;
+    transition: opacity .3s ease, transform .4s cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+  }
+  .ec-thread-t { top: 0; left: 0; height: 1px; width: 0%; }
+  .ec-thread-r { top: 0; right: 0; width: 1px; height: 0%; }
+  .group:hover .ec-thread-t { opacity: 1; width: 100%; transition-delay: 0s; }
+  .group:hover .ec-thread-r { opacity: 1; height: 100%; transition-delay: .25s; }
+  @media (prefers-reduced-motion: reduce) {
+    .ec-thread { display: none !important; }
+  }
+</style>

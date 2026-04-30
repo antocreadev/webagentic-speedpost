@@ -1,0 +1,105 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Quill from "@/components/icons/Quill.astro";
+import { Calendar, Users, Clock } from "lucide-react";
+
+const ateliers = [
+  {
+    name: "Atelier d'écriture créative",
+    rhythm: "Bimensuel, 1er et 3ème mardi du mois",
+    time: "19h00 à 21h00",
+    leader: "Paul-Antoine Casta",
+    level: "Tous niveaux",
+    price: "20€ la séance, 35€ les deux",
+    color: "#8E6C90",
+    desc: "Deux heures pour écrire ensemble autour d'une contrainte douce. On lit à voix haute, on commente avec bienveillance, on repart avec un texte.",
+  },
+  {
+    name: "Lecture à voix haute pour enfants",
+    rhythm: "Tous les samedis",
+    time: "10h30 à 11h30",
+    leader: "Anna Filippi",
+    level: "À partir de 4 ans",
+    price: "Gratuit, sur inscription",
+    color: "#8A9876",
+    desc: "Album, conte, histoire courte. Une heure dans le carré jeunesse, sur le tapis, autour d'un goûter offert par la maison.",
+  },
+  {
+    name: "Initiation à la calligraphie",
+    rhythm: "Mensuel, 2ème dimanche après-midi",
+    time: "14h30 à 17h30",
+    leader: "Marie-Claude Pieri",
+    level: "Débutants bienvenus",
+    price: "45€, matériel fourni",
+    color: "#C77A4F",
+    desc: "Trois heures pour découvrir la plume, l'encre, le geste. On travaille l'italique anglaise, l'onciale et un peu de gothique pour s'amuser.",
+  },
+  {
+    name: "Cercle de poésie",
+    rhythm: "Mensuel, dernier jeudi du mois",
+    time: "20h00 à 22h00",
+    leader: "Anna Filippi",
+    level: "Amateurs et curieux",
+    price: "Libre participation",
+    color: "#5C3820",
+    desc: "Un poème lu, partagé, discuté. Chacun apporte un texte qui l'a remué, on tourne autour. Souvent ça finit en grand silence ou en grand rire.",
+  },
+];
+
+const sessions = [
+  { date: "23 avril", atelier: "Cercle de poésie", places: "8 places restantes" },
+  { date: "27 avril", atelier: "Lecture à voix haute", places: "12 places restantes" },
+  { date: "5 mai", atelier: "Atelier d'écriture", places: "Complet" },
+  { date: "10 mai", atelier: "Calligraphie", places: "3 places restantes" },
+  { date: "19 mai", atelier: "Atelier d'écriture", places: "6 places restantes" },
+];
+---
+<BaseLayout title="Ateliers réguliers, Les Contes Infusés" description="Quatre ateliers récurrents : écriture créative, lecture aux enfants, calligraphie, cercle de poésie.">
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-8 md:pt-16 pb-10 text-center">
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Ateliers réguliers</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl sm:text-7xl text-cocoa-600 mt-4">Apprendre lentement</h1>
+    <div class="flex justify-center mt-8 opacity-70"><Quill size={60} /></div>
+  </section>
+
+  {/* MAGAZINE-LIKE LISTING with vertical rule */}
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 py-12">
+    <div class="space-y-12">
+      {ateliers.map((a, i) => (
+        <article class="grid md:grid-cols-12 gap-8 pb-12 border-b border-line last:border-0" data-reveal>
+          <div class="md:col-span-1 flex md:flex-col items-center md:items-start gap-3">
+            <span class="font-display italic text-7xl leading-none" style={`color:${a.color}`}>{String(i+1).padStart(2,"0")}</span>
+          </div>
+          <div class="md:col-span-7">
+            <h2 class="font-display italic text-3xl sm:text-4xl text-cocoa-600 leading-tight">{a.name}</h2>
+            <p class="font-body text-cocoa-700 mt-4 leading-relaxed">{a.desc}</p>
+            <p class="font-script text-2xl mt-5" style={`color:${a.color}`}>animé par {a.leader}</p>
+          </div>
+          <div class="md:col-span-4">
+            <ul class="space-y-3 bg-cream-100 border border-line rounded-xl p-5 text-sm">
+              <li class="flex items-start gap-3"><Calendar size={16} className="mt-0.5 text-cocoa-400" /><span><span class="font-smallcap uppercase tracking-widest text-xs text-cocoa-400">Rythme</span><br/>{a.rhythm}</span></li>
+              <li class="flex items-start gap-3"><Clock size={16} className="mt-0.5 text-cocoa-400" /><span><span class="font-smallcap uppercase tracking-widest text-xs text-cocoa-400">Horaire</span><br/>{a.time}</span></li>
+              <li class="flex items-start gap-3"><Users size={16} className="mt-0.5 text-cocoa-400" /><span><span class="font-smallcap uppercase tracking-widest text-xs text-cocoa-400">Niveau</span><br/>{a.level}</span></li>
+              <li class="pt-2 border-t border-line/70"><span class="price-tab text-base">{a.price}</span></li>
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  {/* CALENDAR */}
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-16">
+    <p class="eyebrow text-center"><span class="filet"></span><span class="mx-3">Prochaines sessions</span><span class="filet"></span></p>
+    <h2 class="font-display italic text-4xl text-cocoa-600 text-center mt-4 mb-10">Avril, mai 2026</h2>
+    <ul class="border-y border-line divide-y divide-line">
+      {sessions.map((s) => (
+        <li class="py-5 flex items-center gap-6 flex-wrap">
+          <span class="font-display italic text-3xl text-terracotta-400 w-28 shrink-0">{s.date}</span>
+          <span class="font-body text-cocoa-700 flex-1 min-w-[160px]">{s.atelier}</span>
+          <span class={`chip ${s.places === "Complet" ? "border-cocoa-400 text-cocoa-400 line-through" : "border-sage-400 text-sage-600"}`}>{s.places}</span>
+          <a href={s.places === "Complet" ? "#" : "/contact"} class={`font-smallcap text-xs tracking-widest uppercase ${s.places === "Complet" ? "text-cocoa-400 pointer-events-none" : "text-terracotta-600 hover:text-cocoa-600"}`}>{s.places === "Complet" ? "Liste d'attente" : "S'inscrire"}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

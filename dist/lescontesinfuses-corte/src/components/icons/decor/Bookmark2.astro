@@ -1,0 +1,21 @@
+---
+interface Props { size?: number; class?: string; }
+const { size = 60, class: className = "" } = Astro.props;
+---
+<svg viewBox="0 0 40 80" width={size * 0.5} height={size} class={className} aria-hidden="true">
+  <g stroke="currentColor" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 4 L 32 4 L 32 64 L 20 56 L 8 64 Z"/>
+    <path d="M12 8 L 28 8" opacity="0.5"/>
+    {/* tressed pattern */}
+    <path d="M12 16 q 4 4, 8 0 q 4 -4, 8 0"/>
+    <path d="M12 22 q 4 -4, 8 0 q 4 4, 8 0"/>
+    <path d="M12 28 q 4 4, 8 0 q 4 -4, 8 0"/>
+    <path d="M12 34 q 4 -4, 8 0 q 4 4, 8 0"/>
+    <path d="M12 40 q 4 4, 8 0 q 4 -4, 8 0"/>
+    <path d="M12 46 q 4 -4, 8 0 q 4 4, 8 0"/>
+    {/* tassels */}
+    <path d="M20 64 L 20 72"/>
+    <path d="M16 70 L 16 76"/>
+    <path d="M24 70 L 24 76"/>
+  </g>
+</svg>
