@@ -10,12 +10,24 @@ Coder à la main un site **bespoke, single-file, state-of-the-art 2025-2026** qu
 
 ## Stack obligatoire
 
-- HTML5, un seul fichier `index.html` (CSS et JS inline ou via CDN)
-- **Tailwind CDN** (JIT, via `<script src="https://cdn.tailwindcss.com"></script>`)
+- HTML5 + `tailwind.css` pré-compilé, le tout dans `site/`
+- **Tailwind PRÉ-COMPILÉ EN LOCAL** (jamais le CDN play `cdn.tailwindcss.com` qui est bloqué par les adblockers Brave/uBlock) :
+  1. Créer `site/tw.config.js` avec `module.exports = { content: ["./index.html"], theme: { extend: { colors: {...palette du brief}, fontFamily: {...} } } }`
+  2. Créer `site/tw.in.css` avec les 3 directives `@tailwind base; @tailwind components; @tailwind utilities;`
+  3. Compiler : `/tmp/tailwindcss -c site/tw.config.js -i site/tw.in.css -o site/tailwind.css --minify` (binaire standalone v3.4.17 macos-arm64 à télécharger une fois si absent)
+  4. Référencer `<link rel="stylesheet" href="./tailwind.css"/>` dans `index.html`
+  5. Supprimer `tw.config.js` + `tw.in.css` après compile, garder uniquement `index.html` + `tailwind.css`
 - **Google Fonts** (chargement via `<link rel="preconnect">` + `<link href="...">`)
-- **Motion One** (`https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.min.js`)
-- **Lenis** smooth scroll (`https://unpkg.com/lenis@1.1.13/dist/lenis.min.js`)
-- Palette : injecter les hex du brief en CSS variables + via `tailwind.config` inline
+- **Motion One** ESM (`import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`)
+- **Lenis** smooth scroll ESM (`import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/+esm'`)
+- Palette : aussi en CSS variables (`:root{--bg:...}`) pour usage dans `<style>` custom
+- **Reveals robustes (filet de sécurité)** :
+  ```css
+  .js-ready [data-reveal]{opacity:0;transform:translateY(16px);animation:autoreveal .5s ease-out .15s forwards;}
+  @keyframes autoreveal{to{opacity:1;transform:translateY(0)}}
+  ```
+  Et au tout début du `<script type="module">` : `document.documentElement.classList.add('js-ready');`
+  Animation Motion `inView` : durée 0.4-0.6s max, jamais 0.9-1.4s (perçu comme lent).
 
 ## Structure du document
 

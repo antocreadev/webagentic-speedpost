@@ -55,6 +55,16 @@ grep -c 'maps.google.com/maps?q=' dist/<slug>/site/index.html  # doit être ≥ 
 
 # HTML bien formé
 python3 -c "from html.parser import HTMLParser; HTMLParser().feed(open('dist/<slug>/site/index.html').read()); print('ok')"
+
+# Tailwind pré-compilé local (jamais le CDN play, bloqué adblockers → site cassé)
+grep -c 'cdn.tailwindcss.com' dist/<slug>/site/index.html  # doit être 0
+grep -c 'href="./tailwind.css"' dist/<slug>/site/index.html  # doit être ≥ 1
+test -s dist/<slug>/site/tailwind.css && echo ok            # fichier doit exister non vide
+
+# Reveals robustes (filet de sécurité contre Motion qui plante)
+grep -c '.js-ready \[data-reveal\]' dist/<slug>/site/index.html  # doit être ≥ 1
+grep -c '@keyframes autoreveal' dist/<slug>/site/index.html       # doit être ≥ 1
+grep -c "classList.add('js-ready')" dist/<slug>/site/index.html   # doit être ≥ 1
 ```
 
 ## Verdict

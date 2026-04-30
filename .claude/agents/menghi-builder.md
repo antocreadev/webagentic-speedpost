@@ -1,6 +1,6 @@
 ---
 name: menghi-builder
-description: Hand-author the bespoke single-file site/index.html from a design brief. Use for Step 3 after menghi-designer completes. Must produce Awwwards-tier HTML with Tailwind CDN + Motion One + Lenis, not a template.
+description: Hand-author the bespoke site (site/index.html + site/tailwind.css pré-compilé) from a design brief. Use for Step 3 after menghi-designer completes. Must produce Awwwards-tier HTML with PRE-COMPILED Tailwind + Motion One + Lenis, not a template, and never the cdn.tailwindcss.com play CDN.
 tools: Read, Write, Edit, Bash, Glob, Grep
 model: opus
 ---
@@ -21,8 +21,24 @@ Coder à la main `dist/<slug>/site/index.html`, un fichier HTML unique, bespoke,
 
 ## Stack obligatoire
 
-- HTML5, un seul `index.html`, auto-suffisant (ouvrable en double-clic).
-- **Tailwind CDN** : `<script src="https://cdn.tailwindcss.com"></script>` + `tailwind.config` inline avec les couleurs et fontFamily du brief.
+- HTML5 `index.html` + `tailwind.css` pré-compilé, dans `dist/<slug>/site/`.
+- **Tailwind PRÉ-COMPILÉ EN LOCAL** (jamais `cdn.tailwindcss.com` qui est bloqué par les adblockers Brave/uBlock → site cassé). Procédure :
+  ```bash
+  # 1. Si /tmp/tailwindcss absent, le télécharger une fois
+  [ -x /tmp/tailwindcss ] || (curl -sL -o /tmp/tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4.17/tailwindcss-macos-arm64" && chmod +x /tmp/tailwindcss)
+  # 2. Écrire site/tw.config.js (theme.extend.colors + fontFamily du brief) et site/tw.in.css (3 directives @tailwind)
+  # 3. Compiler
+  /tmp/tailwindcss -c dist/<slug>/site/tw.config.js -i dist/<slug>/site/tw.in.css -o dist/<slug>/site/tailwind.css --minify
+  # 4. Supprimer artefacts
+  rm dist/<slug>/site/tw.config.js dist/<slug>/site/tw.in.css
+  ```
+  Référencer dans `index.html` : `<link rel="stylesheet" href="./tailwind.css"/>`.
+- **Reveals robustes** dans `<style>` :
+  ```css
+  .js-ready [data-reveal]{opacity:0;transform:translateY(16px);animation:autoreveal .5s ease-out .15s forwards;}
+  @keyframes autoreveal{to{opacity:1;transform:translateY(0)}}
+  ```
+  Et au tout début du `<script type="module">` : `document.documentElement.classList.add('js-ready');`. Garder les durées Motion `inView` à 0.4-0.6s max.
 - **Google Fonts** (display + body du brief) via `<link rel="preconnect">` + `<link href="...&display=swap">`.
 - **Motion One** : `import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`.
 - **Lenis** smooth scroll : `import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/+esm'`.

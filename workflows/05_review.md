@@ -28,7 +28,9 @@ Valider ou rejeter la sortie d'un client avant de le marquer `done`. Refuser san
 ### `site/index.html`
 - [ ] **Layout unique par client** : la structure (archétype, ordre des sections, traitement du hero, nav, rythme visuel) diverge clairement des autres sites du catalogue. FAIL si le site ressemble à un template 9-sections générique identique à d'autres clients.
 - [ ] Un seul fichier, se charge en double-clic
-- [ ] Tailwind CDN + Google Fonts + Motion + Lenis intégrés
+- [ ] **Tailwind PRÉ-COMPILÉ** présent : `<link rel="stylesheet" href="./tailwind.css"/>` ET fichier `site/tailwind.css` existe (>5KB) ET aucune référence à `cdn.tailwindcss.com` dans index.html. FAIL si le CDN play est utilisé.
+- [ ] **Reveals robustes** : `[data-reveal]` initial state conditionné par `.js-ready` + `@keyframes autoreveal` fallback présents. FAIL si `[data-reveal]{opacity:0}` est inconditionnel (risque de page vide si JS échoue).
+- [ ] Google Fonts + Motion + Lenis intégrés (ESM imports)
 - [ ] Palette CSS variables injectée
 - [ ] Typographie display appliquée au h1 et aux titres de section
 - [ ] Hero avec image réelle priorité 1 (vérifier le `src`)

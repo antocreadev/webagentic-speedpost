@@ -139,8 +139,14 @@ open "https://antocreadev.github.io/menghicomputerscience-<slug>/"
 
 ### Stack site
 
-- HTML5 **single-file** (`site/index.html`), auto-suffisant, ouvrable en double-clic.
-- **Tailwind CDN** (`https://cdn.tailwindcss.com`) avec `tailwind.config` inline portant la palette + fontFamily du brief.
+- HTML5 (`site/index.html`) + `tailwind.css` pré-compilé local. Auto-suffisant, servi en statique sur GitHub Pages.
+- **Tailwind PRÉ-COMPILÉ** (jamais le CDN play). Le builder doit :
+  1. Écrire `site/tw.config.js` (theme.extend palette + fontFamily du brief) et `site/tw.in.css` (`@tailwind base/components/utilities`).
+  2. Compiler : `/tmp/tailwindcss -c site/tw.config.js -i site/tw.in.css -o site/tailwind.css --minify` (binaire standalone, télécharger depuis https://github.com/tailwindlabs/tailwindcss/releases v3.4.17 macos-arm64 si absent).
+  3. Référencer `<link rel="stylesheet" href="./tailwind.css"/>` dans `index.html`.
+  4. Supprimer `tw.config.js` et `tw.in.css` (artefacts), garder uniquement `tailwind.css`.
+  - **Raison** : `cdn.tailwindcss.com` est régulièrement bloqué par les adblockers (Brave, uBlock) → layout cassé, page perçue "vide" / "horrible". Incident 2026-05-01 sur Ile de Beauté.
+- **Reveals robustes** : `[data-reveal]{opacity:0}` doit être conditionné par une classe `.js-ready` ajoutée par le module script. Ajouter aussi un `@keyframes autoreveal` CSS qui force opacity:1 après ~0.5s en filet de sécurité si Motion plante. Animation reveal courte (0.4-0.6s, jamais 0.9-1.4s) sinon perçue comme lente.
 - **Google Fonts** via `<link rel="preconnect">` + `<link href="...&display=swap">`.
 - **Motion One** + **Lenis** en ESM (`import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`).
 - **Google Maps iframe** sans clé : `https://maps.google.com/maps?q=LAT,LNG&z=15&output=embed`.
@@ -281,6 +287,20 @@ menghi_computer_science/
 - **gh CLI** authentifié sur `antocreadev` avec scope `repo` (`gh auth status` pour vérifier)
 - macOS/Linux (testé sur macOS Darwin 24.6)
 
+## Boucle d'auto-amélioration (OBLIGATOIRE)
+
+Quand le user signale une erreur, un site cassé, ou corrige une approche, je dois **immédiatement** boucler :
+
+1. Identifier la **root cause** (pas le symptôme).
+2. Écrire/mettre à jour un fichier `feedback_*.md` dans `~/.claude/projects/-Users-antocreadev-Developer-menghi-computer-science/memory/` avec : règle, **Why** (incident concret + date + slug), **How to apply** (étapes reproductibles).
+3. Ajouter le pointeur dans `MEMORY.md`.
+4. Mettre à jour `CLAUDE.md` + le `workflows/<étape>.md` concerné (et `workflows/rules.md` si règle globale).
+5. Mettre à jour les briefs des sous-agents `.claude/agents/menghi-*.md` quand pertinent pour qu'ils intègrent la règle dès leur prochain run.
+6. Lister les sites/clients à patcher rétroactivement si la règle affecte la prod existante.
+7. Si le QA reviewer a fait un faux-positif (PASS sur un site cassé) : renforcer `workflows/05_review.md` avec la nouvelle assertion détectable automatiquement.
+
+**Why:** Sinon je refais la même erreur sur les ~5075 clients restants. Le user paie le coût en revues à la main et perd confiance. Persister chaque leçon = la dette ne s'accumule pas. Cette boucle est non-négociable.
+
 ## Leçons apprises (persistées en mémoire)
 
 Tirées des itérations précédentes, toutes persistées dans `~/.claude/projects/-Users-antocreadev-Developer-menghi-computer-science/memory/` :
@@ -291,6 +311,8 @@ Tirées des itérations précédentes, toutes persistées dans `~/.claude/projec
 - `feedback_email_txt_not_md.md` — Emailer livre `email.txt` en texte brut sans markdown, pas `email.md`.
 - `feedback_real_photos_priority.md` — Vraies photos Google Maps/TripAdvisor en P1, astuce lh3 `=w2400-h1800-k-no`, TripAdvisor `/photo-o/`, RestaurantGuru `_big`. Rejet Unsplash en hero si photos réelles dispo.
 - `feedback_text_on_image_contrast.md` — Scrim permanent + text-shadow + couleurs solides obligatoires dès qu'un texte est posé sur photo.
+- `feedback_tailwind_precompile.md` — Tailwind doit être pré-compilé en local (`tailwind.css`), jamais le CDN play (bloqué adblockers). Reveals avec filet de sécurité CSS.
+- `feedback_self_improvement.md` — Boucle d'auto-amélioration sur chaque erreur user-signalée (memory + CLAUDE.md + workflows + agents).
 - `project_commercial_offer.md`, `project_pipeline_rules.md`, `project_tech_defaults.md`, `project_data_source.md`, `project_overview.md`, `user_profile.md`.
 
 ## Techniques éprouvées (raccourcis opérationnels)
