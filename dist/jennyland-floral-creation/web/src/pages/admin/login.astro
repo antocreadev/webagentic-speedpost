@@ -1,0 +1,27 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import LoginForm from "@/islands/LoginForm";
+---
+
+<AdminLayout title="Connexion — Jennyland Admin" noShell={true}>
+  <main class="min-h-screen flex items-center justify-center px-5 py-20 bath bath-rose-soft">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-10">
+        <span class="cursive text-5xl text-ink block">Jennyland</span>
+        <span class="spec-num text-ink-40 mt-2 block">Admin · Authentification</span>
+      </div>
+      <div class="bg-cream border border-ink p-8">
+        <h1 class="font-display text-display-m text-ink leading-[0.9]">
+          Bienvenue dans <span class="font-display-italic text-rose-deep">l'atelier.</span>
+        </h1>
+        <p class="text-sm text-ink-60 mt-3">Connectez-vous pour gérer la boutique.</p>
+        <div class="mt-8">
+          <LoginForm client:load />
+        </div>
+      </div>
+      <p class="text-center spec-num text-ink-40 mt-6">
+        <a href="/" class="hover:text-rose-deep">← Retour au site</a>
+      </p>
+    </div>
+  </main>
+</AdminLayout>

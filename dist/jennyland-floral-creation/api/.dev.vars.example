@@ -1,0 +1,6 @@
+# Copy to .dev.vars for local development.
+# .dev.vars is in .gitignore — never commit secrets.
+
+JWT_SECRET=change-me-to-a-random-32-char-string-or-longer
+PAYPAL_CLIENT_ID=sb
+PAYPAL_CLIENT_SECRET=

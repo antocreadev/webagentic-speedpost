@@ -1,0 +1,93 @@
+---
+import "@/styles/global.css";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import CartDrawer from "@/islands/CartDrawer";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noHeader?: boolean;
+  noFooter?: boolean;
+}
+
+const {
+  title = "Jennyland Floral Création — Atelier de fleurs au crochet",
+  description = "Bouquets, compositions et créations sur-mesure en crochet. Fait main, conçu pour traverser les années.",
+  noHeader = false,
+  noFooter = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+  />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content="/assets/bouquet-hero.png" />
+  <meta name="theme-color" content="#FAEEEE" />
+</head>
+<body class="min-h-screen text-ink antialiased">
+  {!noHeader && <Header />}
+  <main>
+    <slot />
+  </main>
+  {!noFooter && <Footer />}
+
+  <CartDrawer client:load />
+
+  <!-- Custom cursor (desktop only via media query in CSS) -->
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+  <script>
+    document.documentElement.classList.add("js-ready");
+
+    // Custom cursor — thread-point that grows on hover
+    if (window.matchMedia("(pointer: fine)").matches) {
+      const dot = document.getElementById("cursor-dot");
+      if (dot) {
+        let mx = window.innerWidth / 2;
+        let my = window.innerHeight / 2;
+        let cx = mx, cy = my;
+        document.addEventListener("mousemove", (e) => {
+          mx = e.clientX;
+          my = e.clientY;
+        });
+        function tick() {
+          cx += (mx - cx) * 0.22;
+          cy += (my - cy) * 0.22;
+          if (dot) dot.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+          requestAnimationFrame(tick);
+        }
+        tick();
+        // Add hover state on interactive elements
+        const interactives = "a, button, input, textarea, select, label[for], [role='button']";
+        document.addEventListener("mouseover", (e) => {
+          const t = e.target as HTMLElement;
+          if (t.closest(interactives)) {
+            const onBath = t.closest(".bath-rose-deep, .bath-aubergine, .bath-aubergine, .bath-ink");
+            dot?.classList.add(onBath ? "hover-rose" : "hover");
+          }
+        });
+        document.addEventListener("mouseout", () => {
+          dot?.classList.remove("hover", "hover-rose");
+        });
+      }
+    }
+  </script>
+</body>
+</html>

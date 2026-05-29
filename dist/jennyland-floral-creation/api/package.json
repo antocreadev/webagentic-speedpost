@@ -1,0 +1,25 @@
+{
+  "name": "jennyland-api",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create jennyland",
+    "db:schema": "wrangler d1 execute jennyland --local --file=./src/db/schema.sql",
+    "db:schema:remote": "wrangler d1 execute jennyland --remote --file=./src/db/schema.sql",
+    "db:seed": "wrangler d1 execute jennyland --local --file=./src/db/seed.sql",
+    "db:seed:remote": "wrangler d1 execute jennyland --remote --file=./src/db/seed.sql",
+    "db:reset": "rm -rf .wrangler/state/v3/d1 && npm run db:schema && npm run db:seed",
+    "types": "wrangler types"
+  },
+  "dependencies": {
+    "hono": "^4.6.14"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250115.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^3.99.0"
+  }
+}

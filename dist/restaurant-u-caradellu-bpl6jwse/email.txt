@@ -2,52 +2,21 @@ Sujet : U Caradellu, la paillote de Bravone en ligne
 
 Bonjour,
 
-J'ai passé du temps sur votre maison avant de vous écrire. U Caradellu, c'est #1 sur les 16 restaurants de Linguizzetta sur Tripadvisor, 4,6/5 sur plus de 1 200 avis Google, et un nom qui revient sans arrêt dans les commentaires : Rocco, votre pizzaiolo, cité comme "légendaire" par les clients. On y parle aussi des pâtes fraîches de la nona et du poisson du jour grillé au feu de bois, servis en terrasse face à la mer de Bravone, ouvert 7j/7 de 12h à 23h toute l'année. Il manque juste une chose dans ce tableau : un vrai site internet.
+J'ai passé du temps sur votre maison avant de vous écrire. U Caradellu, c'est #1 sur les 16 restaurants de Linguizzetta sur Tripadvisor, 4,6/5 sur plus de 1 200 avis Google, et un nom qui revient sans arrêt dans les commentaires : Rocco, votre pizzaiolo, cité comme "légendaire" par les clients.
 
-Chez Menghi Computer Science, nous sommes une petite équipe tech et créative. On fait du développement web sur-mesure, du graphisme (logos, identité visuelle, affiches), du marketing digital et réseaux sociaux, et des applications métier dédiées. Tout sous le même toit, tout codé ou conçu à la main.
+J'ai préparé une démo gratuite de votre site, codée à la main et 100% personnalisable :
+https://antocreadev.github.io/menghicomputerscience-restaurant-u-caradellu-bpl6jwse/
 
-Pour vous montrer ce que ça donne, j'ai conçu une démo complète de votre site, sans engagement.
+Deux formules au choix (tarifs HT) :
+- 1500€ une fois + 20€/mois (maintenance, agent IA pour modifier le site, rapport SEO mensuel), sans engagement
+- 89€/mois engagé 12 mois, mêmes services
 
-Le site que j'ai conçu pour vous : https://antocreadev.github.io/menghicomputerscience-restaurant-u-caradellu-bpl6jwse/
+Inclus dans les deux : hébergement, nom de domaine, SEO, indexation IA (ChatGPT, Gemini, Perplexity), support.
 
-Ce que j'ai mis en avant spécifiquement pour U Caradellu :
-
-- Une identité maritime-rustic qui tient l'équilibre entre la paillote corse et le bleu de la mer orientale (sable de Bravone, bleu nuit, terracotta du four à bois).
-- Vos trois signatures en section dédiée : poisson et fruits de mer du jour, pizza au feu de bois par Rocco, pâtes fraîches de la nona.
-- Vos preuves sociales en clair : 4,6/5 sur 1 200 avis Google, #1 sur 16 à Linguizzetta sur Tripadvisor, verbatim clients positifs en rotation.
-- Google Maps intégré sur votre position exacte au lieu-dit Bravone, horaires 12h-23h 7j/7, bouton d'appel direct vers le 04 95 59 02 85.
-
-Ce n'est pas un site template. Chaque ligne de code est écrite à la main pour votre maison, ce qui veut dire qu'on peut changer absolument tout : couleurs, textes, photos, sections, structure. Vous n'êtes enfermé dans aucun thème WordPress.
-
-Ce qui est inclus dans le 1500€
-
-- Site codé main, sur-mesure : zéro template, zéro compromis, tout est modifiable (textes, photos, couleurs, sections, polices)
-- Identité graphique cohérente avec le site (logo si besoin, palette, visuels, déclinaisons)
-- Référencement Google (SEO) : technique + éditorial (indexation, balisage, mots-clés, sitemap, robots, structured data)
-- Optimisation performance : chargement rapide, mobile-first, expérience fluide
-- Indexation & citations par les IA : ChatGPT, Gemini, Perplexity, Copilot : structured data + signaux d'autorité pour apparaître dans les réponses génératives
-- Hébergement + nom de domaine gérés par nous
-- Maintenance + support direct sous 24h pendant toute l'année 1
-- Aucun abonnement année 1 : 0€/mois
-- Prix : 1740€ 1500€ , une seule fois, tout compris
-
-Ensuite
-
-- Année 2 : 20€/mois (maintenance + hébergement)
-- Option premium (+10€/mois, soit 30€/mois année 2) :
-  - agent IA sécurisé connecté à WhatsApp (vous demandez une modif en langage naturel, elle est appliquée)
-  - modifications du site en temps réel
-  - sauvegardes automatiques
-  - versionning complet (rollback possible)
-  - assistance 24/7
-
-Concrètement, vous gagnez en visibilité (Google + IA), en crédibilité (un vrai site remplace l'absence de site, c'est un signal de sérieux massif), en image (cohérence graphique) et en trafic qualifié. Quand un voyageur demandera à ChatGPT ou Gemini "bon restaurant à Linguizzetta" ou "où manger à Bravone", on veut que U Caradellu ressorte en tête.
-
-Si le rendu vous plaît en l'état, je peux mettre le site en ligne sur votre nom de domaine dès cette semaine. Si vous voulez ajuster quelque chose avant (photos, textes, sections, couleurs), dites-moi simplement ce que vous voudriez voir évoluer.
-
-À très vite,
+Si la démo vous plaît, je la mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi ce qu'on ajuste.
 
 Anto
-Menghi Computer Science
-menghicomputerscience@gmail.com
-06 43 87 91 14
+SpeedPost.fr (WebAgentic Builder)
+Un service de SAS Mindlet, Corte (Corse)
+Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional
+contact@speedpost.fr  |  webagentic.speedpost.fr

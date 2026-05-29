@@ -1,9 +1,14 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import QuickOrder from "@/components/islands/QuickOrder.tsx";
 import StickyCta from "@/components/mobile/StickyCta.astro";
-import { cafe } from "@/data/cafe";
-const items = cafe.filter((c) => c.category !== "the"); // Damman is single line, garde tout sinon
+import { listCafe } from "@/lib/api";
+import { toLegacyBoisson, safe } from "@/lib/adapters";
+
+const r = await safe(listCafe(), []);
+const cafe = (r.data ?? []).map(toLegacyBoisson);
+const items = cafe.filter((c) => c.category !== "the");
 ---
 <BaseLayout
   title="Click & collect, Les Contes Infusés"
@@ -22,7 +27,7 @@ const items = cafe.filter((c) => c.category !== "the"); // Damman is single line
       </div>
       <a href="/cafe" class="btn-ghost">Voir la carte complète</a>
     </div>
-    <QuickOrder items={cafe} client:load />
+    <QuickOrder items={items} client:load />
   </section>
   <StickyCta label="Récupérer dans 15 min" href="/panier" />
 </BaseLayout>

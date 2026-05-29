@@ -18,8 +18,10 @@ Coder à la main un site **bespoke, single-file, state-of-the-art 2025-2026** qu
   4. Référencer `<link rel="stylesheet" href="./tailwind.css"/>` dans `index.html`
   5. Supprimer `tw.config.js` + `tw.in.css` après compile, garder uniquement `index.html` + `tailwind.css`
 - **Google Fonts** (chargement via `<link rel="preconnect">` + `<link href="...">`)
-- **Motion One** ESM (`import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`)
-- **Lenis** smooth scroll ESM (`import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/+esm'`)
+- **Motion One** ESM (`import { animate, inView } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`) — n'importe PAS `scroll`
+- **SCROLL NATIF. Lenis INTERDIT** (et tout smooth-scroll hijack). Pas d'effets scroll-linked (`scroll((p)=>...)`, parallaxe, stroke scrubbé). Smooth des ancres via CSS `html{scroll-behavior:smooth}` seulement. Incident 2026-05-29 Horizon Coiffure.
+- **SVG dessiné main = petits décors UNIQUEMENT** (icônes, puces, dividers, motifs de fond subtils). INTERDIT en grand format / premier plan / hero : pas de grande illustration ou scène SVG plein écran, pas de hero ni money shot construit autour d'un SVG dessiné. Le premier plan = vraies photos du commerce.
+- **Le site REMPLACE le service existant** : aucun lien / bouton / iframe vers Planity, Treatwell, Fresha, TheFork/LaFourchette, OpenTable, Zenchef, Guestonline, Resengo, Uber Eats, Deliveroo, Just Eat, ancien site, Wix, Linktree. Réservation / RDV / contact / commande **en natif** (`tel:`, email, formulaire, ancre `#reservation`). Maps iframe + liens réseaux sociaux en footer restent OK. Voir `feedback_replace_existing_service.md`.
 - Palette : aussi en CSS variables (`:root{--bg:...}`) pour usage dans `<style>` custom
 - **Reveals robustes (filet de sécurité)** :
   ```css
@@ -28,6 +30,7 @@ Coder à la main un site **bespoke, single-file, state-of-the-art 2025-2026** qu
   ```
   Et au tout début du `<script type="module">` : `document.documentElement.classList.add('js-ready');`
   Animation Motion `inView` : durée 0.4-0.6s max, jamais 0.9-1.4s (perçu comme lent).
+- **Données réelles ou rien, jamais de `0`/placeholder.** Toute stat = vraie valeur en dur dans le HTML. Les compteurs animés : `<span class="count" data-to="20">20</span>` (PAS `>0<`). `data-to` = cible d'animation ; le texte initial est déjà la vraie valeur. Le count-up est un enhancement guardé `if(!reduce)`, qui restaure la valeur finale, et la page reste correcte si `inView` ne se déclenche pas (section déjà visible) ou si Motion est bloqué. Donnée absente de `research.md` → retirer la stat, ne jamais mettre `0`. Incident 2026-05-29 espace-jc-coiffure. Cf. `feedback_no_placeholder_zero_data.md`.
 
 ## Structure du document
 
@@ -76,20 +79,18 @@ Coder à la main un site **bespoke, single-file, state-of-the-art 2025-2026** qu
   <footer>...</footer>
 
   <script type="module">
-    import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm';
-    import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/+esm';
+    // SCROLL NATIF : pas de Lenis, pas de scroll((p)=>...). Smooth des ancres via CSS.
+    import { animate, inView } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm';
 
-    const lenis = new Lenis();
-    function raf(t){ lenis.raf(t); requestAnimationFrame(raf); } requestAnimationFrame(raf);
+    document.documentElement.classList.add('js-ready');
 
+    // Apparitions one-shot (déclenchées à l'entrée viewport, jamais scrubbées sur le scroll)
     inView('[data-reveal]', el => {
       animate(el, { opacity:[0,1], transform:['translateY(20px)','translateY(0)'] },
-              { duration:0.8, easing:[0.2,0.7,0.2,1] });
-    });
+              { duration:0.5, easing:[0.2,0.7,0.2,1] });
+    }, { amount: 0.15 });
 
-    const hero = document.querySelector('#hero-image');
-    if (hero) scroll(animate(hero, { transform:['translateY(0)','translateY(-10%)'] }),
-                      { target: hero, offset:['start end','end start'] });
+    // Geste UI signature : déclencher via inView (apparition) ou hover/click. Jamais via scroll((p)=>...).
   </script>
 </body>
 </html>
@@ -100,7 +101,7 @@ Coder à la main un site **bespoke, single-file, state-of-the-art 2025-2026** qu
 ## Règles d'exécution
 
 1. **Toujours lire `design.md` en premier** : toutes les décisions s'y trouvent. Ne jamais ré-inventer une couleur ou une typo.
-2. **Assigner `data-reveal`** à tous les blocs qui doivent apparaître au scroll (titres de section, paragraphes, cartes).
+2. **Assigner `data-reveal`** à tous les blocs qui doivent apparaître à l'entrée viewport (titres de section, paragraphes, cartes). Animation one-shot via `inView`, jamais collée à la position de scroll.
 3. **Hero image** : balise `<img id="hero-image">` avec le `src` du brief (toujours un **chemin local relatif** `./assets/images/...`), `loading="eager"`, `fetchpriority="high"`, `alt` du brief, objet-cover, aspect 4:5 mobile + 3:4 desktop.
 4. **Marquee (si le brief le prévoit)** : duplicate le contenu (`<div class="marquee flex gap-10 whitespace-nowrap">` × 2) pour boucle sans couture. Si le brief ne prévoit PAS de marquee, ne pas en ajouter un.
 5. **Galerie (si le brief la prévoit)** : la forme suit l'archétype (masonry, diagonale, stack vertical, strip horizontale, carousel, grille dense, etc.), pas toujours une grille 3×2 standard. Si le brief n'inclut pas de section galerie (ex. `wordmark-xxl` radical), ne pas en ajouter.

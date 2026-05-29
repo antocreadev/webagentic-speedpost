@@ -1,8 +1,62 @@
-node_modules
-dist
-.astro
-.DS_Store
+# Dependencies
+node_modules/
+backend/.venv/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Build outputs
+dist/
+.astro/
+backend/build/
+backend/*.egg-info/
+
+# Environment
 .env
+.env.local
 .env.production
+.env.*.local
+
+# Data / DB
+backend/contes.db
+backend/contes.db-journal
+backend/contes.db-shm
+backend/contes.db-wal
+backend/test_contes.db*
+backend/*.sqlite
+backend/*.sqlite3
+backend/static/images/
+
+# Outbox (mock email)
+backend/app/_outbox/
+backend/_outbox/
+
+# Logs
 *.log
-_design-sources
+backend/logs/
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.history/
+
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Local design sources (not for repo)
+_design-sources/
+DESIGN_BRIEF.md
+AUDIT.md

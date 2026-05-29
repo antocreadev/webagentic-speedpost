@@ -1,20 +1,41 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import EventCard from "@/components/cards/EventCard.astro";
 import EventRegistration from "@/components/islands/EventRegistration.tsx";
 import StickyCta from "@/components/mobile/StickyCta.astro";
-import LaceMedallion from "@/components/icons/LaceMedallion.astro";
-import { events, type Event } from "@/data/events";
+import { api, getEventBySlug, getEventSeats } from "@/lib/api";
+import type { Event as ApiEvent } from "@/lib/api";
+import { toLegacyEvent } from "@/lib/adapters";
 import { formatPrice, formatDate } from "@/lib/format";
 
-export function getStaticPaths() {
-  return events.map((e) => ({ params: { slug: e.slug }, props: { event: e } }));
+const slug = Astro.params.slug as string;
+
+let apiEvent: Awaited<ReturnType<typeof getEventBySlug>> | null = null;
+try {
+  apiEvent = await getEventBySlug(slug);
+} catch {
+  return new Response(null, { status: 404, statusText: "Not Found" });
 }
-const { event } = Astro.props as { event: Event };
+
+const event = toLegacyEvent(apiEvent);
+
+let remaining = event.capacity - event.registered;
+try {
+  const seats = await getEventSeats(slug);
+  remaining = seats.available;
+  event.registered = seats.registered;
+  event.capacity = seats.capacity;
+} catch { /* fall back */ }
+
 const d = new Date(event.date);
 const time = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-const remaining = event.capacity - event.registered;
-const others = events.filter((e) => e.slug !== event.slug).slice(0, 3);
+
+let others: ReturnType<typeof toLegacyEvent>[] = [];
+try {
+  const list = await api.get("catalog/events", { searchParams: { upcoming: true, limit: 12 } }).json<ApiEvent[]>();
+  others = list.map(toLegacyEvent).filter((e) => e.slug !== event.slug).slice(0, 3);
+} catch { /* ignore */ }
 ---
 <BaseLayout title={`${event.title}, Les Contes Infusés`} description={event.description}>
   <section class="relative max-w-6xl mx-auto px-5 sm:px-8 py-12">
@@ -69,19 +90,21 @@ const others = events.filter((e) => e.slug !== event.slug).slice(0, 3);
       </div>
 
       <aside class="lg:sticky lg:top-28 lg:self-start">
-        <EventRegistration eventTitle={event.title} remaining={remaining} client:load />
+        <EventRegistration slug={slug} eventTitle={event.title} remaining={remaining} client:load />
       </aside>
     </div>
 
-    <section class="mt-24">
-      <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
-        <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600">Autres rencontres</h2>
-        <a href="/evenements" class="btn-ghost">Tout le calendrier</a>
-      </div>
-      <div class="grid md:grid-cols-3 gap-4">
-        {others.map((e) => <EventCard event={e} />)}
-      </div>
-    </section>
+    {others.length > 0 && (
+      <section class="mt-24">
+        <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
+          <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600">Autres rencontres</h2>
+          <a href="/evenements" class="btn-ghost">Tout le calendrier</a>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4">
+          {others.map((e) => <EventCard event={e} />)}
+        </div>
+      </section>
+    )}
   </section>
   <StickyCta label={event.price === 0 ? "Réserver" : `Réserver · ${formatPrice(event.price)}`} href="#registration" />
 </BaseLayout>

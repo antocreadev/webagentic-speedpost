@@ -1,0 +1,11 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminGuard from "@/islands/AdminGuard";
+import AdminSettings from "@/islands/AdminSettings";
+---
+
+<AdminLayout title="Paramètres — Admin" active="settings">
+  <AdminGuard client:load>
+    <AdminSettings client:load />
+  </AdminGuard>
+</AdminLayout>

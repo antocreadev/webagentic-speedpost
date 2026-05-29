@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Plus, Minus, Trash2, Coffee } from "lucide-react";
+import { Plus, Minus, Trash2, Coffee, Loader2 } from "lucide-react";
 import type { CafeItem } from "@/data/cafe";
 import { cart, type CartItem } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
+import { createCafeOrder, apiError } from "@/lib/api";
+import { toast } from "@/lib/toast";
 
 interface Props {
   items: CafeItem[];
@@ -21,7 +23,7 @@ export default function QuickOrder({ items }: Props) {
   const [list, setList] = useState<CartItem[]>([]);
   const [name, setName] = useState("");
   const [slot, setSlot] = useState("15");
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => cart.subscribe(setList), []);
 
@@ -30,14 +32,34 @@ export default function QuickOrder({ items }: Props) {
     return acc;
   }, {});
 
-  const total = list.reduce((s, i) => s + i.price * i.qty, 0);
+  const cafeOnly = list.filter((i) => i.type === "boisson");
+  const total = cafeOnly.reduce((s, i) => s + i.price * i.qty, 0);
 
-  const onSubmit = (e: React.FormEvent) => {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
-    console.log("Click & collect", { name, slot, list });
-    setTimeout(() => setSubmitted(false), 4000);
-  };
+    if (cafeOnly.length === 0 || submitting) return;
+    setSubmitting(true);
+    try {
+      const minutes = Number(slot);
+      const pickupTime = new Date(Date.now() + minutes * 60_000).toISOString();
+      const res = await createCafeOrder({
+        items: cafeOnly.map((i) => ({ boisson_slug: i.id, qty: i.qty })),
+        first_name: name,
+        pickup_time: pickupTime,
+        payment: { method: "onsite" },
+      });
+      // Clear cafe items only
+      cafeOnly.forEach((i) => cart.remove(i.id, i.type));
+      toast.success("Commande prise.", `On vous attend dans ${minutes} min.`);
+      const tk = (res as any).token || (res as any).public_token || "";
+      window.location.assign(`/cafe/confirmation?order=${encodeURIComponent(res.id)}&token=${encodeURIComponent(tk)}`);
+    } catch (err) {
+      const ee = await apiError(err);
+      toast.error("Commande impossible", ee.message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div className="grid lg:grid-cols-[1fr_360px] gap-8">
@@ -79,38 +101,26 @@ export default function QuickOrder({ items }: Props) {
         <p className="eyebrow">Votre panier</p>
         <h3 className="font-display italic text-2xl text-cocoa-600 mt-1">Click & collect</h3>
 
-        {list.length === 0 ? (
+        {cafeOnly.length === 0 ? (
           <p className="text-sm text-cocoa-400 mt-6 italic">Aucun article. Cliquez sur la carte à gauche.</p>
         ) : (
           <ul className="mt-5 space-y-3">
-            {list.map((i) => (
+            {cafeOnly.map((i) => (
               <li key={`${i.type}-${i.id}`} className="flex items-center gap-3 text-sm">
                 <div className="flex-1 min-w-0">
                   <p className="font-body text-cocoa-700 truncate">{i.title}</p>
                   <p className="price-tab text-xs">{formatPrice(i.price)}</p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => cart.updateQty(i.id, i.type, i.qty - 1)}
-                    aria-label="Moins"
-                    className="p-1 rounded-full border border-line hover:border-terracotta-400"
-                  >
+                  <button onClick={() => cart.updateQty(i.id, i.type, i.qty - 1)} aria-label="Moins" className="p-1 rounded-full border border-line hover:border-terracotta-400">
                     <Minus size={12} />
                   </button>
                   <span className="w-6 text-center font-sans text-sm">{i.qty}</span>
-                  <button
-                    onClick={() => cart.updateQty(i.id, i.type, i.qty + 1)}
-                    aria-label="Plus"
-                    className="p-1 rounded-full border border-line hover:border-terracotta-400"
-                  >
+                  <button onClick={() => cart.updateQty(i.id, i.type, i.qty + 1)} aria-label="Plus" className="p-1 rounded-full border border-line hover:border-terracotta-400">
                     <Plus size={12} />
                   </button>
                 </div>
-                <button
-                  onClick={() => cart.remove(i.id, i.type)}
-                  aria-label="Retirer"
-                  className="p-1 text-cocoa-400 hover:text-terracotta-400"
-                >
+                <button onClick={() => cart.remove(i.id, i.type)} aria-label="Retirer" className="p-1 text-cocoa-400 hover:text-terracotta-400">
                   <Trash2 size={14} />
                 </button>
               </li>
@@ -127,33 +137,22 @@ export default function QuickOrder({ items }: Props) {
           <label className="block text-xs font-smallcap tracking-widest uppercase text-cocoa-400">
             Votre prénom
             <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Élise"
-              className="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400"
-            />
+              type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Élise"
+              className="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400" />
           </label>
           <label className="block text-xs font-smallcap tracking-widest uppercase text-cocoa-400">
             Récupération
-            <select
-              value={slot}
-              onChange={(e) => setSlot(e.target.value)}
-              className="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400"
-            >
+            <select value={slot} onChange={(e) => setSlot(e.target.value)}
+              className="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400">
               <option value="15">Dans 15 min</option>
               <option value="30">Dans 30 min</option>
               <option value="45">Dans 45 min</option>
               <option value="60">Dans 1h</option>
             </select>
           </label>
-          <button
-            type="submit"
-            disabled={list.length === 0}
-            className="btn-terracotta w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {submitted ? "Commande envoyée" : `Récupérer dans ${slot} min`}
+          <button type="submit" disabled={cafeOnly.length === 0 || submitting}
+            className="btn-terracotta w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+            {submitting ? <><Loader2 size={14} className="animate-spin" /> Envoi</> : `Récupérer dans ${slot} min`}
           </button>
         </form>
       </aside>

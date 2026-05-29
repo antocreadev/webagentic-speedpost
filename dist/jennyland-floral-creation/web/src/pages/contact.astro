@@ -1,0 +1,90 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const whatsapp = (import.meta.env.PUBLIC_WHATSAPP as string) || "+33600000000";
+const instagram = (import.meta.env.PUBLIC_INSTAGRAM as string) || "jennyland.floral";
+const email = (import.meta.env.PUBLIC_EMAIL as string) || "contact@jennyland.fr";
+---
+
+<BaseLayout title="Contact — Jennyland">
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px]">
+      <nav class="spec-num text-ink-40 mb-12">
+        <a href="/" class="hover:text-rose-deep">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>Contact</span>
+      </nav>
+      <span class="spec-num text-ink-40 mb-6 block">N° XII · Trois canaux</span>
+      <h1 class="font-display text-display-xl text-ink leading-[0.9]">
+        Trois façons de<br/>
+        <span class="font-display-italic text-rose-deep">me joindre.</span>
+      </h1>
+      <p class="mt-10 font-display-italic text-2xl text-ink-60 max-w-2xl">
+        Réponse sous 24h en semaine. Pour les commandes urgentes ou personnalisées, WhatsApp est toujours plus rapide.
+      </p>
+    </div>
+  </section>
+
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-1 md:grid-cols-3 border-t border-ink">
+        {[
+          { num: "01", title: "WhatsApp", subtitle: "Le plus rapide.", value: whatsapp, href: `https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}` },
+          { num: "02", title: "Email", subtitle: "Pour les questions plus longues.", value: email, href: `mailto:${email}` },
+          { num: "03", title: "Instagram", subtitle: "Voir l'atelier en vrai.", value: `@${instagram}`, href: `https://instagram.com/${instagram}` },
+        ].map((channel, i) => (
+          <a
+            href={channel.href}
+            target={channel.href.startsWith("http") ? "_blank" : undefined}
+            rel="noopener noreferrer"
+            class={`group block p-7 border-b border-r border-ink no-underline transition-colors hover:bg-ink hover:text-cream ${i === 2 ? "md:border-r-0" : ""}`}
+            data-reveal
+            style={`--reveal-delay: ${i * 100}ms`}
+          >
+            <span class="spec-num text-rose-deep group-hover:text-blush">{channel.num}</span>
+            <h2 class="font-display text-display-m mt-6 leading-tight">{channel.title}</h2>
+            <p class="mt-2 font-display-italic text-base opacity-60">{channel.subtitle}</p>
+            <p class="mt-6 font-mono text-sm break-all">{channel.value}</p>
+            <span class="mt-4 inline-flex items-center gap-1.5 spec-num">
+              Ouvrir
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1000px]">
+      <span class="spec-num text-ink-40 mb-6 block">N° XII.2 · FAQ</span>
+      <h2 class="font-display text-display-l text-ink leading-[0.92] mb-12" data-reveal>
+        Questions <span class="font-display-italic text-rose-deep">fréquentes.</span>
+      </h2>
+      <div class="border-t border-ink">
+        {[
+          { q: "Combien de temps Jenny met pour faire un bouquet ?", a: "Entre 8h pour un mini-bouquet à 50h pour un bouquet de mariée complet. La file d'attente courante est visible en temps réel sur Instagram." },
+          { q: "Mes fleurs vont-elles tenir dans le temps ?", a: "Oui. Le coton mercerisé tient sa couleur sur 15-20 ans à l'abri du soleil direct. Pas d'eau, pas d'entretien." },
+          { q: "Puis-je modifier les couleurs d'un bouquet ?", a: "Oui pour les bouquets sur-mesure. Pour les pièces du catalogue, les couleurs sont fixées mais Jenny peut faire une variante sur demande WhatsApp (devis en 24h)." },
+          { q: "Livrez-vous à l'étranger ?", a: "France métropolitaine, Belgique, Suisse, Luxembourg. Pour le reste de l'Europe ou hors UE, contactez Jenny pour un devis sur-mesure." },
+          { q: "Que faire si mon bouquet est endommagé à la livraison ?", a: "Photo de l'emballage et du bouquet sur WhatsApp dans les 48h. Réparation gratuite ou remboursement intégral selon les cas." },
+        ].map((faq, i) => (
+          <details class="border-b border-line py-6" data-reveal>
+            <summary class="cursor-pointer font-display text-2xl text-ink list-none flex justify-between items-baseline">
+              <span class="flex items-baseline gap-4">
+                <span class="spec-num text-ink-40">0{i + 1}</span>
+                {faq.q}
+              </span>
+              <span class="text-rose-deep transition-transform" style="display: inline-block">+</span>
+            </summary>
+            <p class="mt-4 text-sm text-ink-60 leading-relaxed pl-12">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  details[open] summary > span:last-child { transform: rotate(45deg); }
+</style>

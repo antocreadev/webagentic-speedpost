@@ -54,7 +54,7 @@ import { Heart, CalendarDays, Coffee } from "lucide-react";
   </section>
 
   <section class="max-w-3xl mx-auto px-5 sm:px-8 pb-20">
-    <form class="bg-cream-50 border border-line rounded-2xl p-8" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Bien reçu, à très vite';">
+    <form class="bg-cream-50 border border-line rounded-2xl p-8" data-newsletter>
       <p class="eyebrow text-center">Inscription</p>
       <h2 class="font-display italic text-3xl text-cocoa-600 text-center mt-2">Recevez la prochaine édition</h2>
 
@@ -65,7 +65,7 @@ import { Heart, CalendarDays, Coffee } from "lucide-react";
         </label>
         <label class="block text-xs font-smallcap tracking-widest uppercase text-cocoa-400">
           Email
-          <input type="email" required class="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400" />
+          <input name="email" type="email" required class="mt-1 w-full px-4 py-2.5 rounded-full border border-line bg-paper font-body text-sm focus:outline-none focus:border-terracotta-400" />
         </label>
       </div>
       <label class="mt-4 flex items-start gap-2 text-xs text-cocoa-400 font-sans">

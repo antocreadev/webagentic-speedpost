@@ -1,0 +1,100 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import CategoryCard from "@/components/CategoryCard.astro";
+import { api, safe, type Product, type Category } from "@/lib/api";
+
+const [{ data: catData }, { data: prodData }] = await Promise.all([
+  safe(api.categories(), { categories: [] as Category[] }),
+  safe(api.products({}), { products: [] as Product[] }),
+]);
+
+const categories = catData.categories;
+const products = prodData.products;
+const sortValue = Astro.url.searchParams.get("sort") || "featured";
+const sorted = [...products].sort((a, b) => {
+  if (sortValue === "price-asc") return a.price_cents - b.price_cents;
+  if (sortValue === "price-desc") return b.price_cents - a.price_cents;
+  if (sortValue === "name") return a.name.localeCompare(b.name, "fr");
+  return (b.featured - a.featured) || a.sort - b.sort;
+});
+---
+
+<BaseLayout title="Boutique — Jennyland Floral Création">
+  <section class="bath bath-rose-soft pt-12 pb-12 px-5 sm:px-8 md:px-12">
+    <div class="mx-auto max-w-[1400px]">
+      <nav class="spec-num text-ink-40 mb-12">
+        <a href="/" class="hover:text-rose-deep">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>Boutique</span>
+      </nav>
+
+      <div class="grid grid-cols-12 gap-6 md:gap-8 items-end mb-12" data-reveal>
+        <div class="col-span-12 md:col-span-8">
+          <span class="spec-num text-ink-40 mb-6 block">N° 2026 / Catalogue</span>
+          <h1 class="font-display text-display-xl text-ink leading-[0.9]">
+            La boutique<br/>
+            <span class="font-display-italic text-rose-deep">complète.</span>
+          </h1>
+        </div>
+        <div class="col-span-12 md:col-span-4 md:text-right">
+          <p class="font-display-italic text-xl text-ink-60 leading-tight mb-4">
+            {products.length} pièces actuellement disponibles. Chaque bouquet est unique et numéroté.
+          </p>
+          <select
+            class="field-input inline-block w-auto"
+            onchange="window.location.search = '?sort=' + this.value"
+          >
+            <option value="featured" selected={sortValue === "featured"}>Recommandé</option>
+            <option value="price-asc" selected={sortValue === "price-asc"}>Prix ↑</option>
+            <option value="price-desc" selected={sortValue === "price-desc"}>Prix ↓</option>
+            <option value="name" selected={sortValue === "name"}>Nom A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="border-t border-ink pt-6 flex gap-2 overflow-x-auto scrollbar-thin pb-4" data-reveal>
+        <a href="/boutique" class="btn btn-primary text-xs">Tout</a>
+        {categories.map((cat) => (
+          <a href={`/boutique/${cat.slug}`} class="btn btn-light text-xs whitespace-nowrap">
+            {cat.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {sorted.map((p, i) => (
+          <ProductCard product={p} index={i} number={`N° 0${(i + 1).toString().padStart(3, "0")} / 010`} />
+        ))}
+      </div>
+
+      {sorted.length === 0 && (
+        <div class="text-center py-32">
+          <p class="font-display-italic text-3xl text-ink-60">L'atelier prépare le prochain catalogue.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-12 gap-6 mb-12" data-reveal>
+        <div class="col-span-12 md:col-span-8">
+          <span class="spec-num text-ink-40 mb-6 block">Univers</span>
+          <h2 class="font-display text-display-l text-ink leading-[0.92]">
+            Choisissez par <span class="font-display-italic text-rose-deep">ambiance.</span>
+          </h2>
+        </div>
+      </div>
+      <div class="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        {categories.slice(0, 4).map((cat, i) => (
+          <CategoryCard category={cat} index={i} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

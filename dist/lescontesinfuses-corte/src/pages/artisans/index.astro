@@ -1,8 +1,29 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import LaceMedallion from "@/components/icons/LaceMedallion.astro";
 import ArtisansFilter from "@/components/islands/ArtisansFilter.tsx";
-import { artisans } from "@/data/artisans";
+import EmptyState from "@/components/empty/EmptyState.astro";
+import { listArtisans, getArtisanBySlug } from "@/lib/api";
+import { toLegacyProduct, safe } from "@/lib/adapters";
+import type { ArtisanProduct } from "@/data/artisans";
+
+const r = await safe(listArtisans(), []);
+const artisansList = r.data ?? [];
+
+let artisans: ArtisanProduct[] = [];
+if (!r.error && artisansList.length) {
+  const details = await Promise.all(
+    artisansList.map((a) => getArtisanBySlug(a.slug).catch(() => null)),
+  );
+  for (const d of details) {
+    if (!d) continue;
+    for (const p of d.products ?? []) {
+      artisans.push(toLegacyProduct(p, { name: d.name, city: d.city }));
+    }
+  }
+}
+const apiError = r.error;
 
 const portraits = [
   { name: "Atelier Sì", city: "Calenzana", body: "Cire végétale, mèches en bois, parfums tirés du maquis. Trois personnes, un atelier sous figuier, et l'envie de faire durer." },
@@ -28,7 +49,16 @@ const portraits = [
   </section>
 
   <section class="max-w-7xl mx-auto px-5 sm:px-8 pb-20" data-chapter="2">
-    <ArtisansFilter products={artisans} client:load />
+    {apiError ? (
+      <EmptyState
+        title="Atelier momentanément indisponible"
+        description="Nous n'avons pas pu charger les pièces. Réessayez dans un instant."
+        ctaLabel="Réessayer"
+        ctaHref="/artisans"
+      />
+    ) : (
+      <ArtisansFilter products={artisans} client:load />
+    )}
   </section>
 
   <section class="bg-cream-100/40 border-y border-line py-20" data-chapter="3">

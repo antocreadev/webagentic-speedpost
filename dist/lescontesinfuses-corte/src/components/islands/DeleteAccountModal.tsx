@@ -1,11 +1,32 @@
 import React, { useState } from "react";
-import { AlertCircle, X } from "lucide-react";
+import { AlertCircle, X, Loader2 } from "lucide-react";
 import { toast } from "@/lib/toast";
+import { requestAccountDeletion, apiError } from "@/lib/api";
+import { authStore } from "@/lib/auth";
 
 export default function DeleteAccountModal() {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function confirmDelete() {
+    const user = authStore.getUser();
+    const email = user?.email || prompt("Email du compte ?") || "";
+    if (!email) return;
+    setLoading(true);
+    try {
+      await requestAccountDeletion({ email });
+      authStore.clearSession();
+      setDone(true);
+      toast.error("Action irréversible.", "Votre demande de suppression est enregistrée.");
+    } catch (err) {
+      const ee = await apiError(err);
+      toast.error("Suppression impossible", ee.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>
@@ -60,11 +81,11 @@ export default function DeleteAccountModal() {
                   </button>
                   <button
                     type="button"
-                    disabled={text !== "SUPPRIMER"}
-                    onClick={() => { setDone(true); toast.error("Action irréversible.", "Votre demande de suppression est enregistrée."); }}
+                    disabled={text !== "SUPPRIMER" || loading}
+                    onClick={confirmDelete}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-600 text-cream-50 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-cocoa-700 transition-colors text-xs uppercase tracking-widest font-smallcap"
                   >
-                    Confirmer la suppression
+                    {loading ? <><Loader2 size={12} className="animate-spin" /> Envoi</> : "Confirmer la suppression"}
                   </button>
                 </div>
               </>

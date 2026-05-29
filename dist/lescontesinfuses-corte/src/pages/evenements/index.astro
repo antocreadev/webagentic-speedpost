@@ -1,10 +1,21 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import LaurelBranch from "@/components/icons/LaurelBranch.astro";
 import EventsView from "@/components/islands/EventsView.tsx";
-import { events } from "@/data/events";
+import EmptyState from "@/components/empty/EmptyState.astro";
+import { api } from "@/lib/api";
+import type { Event as ApiEvent } from "@/lib/api";
+import { toLegacyEvent, safe } from "@/lib/adapters";
 
-const sorted = events.slice().sort((a, b) => +new Date(a.date) - +new Date(b.date));
+const r = await safe(
+  api.get("catalog/events", { searchParams: { upcoming: true, limit: 100 } }).json<ApiEvent[]>(),
+  [] as ApiEvent[],
+);
+const sorted = (r.data ?? [])
+  .map(toLegacyEvent)
+  .sort((a, b) => +new Date(a.date) - +new Date(b.date));
+const apiError = r.error;
 ---
 <BaseLayout
   title="Événements à Corte, Les Contes Infusés"
@@ -29,6 +40,22 @@ const sorted = events.slice().sort((a, b) => +new Date(a.date) - +new Date(b.dat
   </section>
 
   <section class="max-w-5xl mx-auto px-5 sm:px-8 py-12">
-    <EventsView events={sorted} client:load />
+    {apiError ? (
+      <EmptyState
+        title="Calendrier momentanément indisponible"
+        description="Nous n'avons pas pu charger les événements. Réessayez dans un instant."
+        ctaLabel="Réessayer"
+        ctaHref="/evenements"
+      />
+    ) : sorted.length === 0 ? (
+      <EmptyState
+        title="Aucun événement à venir pour l'instant"
+        description="Le calendrier se remplit chaque mois. Repassez bientôt."
+        ctaLabel="Newsletter"
+        ctaHref="/newsletter"
+      />
+    ) : (
+      <EventsView events={sorted} client:load />
+    )}
   </section>
 </BaseLayout>

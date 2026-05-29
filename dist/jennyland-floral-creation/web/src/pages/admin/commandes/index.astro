@@ -1,0 +1,11 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminGuard from "@/islands/AdminGuard";
+import AdminOrders from "@/islands/AdminOrders";
+---
+
+<AdminLayout title="Commandes — Admin" active="orders">
+  <AdminGuard client:load>
+    <AdminOrders client:load />
+  </AdminGuard>
+</AdminLayout>

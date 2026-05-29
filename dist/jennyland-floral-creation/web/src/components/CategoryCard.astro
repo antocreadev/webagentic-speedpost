@@ -1,0 +1,47 @@
+---
+import type { Category } from "@/lib/api";
+
+interface Props {
+  category: Category;
+  index?: number;
+}
+const { category, index = 0 } = Astro.props;
+
+// Each category gets a different bath color
+const bathMap: Record<string, string> = {
+  "bouquets-romantiques": "bath-rose-deep",
+  "bouquets-mariage": "bath-blush",
+  compositions: "bath-aubergine",
+  decorations: "bath-aubergine",
+  "fleurs-unitaires": "bath-rose-soft",
+};
+const bath = bathMap[category.slug] || "bath-rose-soft";
+const num = String(index + 1).padStart(2, "0");
+---
+
+<a
+  href={`/boutique/${category.slug}`}
+  class={`bath ${bath} group relative block crop-portrait overflow-hidden no-underline`}
+  data-reveal
+  style={`--reveal-delay: ${index * 80}ms`}
+>
+  <div class="relative z-10 flex flex-col h-full p-7 transition-transform duration-700 group-hover:scale-[1.02] origin-bottom-left">
+    <div class="flex items-center justify-between mb-auto">
+      <span class="spec-num opacity-60">{num} / 04</span>
+      <span class="eyebrow opacity-60">Univers</span>
+    </div>
+
+    <div>
+      <h3 class="font-display text-4xl md:text-5xl leading-[0.92]">
+        {category.name}
+      </h3>
+      {category.tagline && (
+        <p class="mt-3 text-sm leading-snug opacity-80 max-w-xs">{category.tagline}</p>
+      )}
+      <span class="mt-6 inline-flex items-center gap-2 eyebrow opacity-90 group-hover:gap-4 transition-all">
+        Voir
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </span>
+    </div>
+  </div>
+</a>

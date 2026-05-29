@@ -29,10 +29,10 @@ import Stamp from "./icons/decor/Stamp.astro";
       <p class="mt-3 font-body text-cream-100/70 max-w-xl mx-auto">Coups de cœur, agenda des dédicaces, recettes du café et nouveautés des artisans. Une fois par mois, jamais plus.</p>
       <form
         class="mt-7 max-w-xl mx-auto flex flex-col sm:flex-row gap-3"
-        onsubmit="event.preventDefault(); const b=this.querySelector('button'); b.textContent='Bien reçu, à très vite';"
+        data-newsletter
       >
         <label class="sr-only" for="footer-nl">Votre email</label>
-        <input id="footer-nl" type="email" required placeholder="votre.email@exemple.fr"
+        <input id="footer-nl" name="email" type="email" required placeholder="votre.email@exemple.fr"
           class="flex-1 px-5 py-3 rounded-full bg-cocoa-700 border border-cream-100/15 text-cream-50 placeholder:text-cream-100/40 focus:outline-none focus:border-terracotta-400 font-sans text-sm" />
         <button type="submit" class="btn-terracotta justify-center">S'inscrire</button>
       </form>
@@ -87,7 +87,8 @@ import Stamp from "./icons/decor/Stamp.astro";
           <li><a href="/compte/commandes" class="hover:text-terracotta-200 transition">Mes commandes</a></li>
           <li><a href="/compte/donnees" class="hover:text-terracotta-200 transition">Données (RGPD)</a></li>
           <li><a href="/compte/preferences" class="hover:text-terracotta-200 transition">Préférences</a></li>
-          <li><a href="/deconnexion" class="hover:text-terracotta-200 transition">Déconnexion</a></li>
+          <li><a href="/retrouver-ma-commande" class="hover:text-terracotta-200 transition">Suivi commande sans compte</a></li>
+          <li><a href="/auth/connexion" class="hover:text-terracotta-200 transition">Connexion</a></li>
         </ul>
       </div>
     </div>
@@ -201,3 +202,31 @@ import Stamp from "./icons/decor/Stamp.astro";
     .lci-backtop { display: none !important; }
   }
 </style>
+
+<script>
+  import { subscribeNewsletter, apiError } from "@/lib/api";
+  function bind(form: HTMLFormElement) {
+    if ((form as any).__bound) return;
+    (form as any).__bound = true;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const email = String(fd.get("email") ?? "").trim();
+      if (!email) return;
+      const btn = form.querySelector("button[type=submit]") as HTMLButtonElement | null;
+      if (btn) btn.disabled = true;
+      try {
+        await subscribeNewsletter({ email, consent: true } as any);
+        (window as any).__lciToast?.success("Inscription bientôt confirmée par email.");
+        if (btn) btn.textContent = "Bien reçu, à très vite";
+        form.reset();
+      } catch (err) {
+        const ee = await apiError(err);
+        (window as any).__lciToast?.error("Inscription impossible", ee.message);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+  document.querySelectorAll<HTMLFormElement>("form[data-newsletter]").forEach(bind);
+</script>

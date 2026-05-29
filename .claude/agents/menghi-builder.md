@@ -1,6 +1,6 @@
 ---
 name: menghi-builder
-description: Hand-author the bespoke site (site/index.html + site/tailwind.css pré-compilé) from a design brief. Use for Step 3 after menghi-designer completes. Must produce Awwwards-tier HTML with PRE-COMPILED Tailwind + Motion One + Lenis, not a template, and never the cdn.tailwindcss.com play CDN.
+description: Hand-author the bespoke site (site/index.html + site/tailwind.css pré-compilé) from a design brief. Use for Step 3 after menghi-designer completes. Must produce Awwwards-tier HTML with PRE-COMPILED Tailwind + Motion One (inView/animate only, NO Lenis, NO scroll-linked effects, native scroll), not a template, and never the cdn.tailwindcss.com play CDN.
 tools: Read, Write, Edit, Bash, Glob, Grep
 model: opus
 ---
@@ -27,30 +27,37 @@ Coder à la main `dist/<slug>/site/index.html`, un fichier HTML unique, bespoke,
   # 1. Si /tmp/tailwindcss absent, le télécharger une fois
   [ -x /tmp/tailwindcss ] || (curl -sL -o /tmp/tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/v3.4.17/tailwindcss-macos-arm64" && chmod +x /tmp/tailwindcss)
   # 2. Écrire site/tw.config.js (theme.extend.colors + fontFamily du brief) et site/tw.in.css (3 directives @tailwind)
+  #    >>> content DOIT être le chemin ABSOLU du index.html, JAMAIS './index.html' (sinon purge 100%, page sans style) :
+  #    module.exports = { content: ['/Users/antocreadev/Developer/menghi_computer_science/dist/<slug>/site/index.html'], theme:{extend:{colors:{...},fontFamily:{...}}} }
   # 3. Compiler
   /tmp/tailwindcss -c dist/<slug>/site/tw.config.js -i dist/<slug>/site/tw.in.css -o dist/<slug>/site/tailwind.css --minify
-  # 4. Supprimer artefacts
+  # 4. VÉRIFIER LA COMPILE (obligatoire, sinon page sans style) :
+  wc -c dist/<slug>/site/tailwind.css   # doit être > ~12000 ; < 8000 = PURGE RATÉE, ne pas livrer
+  grep -c '\.flex{' dist/<slug>/site/tailwind.css   # doit être >= 1
+  # 5. Supprimer artefacts
   rm dist/<slug>/site/tw.config.js dist/<slug>/site/tw.in.css
   ```
   Référencer dans `index.html` : `<link rel="stylesheet" href="./tailwind.css"/>`.
-- **Reveals robustes** dans `<style>` :
-  ```css
-  .js-ready [data-reveal]{opacity:0;transform:translateY(16px);animation:autoreveal .5s ease-out .15s forwards;}
-  @keyframes autoreveal{to{opacity:1;transform:translateY(0)}}
-  ```
-  Et au tout début du `<script type="module">` : `document.documentElement.classList.add('js-ready');`. Garder les durées Motion `inView` à 0.4-0.6s max.
+  - **PIÈGE CRITIQUE (incident 2026-05-29 Ranch l'Indianna, CSS 5ko sans aucune utility)** : dans `tw.config.js`, le champ `content` est résolu **relativement au CWD au moment du compile** (la racine du projet), PAS au fichier config. `content:['./index.html']` lancé depuis la racine ne trouve RIEN → purge 100% des utilities + `@layer components`. **`content` DOIT être le chemin ABSOLU** : `content:['/Users/antocreadev/Developer/menghi_computer_science/dist/<slug>/site/index.html']`. Cf. `feedback_tailwind_precompile.md`.
+  - **Classes custom (`scrim`, `chip`, `eyebrow`, `on-photo`, `photo-tone`, `header-solid`, `h1-disp`…) : les DÉFINIR dans le `<style>` inline de `index.html`** (placé APRÈS le `<link>` tailwind.css), pas seulement en `@layer components` (qui disparaît si la purge rate à nouveau). L'inline survit toujours.
+  - **Classes Tailwind ajoutées dynamiquement en JS** (ex. header au scroll) : l'extracteur ne les capte pas dans les strings JS, et `bg-<couleur>/92` (opacité custom) ne se génère pas même en safelist. Utiliser une **classe custom inline togglée** (`.header-solid{...}`), jamais une classe Tailwind dynamique.
+- **Contenu visible par défaut (PRÉFÉRÉ, voir aussi plus bas)** dans `<style>` : `[data-reveal]{opacity:1;transform:none}`. C'est l'état attendu : zéro masquage, zéro dépendance Motion, aucun risque de page vide. NE PAS réintroduire de masquage `opacity:0` au repos. Si (et seulement si) un reveal subtil est vraiment voulu, il doit rester garanti de finir visible via filet CSS `@keyframes autoreveal` (jamais un `opacity:0` inconditionnel ni conditionné `.js-ready` sans filet). En cas de doute : pas de reveal du tout.
 - **Google Fonts** (display + body du brief) via `<link rel="preconnect">` + `<link href="...&display=swap">`.
-- **Motion One** : `import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`.
-- **Lenis** smooth scroll : `import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/+esm'`.
+- **Motion One** : `import { animate, inView } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`. N'importe PAS `scroll` (effets scroll-linked interdits, cf. ci-dessous).
+- **SCROLL NATIF OBLIGATOIRE. Lenis INTERDIT** (et tout smooth-scroll qui détourne la molette : locomotive, etc.). INTERDIT aussi les effets collés à la position de scroll via `scroll((p)=>...)` (parallaxe hero, `strokeDashoffset` scrubbé). Incident 2026-05-29 Horizon Coiffure : Lenis + parallaxe + tracé tied = scroll "qui ne marche pas / bizarre". Smooth des ancres uniquement via CSS `html{scroll-behavior:smooth}`.
+- **CONTENU VISIBLE PAR DÉFAUT** (durci après 2ᵉ plainte même incident) : `[data-reveal]{opacity:1;transform:none}`. NE JAMAIS masquer un bloc en attendant un scroll. La 2ᵉ plainte est venue de reveals `inView` (apparition au scroll) + marquee auto-défilant + tracé SVG au scroll, tous perçus comme "scroll cassé". Préférer : pas de reveal du tout (ou ultra-subtil + filet CSS forçant `opacity:1`), bandeau statique (PAS de marquee auto-défilant), SVG dessinés d'office (`stroke-dashoffset:0`). Geste UI signature = déclenché au hover/click, pas au scroll. JS = fonctionnel uniquement (état ouvert/fermé, toggles, année) ; viser zéro dépendance Motion sur un site simple.
+- **JAMAIS de voile opaque de révélation.** INTERDIT tout overlay (`div`/`::before`/`::after` en `position:fixed|absolute; inset:0`) à opacité de fond > ~0.2 qui couvre le contenu et ne se retire qu'avec une classe JS (`#loadveil` plein écran, `.light-veil` par section, `veil` sur image). Si le JS tarde/échoue, la page est laiteuse / illisible / "on voit rien". Pour révéler, animer l'élément LUI-MÊME (`data-reveal` + `autoreveal` CSS), jamais un cache par-dessus. Un voile décoratif éventuel reste ≤ 0.15 d'opacité, `pointer-events:none`, et se lève par CSS pur. Light mode = fond clair lisible immédiatement. Incident 2026-05-29 Delphine Beauté (voiles 96-99% → illisible). Cf. `feedback_no_opaque_reveal_veils.md`.
+- **DONNÉES RÉELLES OU RIEN, JAMAIS DE `0`/PLACEHOLDER.** Toute stat ou chiffre affiché = vraie valeur **écrite en dur dans le HTML** comme état de repos. Les **compteurs animés** s'écrivent `<span class="count" data-to="20">20</span>` (PAS `>0<`) : `data-to` est seulement la cible d'animation, le texte initial est déjà la vraie valeur. Le count-up est une **amélioration progressive** : guardé `if(!reduce)`, il restaure exactement la valeur finale, et la page reste correcte si `inView` ne se déclenche pas (section déjà visible au chargement) ou si le CDN Motion est bloqué. Si une donnée manque dans `research.md` (ancienneté exacte, gamme produits…), NE PAS inventer ni mettre `0` : retirer la stat. Incident 2026-05-29 espace-jc-coiffure (compteurs codés `>0<` → affichaient « 0 ans / 0/5 / 0 voix », lus comme « pas de données »). Cf. `feedback_no_placeholder_zero_data.md`.
 - Google Maps iframe sans clé : `https://maps.google.com/maps?q=LAT,LNG&z=15&output=embed`.
 
 ## Méthode
 
 1. **Palette → CSS variables + `tailwind.config.theme.extend.colors`** (doubles sources pour confort : classes Tailwind `bg-bg text-ink` + `var(--accent)` dans CSS custom).
 2. **Typographie** : `font-display` pour les titres, body par défaut. Poids du brief appliqués.
-3. **Hero** : `<img id="hero-image">` avec le src du brief, `loading="eager"`, `fetchpriority="high"`, alt du brief, parallax via `scroll(animate(...), { target: hero, offset:['start end','end start'] })`.
-4. **Marquee** : duplicate le contenu, animation CSS `@keyframes marquee`, pause on hover optionnel.
-5. **Révélations scroll** : tous les blocs clés marqués `data-reveal`, animés via `inView('[data-reveal]', ...)` avec `opacity 0→1` + `translateY 20→0`, duration 0.8s, easing `[0.2,0.7,0.2,1]`, stagger 60ms pour les groupes.
+3. **Hero** : `<img id="hero-image">` avec le src du brief (vraie photo), `loading="eager"`, `fetchpriority="high"`, alt du brief. PAS de parallaxe scroll-linked (interdit) : un léger `scale` statique ou une animation d'entrée one-shot suffit. **PAS de grand SVG dessiné main en hero / premier plan** : le SVG manuel est réservé aux petits décors (icônes, dividers, motifs de fond subtils). Pas de scène/illustration SVG plein écran ni de money shot SVG — le premier plan, ce sont les vraies photos.
+4. **Bandeau de mots-clés : statique** (flex-wrap centré). PAS de marquee auto-défilant (perçu "ça bouge / scroll bizarre", incident 2026-05-29 Horizon Coiffure). Si vraiment un marquee : une seule copie, lent, jamais en doublon empilé.
+5. **Contenu visible par défaut, pas de révélation au scroll.** `[data-reveal]{opacity:1;transform:none}`. Les `inView('[data-reveal]')` qui masquent puis révèlent au scroll sont INTERDITS (perçus comme scroll cassé). Cartes prestations / services / galerie : image + titre + texte **toujours visibles** ; le hover n'AJOUTE qu'un détail (lift, zoom doux), jamais la condition pour voir le contenu. INTERDIT les gadgets "dots à révéler" / cartes en `opacity:0` (incident 2026-05-29 : section "sommets" Horizon = images invisibles). Geste UI signature = au hover/click, jamais au scroll. Cf. `feedback_no_hidden_content_and_verify.md`.
+   **Après tout edit HTML : recompiler `tailwind.css`** (classes purgées sinon → layout cassé) PUIS **vérifier en screenshot headless** (Playwright, viewport 1280x900, full_page) : images visibles, pas de grand vide (`min-h-[100svh]`+`flex-1` = vide géant desktop), sections empilées OK.
 6. **Galerie** : grille responsive Tailwind, 6 images, aspect-ratios variés.
 7. **Signature** : 3 cards, hover micro-lift.
 8. **Proof** : note Google `<strong>` + nombre d'avis + 1-2 citations positives extraites de `research.md`.
@@ -61,9 +68,12 @@ Coder à la main `dist/<slug>/site/index.html`, un fichier HTML unique, bespoke,
 
 ## Règles absolues
 
-- **Pas de template**. Chaque section doit refléter le brief. Ne pas copier une structure d'un autre client à l'identique.
+- **Pas de template**. Chaque section doit refléter le brief. Ne pas copier une structure d'un autre client à l'identique. Si on masque le contenu et que le visuel pourrait illustrer n'importe quel autre métier, c'est REFUSÉ.
+- **Design MATERIAL-DRIVEN**. La matière du métier (crochet/laine, bois, pierre, cuir, encre, pâte, mer…) doit être incarnée dans : texture du fond (SVG pattern subtil), bordures (chain stitch / grain / écaille / surpiqûre, pas des `rounded-3xl` génériques), typographie (effet stitched / gravé / cassé sur les titres), motif signature dessiné main en filigrane, hover/reveal qui rappellent la manipulation de la matière. Voir `feedback_material_driven_design.md`.
 - **Pas de `source.unsplash.com/*`**. Uniquement les URLs validées dans `design.md`.
-- **Pas de build step**. Aucune dépendance npm. Pas de React/Vue/Svelte.
+- **Pas de build step pour les sites single-file HTML du pipeline standard**. Aucune dépendance npm sur ces sites, pas de React/Vue/Svelte.
+- **EXCEPTION pour les clients hors-CSV** (e-commerce, app, marque qui demandent un stack Astro/Next/etc.) : libs npm autorisées, à choisir avec parcimonie pour servir la matière (`roughjs`, `rough-notation`, `gsap` + plugins, `splitting`, `splittype`, `lottie-react`, `paper.js`, custom SVG inline en priorité). Viser **< 100kb gz** cumulés côté client pour les libs design.
+- **Le site REMPLACE le service existant : aucune référence ni lien.** Pas de lien / bouton / iframe / embed vers Planity, Treatwell, Fresha, TheFork/LaFourchette, OpenTable, Zenchef, Guestonline, Resengo, Uber Eats, Deliveroo, Just Eat, ancien site, Wix, Linktree. Toute réservation / prise de RDV / contact / commande se fait **en natif sur le site** : `tel:`, email, formulaire, flux maison, ancre interne `#reservation`. Exceptions OK : iframe Google Maps (localisation) et liens réseaux sociaux du client en footer. Voir `feedback_replace_existing_service.md`.
 - **Positif uniquement**. Jamais de signal négatif, jamais de comparaison concurrentielle.
 - **Caractère `—` (tiret cadratin U+2014) interdit** dans les textes visibles du site. Utiliser `:`, `,`, `.` ou `()`. Le tiret simple `-` reste autorisé.
 - **Contraste texte sur image obligatoire** (règle validée, rejet client connu sinon). Dès qu'un texte (titre, paragraphe, eyebrow, navigation, CTA) est posé sur une photo en overlay :

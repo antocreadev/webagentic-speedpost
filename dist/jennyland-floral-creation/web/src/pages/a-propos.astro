@@ -1,0 +1,97 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { api, safe } from "@/lib/api";
+
+const { data } = await safe(api.content(), { content: {} as Record<string, string>, settings: {} as Record<string, string> });
+const c = data.content;
+const intro = c["about.intro"] || "";
+const story = c["about.story"] || "";
+const values = c["about.values"] || "";
+---
+
+<BaseLayout title="À propos de Jenny — Jennyland">
+  <section class="bath bath-aubergine section">
+    <div class="mx-auto max-w-[1400px]">
+      <nav class="spec-num text-cream/60 mb-12">
+        <a href="/" class="hover:text-blush">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>À propos</span>
+      </nav>
+      <div class="grid grid-cols-12 gap-6 md:gap-8 items-end" data-reveal>
+        <div class="col-span-12 md:col-span-7">
+          <span class="spec-num text-cream/60 mb-6 block">N° VI · Atelier · Bastia</span>
+          <h1 class="font-display text-display-xl text-cream leading-[0.9]">
+            <span class="font-display-italic">Bonjour,</span><br/>
+            je suis <span class="cursive text-blush">Jenny.</span>
+          </h1>
+        </div>
+        <div class="col-span-12 md:col-span-5">
+          <p class="font-display-italic text-2xl text-cream/95 leading-tight">{intro}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1000px] prose-jenny">
+      <p data-reveal>{story}</p>
+      <p data-reveal style="--reveal-delay: 100ms">{values}</p>
+    </div>
+  </section>
+
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-12 gap-6 md:gap-8 mb-12">
+        <div class="col-span-12 md:col-span-7" data-reveal>
+          <span class="spec-num text-ink-40 mb-6 block">N° VI.1 · Mes engagements</span>
+          <h2 class="font-display text-display-l text-ink leading-[0.92]">
+            Pas de série,<br/>
+            <span class="font-display-italic text-rose-deep">pas de stock.</span>
+          </h2>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 border-t border-ink">
+        {[
+          { num: "01", title: "Tout fait à la main", text: "Aucune machine. Chaque rose est tricotée pétale par pétale, sur des aiguilles 2 mm." },
+          { num: "02", title: "Coton mercerisé teinté", text: "Coton bio mercerisé, teinté en bain végétal pour les couleurs naturelles." },
+          { num: "03", title: "Pièces uniques", text: "Chaque bouquet a son histoire. Je ne refais jamais deux fois exactement la même composition." },
+        ].map((v, i) => (
+          <article class={`p-7 border-b border-r border-ink ${i === 2 ? "md:border-r-0" : ""}`} data-reveal style={`--reveal-delay: ${i * 100}ms`}>
+            <span class="spec-num text-rose-deep">{v.num}</span>
+            <h3 class="font-display text-3xl text-ink mt-6">{v.title}</h3>
+            <p class="mt-3 text-sm text-ink-60 leading-relaxed">{v.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bath bath-blush section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-12 gap-6 md:gap-8 mb-12" data-reveal>
+        <div class="col-span-12 md:col-span-8">
+          <span class="spec-num text-ink-80 opacity-70 mb-6 block">N° VI.2 · L'atelier en chiffres</span>
+          <h2 class="font-display text-display-l text-ink leading-[0.92]">
+            Quelques chiffres,<br/>
+            <span class="font-display-italic">beaucoup d'aiguilles.</span>
+          </h2>
+        </div>
+      </div>
+      <dl class="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {[
+          { num: "300+", label: "Bouquets livrés" },
+          { num: "5+", label: "Années d'atelier" },
+          { num: "8h", label: "Mini-bouquet" },
+          { num: "300h", label: "Bouquet de mariée" },
+          { num: "92", label: "Mariages célébrés" },
+          { num: "0", label: "Bouquets identiques" },
+        ].map((stat) => (
+          <div class="border-t border-ink pt-6">
+            <dt class="font-display text-display-m text-ink leading-none">{stat.num}</dt>
+            <dd class="spec-num text-ink-80 mt-3">{stat.label}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+</BaseLayout>

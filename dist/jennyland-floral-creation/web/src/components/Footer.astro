@@ -1,0 +1,58 @@
+---
+const whatsapp = (import.meta.env.PUBLIC_WHATSAPP as string) || "+33600000000";
+const instagram = (import.meta.env.PUBLIC_INSTAGRAM as string) || "jennyland.floral";
+const email = (import.meta.env.PUBLIC_EMAIL as string) || "contact@jennyland.fr";
+const year = new Date().getFullYear();
+---
+
+<footer class="bath bath-ink section-tight relative">
+  <div class="mx-auto max-w-[1400px] grid gap-16 md:grid-cols-12">
+    <!-- Big mark -->
+    <div class="md:col-span-7" data-reveal>
+      <div class="eyebrow text-cream/50 mb-6">Jennyland<span class="opacity-50"> ✦ </span>Atelier</div>
+      <h2 class="font-display text-display-l text-cream mb-8">
+        Écrivez. Composez.<br/>
+        <span class="cursive text-blush">Recevez.</span>
+      </h2>
+      <a href="/contact" class="btn btn-cream">Nous contacter →</a>
+    </div>
+
+    <!-- Contact + Nav -->
+    <div class="md:col-span-5 grid grid-cols-2 gap-10 md:gap-6">
+      <div>
+        <div class="eyebrow text-cream/50 mb-4">Index</div>
+        <ul class="space-y-2 text-[13px]">
+          <li><a href="/boutique" class="text-cream hover:text-blush transition">Boutique</a></li>
+          <li><a href="/composer" class="text-cream hover:text-blush transition">Composer</a></li>
+          <li><a href="/sur-mesure" class="text-cream hover:text-blush transition">Sur-mesure</a></li>
+          <li><a href="/a-propos" class="text-cream hover:text-blush transition">À propos</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="eyebrow text-cream/50 mb-4">Contact</div>
+        <ul class="space-y-2 text-[13px]">
+          <li>
+            <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener noreferrer" class="text-cream hover:text-blush transition">WhatsApp</a>
+          </li>
+          <li>
+            <a href={`https://instagram.com/${instagram}`} target="_blank" rel="noopener noreferrer" class="text-cream hover:text-blush transition">Instagram</a>
+          </li>
+          <li>
+            <a href={`mailto:${email}`} class="text-cream hover:text-blush transition">Email</a>
+          </li>
+        </ul>
+        <ul class="mt-6 space-y-2 text-[13px]">
+          <li><a href="/livraison-paiement" class="text-cream/70 hover:text-blush transition">Livraison</a></li>
+          <li><a href="/cgv" class="text-cream/70 hover:text-blush transition">CGV</a></li>
+          <li><a href="/mentions-legales" class="text-cream/70 hover:text-blush transition">Mentions</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-[1400px] mt-20 pt-8 border-t border-cream/15 grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] text-cream/50">
+    <span>© {year} Jennyland Floral Création.</span>
+    <span class="md:text-center">Tous droits réservés.</span>
+    <span class="md:text-right cursive text-blush text-base normal-case tracking-normal">Made with care, in Corsica.</span>
+  </div>
+</footer>

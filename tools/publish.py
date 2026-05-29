@@ -1,6 +1,6 @@
 """Publish a client's site/ directory as a public GitHub repo + enable Pages.
 
-Repo name pattern : `menghicomputerscience-<slug>` under the `antocreadev` account.
+Repo name pattern : `speedpost-<slug>` under the `antocreadev` account.
 Requires `gh` CLI authenticated and `git` available.
 
 Idempotent:
@@ -15,7 +15,7 @@ from pathlib import Path
 from .paths import DIST_DIR
 
 OWNER = "antocreadev"
-REPO_PREFIX = "menghicomputerscience-"
+REPO_PREFIX = "speedpost-"
 
 
 def repo_name(slug: str) -> str:
@@ -67,7 +67,7 @@ def publish(slug: str, *, commit_message: str | None = None,
     _run(["git", "add", "-A"], cwd=site)
     status = _run(["git", "status", "--porcelain"], cwd=site).stdout
     if status.strip():
-        msg = commit_message or f"Site premium — {slug}"
+        msg = commit_message or f"Site SpeedPost — {slug}"
         _run(["git", "commit", "-m", msg], cwd=site)
 
     # 3. create remote repo if missing, then push

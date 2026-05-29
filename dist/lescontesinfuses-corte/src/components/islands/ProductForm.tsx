@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Heart, Save } from "lucide-react";
 import { formatPrice } from "@/lib/format";
+import { adminCreateProduct, apiError } from "@/lib/api";
+import { toast } from "@/lib/toast";
 
 type ProductType = "livre" | "boisson" | "artisan";
 
@@ -28,7 +30,23 @@ export default function ProductForm() {
 
   return (
     <form
-      onSubmit={(e) => { e.preventDefault(); console.log("save product", { type, title, author, sku, price, stock, category, desc, tags, coup, draft }); alert("Produit enregistré (mock)"); }}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const body: Record<string, unknown> = {
+          type, title, name: title, author, sku, isbn: type === "livre" ? sku : undefined,
+          price_cents: Math.round(price * 100), stock, category, description: desc,
+          tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+          coup_de_coeur: coup, status: draft,
+        };
+        try {
+          await adminCreateProduct(body);
+          toast.success("Produit créé", title);
+          window.location.href = "/admin/produits";
+        } catch (err) {
+          const ae = await apiError(err);
+          toast.error("Création échouée", ae.message);
+        }
+      }}
       className="grid lg:grid-cols-[1fr_360px] gap-8"
     >
       <div className="space-y-5">

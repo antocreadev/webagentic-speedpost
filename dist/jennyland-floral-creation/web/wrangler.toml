@@ -1,0 +1,20 @@
+name = "jennyland-web"
+compatibility_date = "2025-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+pages_build_output_dir = "./dist"
+
+[vars]
+PUBLIC_API_URL = "http://127.0.0.1:8787"
+PUBLIC_PAYPAL_CLIENT_ID = "sb"
+PUBLIC_BRAND_NAME = "Jennyland Floral Création"
+PUBLIC_WHATSAPP = "+33600000000"
+PUBLIC_INSTAGRAM = "jennyland.floral"
+PUBLIC_EMAIL = "contact@jennyland.fr"
+
+# When deploying to production, override these vars in the Cloudflare dashboard.
+# Bind D1 if the web pages need direct DB reads (recommended: keep API as the single owner instead).
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "jennyland"
+# database_id = "TO_FILL"

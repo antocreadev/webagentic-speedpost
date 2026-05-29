@@ -2,52 +2,21 @@ Sujet : Corse Bois Energie, un rapport d'impact en ligne
 
 Bonjour,
 
-Opérateur public du réseau de chaleur biomasse de Corte depuis 1988, avec 9 chaufferies collectives gérées, environ 15 000 tonnes de plaquettes produites chaque année et un bois 100% corse qui part du déchiquetage d'Aleria pour chauffer l'hôpital, l'Université Pascal Paoli, les résidences CROUS, le Logirem et l'EHPAD U Serenu : le travail de la SEM est un cas d'école de service public territorial. Pourtant, quand on cherche aujourd'hui « Corse Bois Energie » ou « réseau chaleur biomasse Haute-Corse », on ne trouve aucun site officiel actif, uniquement des articles de presse et un vieux domaine de 2011. Pour une structure de cette ampleur institutionnelle, c'est un vrai frein à la duplication du modèle cortenais vers Sartène, Aleria ou Porto-Vecchio.
+Opérateur public du réseau de chaleur biomasse de Corte depuis 1988, avec 9 chaufferies collectives gérées, environ 15 000 tonnes de plaquettes produites chaque année et un bois 100% corse qui part du déchiquetage d'Aleria pour chauffer l'hôpital, l'Université Pascal Paoli, les résidences CROUS, le Logirem et l'EHPAD U Serenu : le travail de la SEM est un cas d'école de service public territorial.
 
-Chez Menghi Computer Science, nous sommes une petite équipe tech et créative basée en France. On fait du développement web sur-mesure, du graphisme (logos, identité visuelle, affiches, déclinaisons print), du marketing digital et des applications métier dédiées. Tout sous le même toit, tout codé ou conçu à la main.
+J'ai préparé une démo gratuite de votre site, codée à la main et 100% personnalisable :
+https://antocreadev.github.io/menghicomputerscience-s-e-m-corse-bois-energie-zdfkbleu/
 
-J'ai pris l'initiative de vous préparer une démo complète, sans engagement, pensée comme un rapport d'impact territorial plutôt qu'une vitrine commerciale.
+Deux formules au choix (tarifs HT) :
+- 1500€ une fois + 20€/mois (maintenance, agent IA pour modifier le site, rapport SEO mensuel), sans engagement
+- 89€/mois engagé 12 mois, mêmes services
 
-Le site que j'ai conçu pour vous : https://antocreadev.github.io/menghicomputerscience-s-e-m-corse-bois-energie-zdfkbleu/
+Inclus dans les deux : hébergement, nom de domaine, SEO, indexation IA (ChatGPT, Gemini, Perplexity), support.
 
-Ce qui a été spécifiquement mis en avant pour la SEM :
-
-- Un manifeste d'ouverture « Depuis 1988, la chaleur de la Corse vient de ses forêts. » posé sur vos trois chiffres-clés animés : 15 000 tonnes, 9 chaufferies, 30 000 personnes desservies.
-- Une carte SVG interactive de la Corse où les points de chaleur s'allument en cascade : Corte en hub, Aleria en site de production, Sartène et Porto-Vecchio en projets de duplication.
-- Un diagramme de flux « Forêt corse, déchiquetage Aleria, transport court, chaufferie collective » qui rend lisible en une capture votre circuit 100% insulaire, avec la ressource mobilisée (6 à 10% du potentiel forestier) comme ancrage pédagogique.
-- Une frise sobre 1988 (création par la CTC), 2011, 2017 (modernisation 4 M€ FEDER), 2024, et un mur typographique des partenaires institutionnels (CTC, ONF, ADEME, OEC, CROUS, Logirem, Hôpital de Corte, Université de Corse).
-
-Ce n'est pas un site template. Chaque ligne de code est écrite à la main pour la SEM, ce qui veut dire qu'on peut changer absolument tout : couleurs, textes, chiffres actualisés, sections, jusqu'au moindre détail. Vous n'êtes enfermés dans aucun thème, aucun CMS propriétaire.
-
-Ce qui est inclus dans le 1500€
-
-- Site codé main, sur-mesure : zéro template, tout est modifiable (textes, photos, couleurs, sections, polices)
-- Identité graphique cohérente (logo, palette, visuels, déclinaisons)
-- Référencement Google (SEO) : technique + éditorial (balisage, mots-clés, sitemap, structured data)
-- Optimisation performance : chargement rapide, mobile-first
-- Indexation & citations par les IA : ChatGPT, Gemini, Perplexity, Copilot. Vous apparaissez quand un élu ou un journaliste demande « opérateur biomasse en Corse » ou « réseau de chaleur bois Haute-Corse »
-- Hébergement + nom de domaine gérés par nous
-- Maintenance + support direct sous 24h pendant toute l'année 1
-- Aucun abonnement la première année : 0€/mois
-- Prix : 1740€ barré, 1500€, une seule fois, tout compris
-
-Ensuite
-
-- Année 2 : 20€/mois (maintenance + hébergement)
-- Option premium (+10€/mois, soit 30€/mois année 2) :
-  - agent IA sécurisé connecté à WhatsApp (vous demandez une modif en langage naturel, elle est appliquée)
-  - modifications du site en temps réel
-  - sauvegardes automatiques
-  - versionning complet (rollback possible)
-  - assistance 24/7
-
-Concrètement, vous gagnez en visibilité (Google et IA génératives), en crédibilité institutionnelle (un vrai site d'opérateur public remplace l'absence de présence numérique, signal fort pour les financeurs FEDER, l'ADEME, l'OEC et les collectivités prospectes), en image (cohérence graphique à la hauteur du sérieux de la SEM) et en trafic qualifié venant des élus, services techniques et journalistes énergie. Quand un maire ou un gestionnaire de patrimoine public cherchera à dupliquer le modèle cortenais, on veut que votre structure ressorte en premier.
-
-Si le rendu vous convient en l'état, je peux mettre le site en ligne sur votre nom de domaine dès cette semaine. Si vous souhaitez ajuster quelque chose avant (chiffres actualisés 2025, photos de terrain récentes, liste des sites desservis, jalons complémentaires), dites-moi simplement ce que vous voudriez voir évoluer.
-
-À très vite,
+Si la démo vous plaît, je la mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi ce qu'on ajuste.
 
 Anto
-Menghi Computer Science
-menghicomputerscience@gmail.com
-06 43 87 91 14
+SpeedPost.fr (WebAgentic Builder)
+Un service de SAS Mindlet, Corte (Corse)
+Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional
+contact@speedpost.fr  |  webagentic.speedpost.fr

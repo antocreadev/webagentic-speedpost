@@ -1,22 +1,33 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Search, X } from "lucide-react";
-import type { Book } from "@/data/books";
-import type { Event } from "@/data/events";
-import type { ArtisanProduct } from "@/data/artisans";
-import { formatPrice, formatDate } from "@/lib/format";
+import { Search, X, Loader2 } from "lucide-react";
+import { search as apiSearch } from "@/lib/api";
+import { formatPrice } from "@/lib/format";
 
 interface Props {
-  books: Book[];
-  events: Event[];
-  products: ArtisanProduct[];
   initialQuery?: string;
+  // legacy props kept optional so existing callers don't break
+  books?: any[];
+  events?: any[];
+  products?: any[];
 }
 
-type Tab = "livres" | "evenements" | "artisans";
+type Tab = "books" | "events" | "products";
 
-export default function UnifiedSearch({ books, events, products, initialQuery = "" }: Props) {
+interface SearchResult {
+  type: string; // "book" | "event" | "product"
+  slug: string;
+  title: string;
+  subtitle?: string;
+  price_cents?: number;
+  url?: string;
+  [k: string]: any;
+}
+
+export default function UnifiedSearch({ initialQuery = "" }: Props) {
   const [q, setQ] = useState(initialQuery);
-  const [tab, setTab] = useState<Tab>("livres");
+  const [tab, setTab] = useState<Tab>("books");
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -26,162 +37,95 @@ export default function UnifiedSearch({ books, events, products, initialQuery = 
     }
   }, []);
 
-  const k = q.trim().toLowerCase();
-  const fb = useMemo(
-    () =>
-      !k
-        ? books
-        : books.filter(
-            (b) =>
-              b.title.toLowerCase().includes(k) ||
-              b.author.toLowerCase().includes(k) ||
-              b.publisher.toLowerCase().includes(k),
-          ),
-    [books, k],
-  );
-  const fe = useMemo(
-    () =>
-      !k
-        ? events
-        : events.filter(
-            (e) =>
-              e.title.toLowerCase().includes(k) ||
-              e.description.toLowerCase().includes(k) ||
-              e.location.toLowerCase().includes(k),
-          ),
-    [events, k],
-  );
-  const fp = useMemo(
-    () =>
-      !k
-        ? products
-        : products.filter(
-            (p) =>
-              p.name.toLowerCase().includes(k) ||
-              p.artisan.toLowerCase().includes(k) ||
-              p.city.toLowerCase().includes(k),
-          ),
-    [products, k],
-  );
+  useEffect(() => {
+    const k = q.trim();
+    if (!k) { setResults([]); return; }
+    const t = setTimeout(async () => {
+      setLoading(true);
+      try {
+        const res = await apiSearch(k, ["books", "events", "products"]);
+        setResults((res?.results as SearchResult[]) ?? []);
+      } catch {
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+    return () => clearTimeout(t);
+  }, [q]);
 
-  const counts = { livres: fb.length, evenements: fe.length, artisans: fp.length };
+  const grouped = useMemo(() => {
+    const out: Record<Tab, SearchResult[]> = { books: [], events: [], products: [] };
+    for (const r of results) {
+      if (r.type === "book") out.books.push(r);
+      else if (r.type === "event") out.events.push(r);
+      else if (r.type === "product") out.products.push(r);
+    }
+    return out;
+  }, [results]);
+
+  const counts = { books: grouped.books.length, events: grouped.events.length, products: grouped.products.length };
+  const items = grouped[tab];
 
   return (
     <div>
       <div className="relative max-w-3xl mx-auto">
-        <Search
-          size={26}
-          strokeWidth={1.4}
-          className="absolute left-7 top-1/2 -translate-y-1/2 text-cocoa-400"
-        />
+        <Search size={26} strokeWidth={1.4} className="absolute left-7 top-1/2 -translate-y-1/2 text-cocoa-400" />
         <input
-          autoFocus
-          type="search"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
+          autoFocus type="search" value={q} onChange={(e) => setQ(e.target.value)}
           placeholder="Que cherchez-vous ?"
-          className="w-full pl-16 pr-16 py-6 rounded-full border-2 border-line bg-paper font-display italic text-2xl md:text-3xl text-cocoa-600 placeholder:text-cocoa-200 focus:outline-none focus:border-terracotta-400"
-        />
-        {q && (
-          <button
-            onClick={() => setQ("")}
-            aria-label="Effacer"
-            className="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-cocoa-400 hover:text-terracotta-400"
-          >
+          className="w-full pl-16 pr-16 py-6 rounded-full border-2 border-line bg-paper font-display italic text-2xl md:text-3xl text-cocoa-600 placeholder:text-cocoa-200 focus:outline-none focus:border-terracotta-400" />
+        {loading ? (
+          <Loader2 size={20} className="absolute right-6 top-1/2 -translate-y-1/2 text-cocoa-400 animate-spin" />
+        ) : q && (
+          <button onClick={() => setQ("")} aria-label="Effacer"
+            className="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-cocoa-400 hover:text-terracotta-400">
             <X size={20} />
           </button>
         )}
       </div>
 
       <div className="mt-12 flex justify-center gap-2 flex-wrap">
-        {(["livres", "evenements", "artisans"] as Tab[]).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`btn-ghost ${tab === t ? "border-terracotta-400 text-terracotta-400" : ""}`}
-          >
-            {t === "livres" ? "Livres" : t === "evenements" ? "Événements" : "Artisans"}
+        {(["books", "events", "products"] as Tab[]).map((t) => (
+          <button key={t} onClick={() => setTab(t)}
+            className={`btn-ghost ${tab === t ? "border-terracotta-400 text-terracotta-400" : ""}`}>
+            {t === "books" ? "Livres" : t === "events" ? "Événements" : "Artisans"}
             <span className="ml-2 text-cocoa-400">({counts[t]})</span>
           </button>
         ))}
       </div>
 
       <div className="mt-10 max-w-4xl mx-auto">
-        {tab === "livres" && (
+        {q.trim() === "" ? (
+          <p className="py-10 text-center font-display italic text-cocoa-400 text-xl">
+            Tapez un titre, un auteur, un événement ou un artisan.
+          </p>
+        ) : items.length === 0 ? (
+          <p className="py-10 text-center font-display italic text-cocoa-400 text-xl">
+            Aucun résultat dans cette catégorie.
+          </p>
+        ) : (
           <ul className="divide-y divide-line">
-            {fb.map((b) => (
-              <li key={b.slug}>
-                <a href={`/livres/${b.slug}`} className="flex items-center gap-5 py-5 group">
-                  <div
-                    className="w-12 h-16 rounded-sm shrink-0 shadow-book"
-                    style={{
-                      background: `linear-gradient(155deg, ${b.coverGradient[0]}, ${b.coverGradient[1]})`,
-                    }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="eyebrow">{b.publisher}</p>
-                    <p className="font-display italic text-xl text-cocoa-600 group-hover:text-terracotta-400 transition">
-                      {b.title}
-                    </p>
-                    <p className="text-sm text-cocoa-400">{b.author}</p>
-                  </div>
-                  <span className="price-tab">{formatPrice(b.price)}</span>
-                </a>
-              </li>
-            ))}
-            {fb.length === 0 && (
-              <p className="py-10 text-center font-display italic text-cocoa-400 text-xl">
-                Aucun livre.
-              </p>
-            )}
-          </ul>
-        )}
-        {tab === "evenements" && (
-          <ul className="space-y-3">
-            {fe.map((e) => (
-              <li key={e.slug}>
-                <a
-                  href={`/evenements/${e.slug}`}
-                  className="block bg-cream-50 border border-line rounded-2xl p-5 hover:border-terracotta-400 group"
-                >
-                  <p className="eyebrow">{formatDate(e.date, "long")}</p>
-                  <p className="font-display italic text-xl text-cocoa-600 mt-1 group-hover:text-terracotta-400">
-                    {e.title}
-                  </p>
-                  <p className="text-sm text-cocoa-400 mt-1">{e.location}</p>
-                </a>
-              </li>
-            ))}
-            {fe.length === 0 && (
-              <p className="py-10 text-center font-display italic text-cocoa-400 text-xl">
-                Aucun événement.
-              </p>
-            )}
-          </ul>
-        )}
-        {tab === "artisans" && (
-          <ul className="grid sm:grid-cols-2 gap-4">
-            {fp.map((p) => (
-              <li key={p.slug}>
-                <a
-                  href={`/artisans/${p.slug}`}
-                  className="block bg-cream-50 border border-line rounded-2xl p-5 hover:border-terracotta-400 group"
-                >
-                  <p className="eyebrow">
-                    {p.artisan}, {p.city}
-                  </p>
-                  <p className="font-display italic text-xl text-cocoa-600 mt-1 group-hover:text-terracotta-400">
-                    {p.name}
-                  </p>
-                  <p className="price-tab text-sm mt-1">{formatPrice(p.price)}</p>
-                </a>
-              </li>
-            ))}
-            {fp.length === 0 && (
-              <p className="py-10 text-center font-display italic text-cocoa-400 text-xl">
-                Aucun produit.
-              </p>
-            )}
+            {items.map((r) => {
+              const href = r.url
+                || (r.type === "book" ? `/livres/${r.slug}`
+                  : r.type === "event" ? `/evenements/${r.slug}`
+                  : `/artisans/${r.slug}`);
+              return (
+                <li key={`${r.type}-${r.slug}`}>
+                  <a href={href} className="flex items-center gap-5 py-5 group">
+                    <div className="flex-1 min-w-0">
+                      <p className="eyebrow">{r.type === "book" ? "Livre" : r.type === "event" ? "Événement" : "Artisan"}</p>
+                      <p className="font-display italic text-xl text-cocoa-600 group-hover:text-terracotta-400 transition">{r.title}</p>
+                      {r.subtitle && <p className="text-sm text-cocoa-400">{r.subtitle}</p>}
+                    </div>
+                    {typeof r.price_cents === "number" && (
+                      <span className="price-tab">{formatPrice(r.price_cents / 100)}</span>
+                    )}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

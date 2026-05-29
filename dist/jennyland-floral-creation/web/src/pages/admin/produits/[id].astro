@@ -1,0 +1,13 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminGuard from "@/islands/AdminGuard";
+import AdminProductForm from "@/islands/AdminProductForm";
+
+const { id } = Astro.params;
+---
+
+<AdminLayout title="Modifier produit — Admin" active="products">
+  <AdminGuard client:load>
+    <AdminProductForm client:load mode="edit" productId={Number(id)} />
+  </AdminGuard>
+</AdminLayout>

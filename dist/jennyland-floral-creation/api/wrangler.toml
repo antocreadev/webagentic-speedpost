@@ -1,0 +1,29 @@
+name = "jennyland-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENV = "development"
+JWT_ISSUER = "jennyland"
+PAYPAL_API = "https://api-m.sandbox.paypal.com"
+ALLOWED_ORIGINS = "http://127.0.0.1:4321,http://localhost:4321"
+
+# D1 database (run `npm run db:create` first to get the id, then paste it here)
+[[d1_databases]]
+binding = "DB"
+database_name = "jennyland"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+# R2 bucket for product images
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "jennyland-media"
+
+# Secrets to configure with `wrangler secret put`:
+#   JWT_SECRET             — random 64-char string
+#   ADMIN_EMAIL            — primary admin login
+#   ADMIN_PASSWORD_HASH    — PBKDF2 hash (see scripts/hash.ts)
+#   PAYPAL_CLIENT_ID       — PayPal REST app client id
+#   PAYPAL_CLIENT_SECRET   — PayPal REST app secret
+#   WHATSAPP_NUMBER        — international format, no +

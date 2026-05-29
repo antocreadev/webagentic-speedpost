@@ -1,0 +1,52 @@
+---
+import CartButton from "@/islands/CartButton";
+---
+
+<header class="sticky top-0 z-30 backdrop-blur-md bg-rose-soft/85 border-b border-line">
+  <div class="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-5 py-4 sm:px-8 md:px-12">
+    <a href="/" class="flex items-baseline gap-3 group">
+      <span class="cursive text-3xl text-ink leading-none">Jennyland</span>
+      <span class="hidden sm:inline text-[10px] uppercase tracking-widest text-ink-60 font-medium">Floral Création</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-9 text-[13px]">
+      <a href="/boutique" class="text-ink hover:text-rose-deep transition-colors">Boutique</a>
+      <a href="/composer" class="text-ink hover:text-rose-deep transition-colors flex items-center gap-1.5">
+        <span class="inline-block w-1 h-1 rounded-full bg-rose-deep"></span>
+        Composer
+      </a>
+      <a href="/sur-mesure" class="text-ink hover:text-rose-deep transition-colors">Sur-mesure</a>
+      <a href="/a-propos" class="text-ink hover:text-rose-deep transition-colors">À propos</a>
+      <a href="/contact" class="text-ink hover:text-rose-deep transition-colors">Contact</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <CartButton client:load />
+      <button
+        id="mobile-menu-button"
+        class="md:hidden inline-flex h-9 w-9 items-center justify-center"
+        aria-label="Menu"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M4 8h16M4 16h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden md:hidden border-t border-line px-5 py-4 bg-rose-soft-50">
+    <ul class="flex flex-col gap-2 text-sm">
+      <li><a href="/boutique" class="block py-2">Boutique</a></li>
+      <li><a href="/composer" class="block py-2">Composer mon bouquet</a></li>
+      <li><a href="/sur-mesure" class="block py-2">Sur-mesure</a></li>
+      <li><a href="/a-propos" class="block py-2">À propos</a></li>
+      <li><a href="/contact" class="block py-2">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById("mobile-menu-button");
+  const menu = document.getElementById("mobile-menu");
+  btn?.addEventListener("click", () => menu?.classList.toggle("hidden"));
+</script>

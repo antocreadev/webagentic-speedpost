@@ -21,7 +21,7 @@ const items = [
   data-hidden="false"
 >
   <div class="bg-paper/85 backdrop-blur-xl border-t border-line">
-    <ul class="grid grid-cols-5 max-w-md mx-auto px-2">
+    <ul id="lci-bn-list" class="grid grid-cols-5 max-w-md mx-auto px-2">
       {items.map((it) => {
         const active = isActive(it.href);
         return (
@@ -58,6 +58,18 @@ const items = [
           </li>
         );
       })}
+      <li id="lci-bn-admin" class="hidden">
+        <a
+          href="/admin"
+          aria-label="Admin"
+          class={`flex-1 min-h-[64px] flex flex-col items-center justify-center gap-1 py-2 px-1 transition-colors ${path.startsWith("/admin") ? "text-terracotta-400" : "text-cocoa-600"}`}
+        >
+          <span class={`relative inline-flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ${path.startsWith("/admin") ? "bg-terracotta-50" : "bg-transparent"}`}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          <span class="text-[10px] font-sans tracking-wide">Admin</span>
+        </a>
+      </li>
     </ul>
   </div>
 </nav>
@@ -96,6 +108,20 @@ const items = [
       if (el && count > 0) {
         el.classList.remove("hidden");
         el.textContent = String(count);
+      }
+    } catch {}
+
+    // Show admin tab if user is admin (switch grid to 6 cols)
+    try {
+      const raw = localStorage.getItem("lci_user");
+      const user = raw ? JSON.parse(raw) : null;
+      const isAdmin = user && user.scope === "admin";
+      const adminLi = document.getElementById("lci-bn-admin");
+      const list = document.getElementById("lci-bn-list");
+      if (isAdmin && adminLi && list) {
+        adminLi.classList.remove("hidden");
+        list.classList.remove("grid-cols-5");
+        list.classList.add("grid-cols-6");
       }
     } catch {}
 

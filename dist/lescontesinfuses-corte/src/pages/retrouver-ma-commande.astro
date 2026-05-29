@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LaceMedallion from "@/components/icons/LaceMedallion.astro";
+import OrderLookup from "@/components/islands/OrderLookup.tsx";
+---
+<BaseLayout
+  title="Retrouver ma commande, Les Contes Infusés"
+  description="Suivez votre commande sans créer de compte. Saisissez votre email ou votre téléphone, recevez un code à six chiffres, puis accédez au suivi.">
+  <section class="relative max-w-3xl mx-auto px-5 sm:px-8 pt-14 pb-10 text-center">
+    <div class="flex justify-center mb-5 opacity-80">
+      <LaceMedallion size={120} />
+    </div>
+    <p class="eyebrow"><span class="filet"></span><span class="mx-3">Suivi</span><span class="filet"></span></p>
+    <h1 class="font-display italic text-5xl md:text-6xl text-cocoa-600 mt-3 leading-[0.95]">Retrouver ma commande</h1>
+    <p class="font-body italic text-cocoa-400 mt-4 max-w-md mx-auto">
+      Pas de compte, pas de mot de passe. Un code à six chiffres et vos commandes apparaissent.
+    </p>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pb-24">
+    <OrderLookup client:load />
+    <p class="text-center text-xs text-cocoa-400 mt-8">
+      Le code expire au bout de 10 minutes. Aucune information conservée si vous n'allez pas plus loin.
+    </p>
+  </section>
+</BaseLayout>

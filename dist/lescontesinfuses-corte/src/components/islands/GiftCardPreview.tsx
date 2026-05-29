@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Mail, CreditCard, Check } from "lucide-react";
+import { Mail, CreditCard, Check, Loader2 } from "lucide-react";
+import { createGiftCard, apiError } from "@/lib/api";
+import { toast } from "@/lib/toast";
 
 const AMOUNTS = [20, 30, 50, 75, 100];
 
@@ -8,9 +10,12 @@ export default function GiftCardPreview() {
   const [custom, setCustom] = useState("");
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
+  const [recipientEmail, setRecipientEmail] = useState("");
   const [message, setMessage] = useState("Que ces pages t'enveloppent comme une couverture chaude.");
   const [delivery, setDelivery] = useState<"email" | "papier">("email");
   const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [createdCode, setCreatedCode] = useState<string | null>(null);
 
   const finalAmount = custom ? Number(custom) || amount : amount;
 
@@ -21,8 +26,15 @@ export default function GiftCardPreview() {
           <Check size={26} />
         </div>
         <p className="font-display italic text-3xl text-cocoa-600">Carte cadeau préparée.</p>
-        <p className="mt-3 text-cocoa-700">
-          Un récapitulatif a été envoyé à votre adresse. Paiement sécurisé à l'étape suivante.
+        {createdCode && (
+          <p className="mt-3 text-cocoa-700">
+            Code de la carte : <span className="font-mono text-terracotta-600">{createdCode}</span>
+          </p>
+        )}
+        <p className="mt-3 text-cocoa-700 text-sm">
+          {delivery === "email" && recipientEmail
+            ? `Un récapitulatif a été envoyé à ${recipientEmail}.`
+            : "La carte papier sera expédiée sous 5 jours."}
         </p>
       </div>
     );

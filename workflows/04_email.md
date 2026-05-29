@@ -1,109 +1,75 @@
 # Brief — Étape 5 : Email de conversion (post-publish)
 
-**Agent :** `menghi-emailer`
+**Agent :** `menghi-emailer` (nom interne — produit livré = SpeedPost.fr)
 **Livrables :** `dist/<slug>/email.txt` + `dist/<slug>/email.html`
-**Pré-requis :** lire `workflows/rules.md` (notamment la section **Agence Menghi + Offre commerciale**), lire `dist/<slug>/research.md`, lire `dist/<slug>/design.md`, **disposer de l'URL GitHub Pages** publiée à l'étape `06_publish` (champ `pages_url` dans `dist/_progress.json`).
+**Pré-requis :** lire `workflows/rules.md` (section **SpeedPost.fr** + **Offre commerciale**), lire `dist/<slug>/research.md`, lire `dist/<slug>/design.md`, **disposer de l'URL GitHub Pages** publiée à l'étape `06_publish` (champ `pages_url` dans `dist/_progress.json`).
 
 ## Objectif
 
-Rédiger un email **engagé, vendeur, crédible** qui :
+Email **court, simple, professionnel** qui :
 
-1. **Accroche** le gérant sur un détail spécifique de son affaire (preuve qu'on a regardé son cas)
-2. **Présente Menghi Computer Science** comme une agence tech + créative complète (web, graphisme, réseaux sociaux, applis/logiciels sur mesure)
-3. **Donne le lien public du site démo** en clair (URL GitHub Pages)
-4. **Vend le vrai différenciateur** : on code à la main, pas de template, entièrement personnalisable
-5. **Détaille le contenu du 1500€** — tout ce qui est inclus (SEO, GEO pour IA, perf, graphisme, hébergement, support…)
-6. **Projette les bénéfices concrets** — visibilité, crédibilité, image, trafic, apparition dans ChatGPT/Gemini/Perplexity quand on cherche son métier
-7. **Ouvre sur l'action** — mise en ligne rapide + possibilité d'ajuster
+1. **Accroche** sur 1-2 faits précis du commerce (preuve qu'on a regardé)
+2. **Donne la démo** (URL GitHub Pages en clair)
+3. **Propose 2 formules** simples au choix
+4. **Signe** avec les crédentiels Mindlet pour la crédibilité
 
-## Structure type (à adapter, ne pas recopier aveuglément)
+Pas de présentation longue d'agence. Pas de tableau de bénéfices. Pas de bloc « Année 2 ». La démo parle d'elle-même.
+
+## Structure type (120-180 mots de corps)
 
 ```
-Sujet : <accroche tendue, ≤ 55 chars, spécifique au client — pas de "Votre nouveau site">
+Sujet : <accroche tendue, ≤ 55 chars, spécifique au client>
 
-<Salutation adaptée (ex. "Bonjour Mme Durand" si proprietaire_nom exploitable, sinon "Bonjour").>
+Bonjour <prénom si exploitable, sinon ->,
 
-<ACCROCHE PERSONNALISÉE — 2-3 phrases. Cite 2 faits précis extraits de research.md (spécialité, vue, note Google, détail d'un avis positif récurrent, emplacement). Montre qu'on a réellement regardé leur affaire. Ne jamais commencer par "Je me permets de vous contacter...".>
+<ACCROCHE — 2 phrases max. 2-3 faits précis du commerce (spécialité, vue, note Google, détail d'un avis récurrent, emplacement). Pas de "Je me permets de...".>
 
-<PRÉSENTATION DE MENGHI — 1 paragraphe court. Exemple :>
-Chez **Menghi Computer Science**, nous sommes une petite équipe tech et créative basée en France. On fait du développement web sur-mesure, du graphisme (logos, identité visuelle, affiches), du marketing digital & réseaux sociaux, et des applications métier dédiées. Tout sous le même toit, tout codé ou conçu à la main.
+J'ai préparé une démo gratuite de votre site, codée à la main, 100% personnalisable :
+https://antocreadev.github.io/speedpost-<slug>/
 
-<TRANSITION VERS LE LIVRABLE — 1 phrase qui explique la démarche (on vous a fait une démo sans engagement) et donne le lien :>
+<UNE phrase sur ce qu'on a mis en avant pour eux (ancrée dans le research).>
 
-**Le site que j'ai conçu pour vous :** https://antocreadev.github.io/menghicomputerscience-<slug>/
+Deux formules au choix (tarifs HT) :
+- 1500€ une fois + 20€/mois (maintenance, agent IA pour modifier le site, rapport SEO mensuel), sans engagement
+- 89€/mois engagé 12 mois, mêmes services
 
-<CE QUI A ÉTÉ MIS EN AVANT — 3 à 4 puces spécifiques au client, tirées de research/design. Exemples ancrés (pas génériques) :>
-- « Vos glaces artisanales Lilou — le différenciateur cité en boucle dans vos avis — ont leur propre section dès l'ouverture. »
-- « La vue sur le port de Taverna mise en scène en image d'accueil, parce que c'est ce que vos visiteurs racontent. »
+Inclus dans les deux : hébergement, nom de domaine, SEO, indexation IA (ChatGPT, Gemini, Perplexity), support.
 
-<DIFFÉRENCIATEUR MENGHI — 1 paragraphe court, vendeur mais factuel :>
-Ce n'est pas un site template. Chaque ligne de code est écrite à la main pour votre maison — ce qui veut dire qu'on peut changer absolument tout : couleurs, textes, photos, sections, structure, jusqu'au moindre détail. Vous n'êtes pas enfermé dans un thème WordPress.
-
-<CE QUE 1500€ COUVRE — cadre clair, à lister intégralement. Reproduire l'offre mot-pour-mot depuis `rules.md`. Ne pas synthétiser ni reformuler les chiffres. Structure markdown :>
-
-## Ce qui est inclus dans le 1500€
-
-- **Site codé main, sur-mesure** — zéro template, tout est modifiable (textes, photos, couleurs, sections, polices)
-- **Identité graphique** cohérente (logo, palette, visuels)
-- **Référencement Google (SEO)** — technique + éditorial : balisage, mots-clés, sitemap, structured data
-- **Optimisation performance** — chargement rapide, mobile-first
-- **Indexation & citations par les IA** — ChatGPT, Gemini, Perplexity, Copilot : vous apparaissez quand un client demande "bon <métier> à <ville>"
-- **Hébergement + nom de domaine** gérés par nous
-- **Maintenance + support** direct sous 24h pendant toute l'année 1
-- **Aucun abonnement la première année** — 0€/mois
-- **Prix :** ~~1740€~~ **1500€** — une seule fois, tout compris
-
-## Ensuite
-
-- **Année 2 :** 20€/mois (maintenance + hébergement)
-- **Option premium (+10€/mois) :**
-  - agent IA sécurisé connecté à WhatsApp (vous demandez une modif en langage naturel, elle est appliquée)
-  - modifications du site en temps réel
-  - sauvegardes automatiques
-  - versionning complet (rollback possible)
-  - assistance 24/7
-
-<PROJECTION BÉNÉFICES — 2-3 phrases orientées résultat :>
-Concrètement : vous gagnez en **visibilité** (Google + IA), en **crédibilité** (un vrai site change le signal perçu), en **image** (cohérence graphique) et en **trafic qualifié**. Quand un voyageur demandera à ChatGPT « <catégorie> à <ville> », on veut que votre maison ressorte.
-
-<CLÔTURE — 2 phrases. Action + souplesse :>
-Si le rendu vous plaît en l'état, je peux mettre le site en ligne sur votre nom de domaine dès cette semaine. Si vous voulez ajuster quelque chose avant (photos, textes, sections, couleurs), dites-moi simplement ce que vous voudriez voir évoluer.
-
-À très vite,
+Si la démo vous plaît, je la mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi ce qu'on ajuste.
 
 Anto
-**Menghi Computer Science**
-menghicomputerscience@gmail.com
-06 43 87 91 14
+SpeedPost.fr (WebAgentic Builder)
+Un service de SAS Mindlet, Corte (Corse)
+Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional
+contact@speedpost.fr  |  webagentic.speedpost.fr
 ```
 
 ## Règles
 
-- **Longueur** : 320–450 mots corps (hors offre détaillée). Plus dense qu'avant parce qu'on explique plus.
-- **Ton** : confiant, chaleureux, direct. Vendeur-conseil, pas marketing-agressif. "On sait ce qu'on fait" > "Cliquez maintenant !".
-- **Personnalisation obligatoire** : ≥ 3 éléments factuels du research cités (différenciateur, avis récurrent, détail géographique, spécialité).
-- **Offre** : le bloc 1500€ reproduit **mot-pour-mot** depuis `rules.md`. Les puces sont ordonnées exactement comme dans le brief rules.
-- **Jargon** : SEO, IA, Google Maps, ChatGPT, Gemini, Perplexity = OK (mots connus). Core Web Vitals, JSON-LD, structured data, GEO = **interdits** (jargon pro inutile).
-- **Interdit** : superlatifs creux ("révolutionnaire", "exceptionnel"), phrases clichés ("à l'ère du digital"), menaces ("sans site vous perdez des clients"), emojis, **caractère `—` (tiret cadratin U+2014)** — remplacer par `:`, `,`, `.` ou `()` selon le contexte.
-- **URL GitHub Pages obligatoire** et en clair dans le corps, pas de `[cliquez ici](url)`.
+- **Longueur** : 120–180 mots corps **offre incluse** (court, vendeur, pas didactique).
+- **Ton** : pro, direct, confiant. Pas marketing-agressif. Pas de superlatifs.
+- **Personnalisation obligatoire** : ≥ 2 faits factuels du research cités.
+- **URL GitHub Pages en clair** dans le corps (pas de "cliquez ici" masqué).
+- **Toujours préciser « HT »** sur les prix.
+- **Jargon OK** : SEO, IA, ChatGPT, Gemini, Perplexity, agent IA.
+- **Jargon interdit** : Core Web Vitals, JSON-LD, structured data, GEO, Lighthouse, Lenis, etc.
+- **Interdit** : Menghi / Menghi Computer Science / menghicomputerscience@gmail.com / 06 43 87 91 14 (anciens contacts), superlatifs creux ("révolutionnaire"), clichés ("à l'ère du digital"), menaces ("sans site vous perdez des clients"), emojis, **em-dash `—` (U+2014)** : remplacer par `:`, `,`, `.` ou `()`.
 
 ## Version HTML
 
-`email.html` = rendu soigné pour colle-dans-Gmail :
+`email.html` = rendu soigné, collable dans Gmail :
 
 - `max-width: 640px`, marges auto
 - `font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif`
 - `line-height: 1.6`, `color: #111`
-- H1 / H2 uniquement si utiles à la lisibilité (on peut rester en puces)
-- Prix : `<s>1740€</s>` + `<strong>1500€</strong>`
-- Lien GitHub Pages : `<a href="https://antocreadev.github.io/menghicomputerscience-<slug>/">https://antocreadev.github.io/menghicomputerscience-<slug>/</a>` en clair
-- **Pas d'image distante** (risque spam/Gmail)
+- Lien GitHub Pages : `<a href="https://antocreadev.github.io/speedpost-<slug>/">…</a>` en clair
+- Lien `mailto:contact@speedpost.fr` + lien `https://webagentic.speedpost.fr` dans la signature
+- **Aucune image distante** (risque spam/Gmail)
 
-## Sortie
-
-Retourner à l'orchestrateur :
+## Sortie (retour à l'orchestrateur)
 
 - sujet retenu (≤ 55 chars)
-- 3 éléments factuels personnalisés cités
-- nombre de mots du corps
+- 2-3 faits factuels cités (preuve de personnalisation)
+- nombre de mots du corps (doit être dans [120, 180])
 - URL GitHub Pages utilisée
+- chemins `email.txt`, `email.html`

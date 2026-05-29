@@ -1,10 +1,34 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import UnifiedSearch from "@/components/islands/UnifiedSearch.tsx";
-import { books } from "@/data/books";
-import { events } from "@/data/events";
-import { artisans } from "@/data/artisans";
+import { api, listBooks, listArtisans, getArtisanBySlug } from "@/lib/api";
+import type { Event as ApiEvent } from "@/lib/api";
+import { toItems, toLegacyBook, toLegacyEvent, toLegacyProduct, safe } from "@/lib/adapters";
+import type { ArtisanProduct } from "@/data/artisans";
+
 const initial = Astro.url.searchParams.get("q") ?? "";
+
+const [booksRes, eventsRes, artisansRes] = await Promise.all([
+  safe(listBooks({ limit: 100 }), [] as any),
+  safe(api.get("catalog/events", { searchParams: { upcoming: false, limit: 100 } }).json<ApiEvent[]>(), [] as ApiEvent[]),
+  safe(listArtisans(), []),
+]);
+
+const books = toItems(booksRes.data as any).map(toLegacyBook);
+const events = (eventsRes.data ?? []).map(toLegacyEvent);
+
+let artisans: ArtisanProduct[] = [];
+const artisansList = artisansRes.data ?? [];
+if (artisansList.length) {
+  const details = await Promise.all(artisansList.map((a) => getArtisanBySlug(a.slug).catch(() => null)));
+  for (const d of details) {
+    if (!d) continue;
+    for (const p of d.products ?? []) {
+      artisans.push(toLegacyProduct(p, { name: d.name, city: d.city }));
+    }
+  }
+}
 ---
 <BaseLayout
   title="Recherche, Les Contes Infusés"

@@ -30,8 +30,8 @@ Tu :
 
 1. **Images réelles pertinentes** → priorité maximale
    - `premiere_image` / `thumbnail` du CSV (vraies photos Google Maps de CE commerce) = priorité 1
-   - Images `og:image` extraites des pages trouvées par recherche web = priorité 2
-2. **Images Unsplash** → uniquement si :
+   - **Toute image réelle du commerce trouvée pendant la recherche web** = priorité 2. Pendant le `WebSearch`/`WebFetch`, dès qu'une page **concerne ce commerce précis** (site officiel, page Facebook/Instagram, fiche TripAdvisor/RestaurantGuru/Sluurpy, article de presse locale, blog gastronomique le citant…), télécharger **ses** images pertinentes : pas seulement l'`og:image`, mais aussi les galeries photos, vignettes de plats, photos de la salle/terrasse/devanture, etc. Ce sont **ses propres photos** : toujours préférées à Unsplash.
+2. **Images Unsplash** → uniquement **après** avoir épuisé les photos réelles du commerce, et seulement si :
    - cohérentes avec **activité ET localisation**
    - URLs Unsplash réelles (format `images.unsplash.com/photo-...`), **pas** `source.unsplash.com` (déprécié)
 3. **Placeholder** uniquement en dernier recours :
@@ -64,53 +64,74 @@ Tu :
   - Minimal-luxe : **Playfair Display** + **Manrope**
 - Palette : 3 à 5 couleurs, dont **au moins une couleur d'accent** cohérente avec l'identité/lieu.
 
+### SVG dessiné main : petits décors uniquement (gate reviewer)
+
+- Les SVG hand-made sont autorisés **seulement** pour des **petits éléments** : icônes, puces, dividers/filets, petits motifs/patterns de fond subtils, petits accents décoratifs.
+- **INTERDIT en grand format, en premier plan, ou en hero** : pas de grande illustration SVG, pas de scène/dessin SVG plein écran, pas de hero ou de money shot construit autour d'un SVG dessiné main.
+- Le hero et les visuels de premier plan reposent sur les **vraies photos** du commerce (priorité 1/2). Un grand SVG manuel fait amateur/clipart, trahit l'IA et écrase les photos réelles.
+- Restent OK : textures de fond SVG subtiles (linen/grain/ripple), patterns material-driven discrets, micro-illustrations d'accent. Tant que c'est petit et en arrière-plan/détail, pas en sujet principal.
+
+### Le site remplace le service existant (gate reviewer)
+
+- L'objectif du site est de **remplacer le service existant** du client. **Aucune référence, mention ou lien** vers un service tiers que notre offre remplace :
+  - RDV beauté/coiffure : `Planity`, `Treatwell`, `Fresha`
+  - Réservation resto : `TheFork`/`LaFourchette`, `OpenTable`, `Zenchef`, `Guestonline`, `Resengo`
+  - Commande/livraison : `Uber Eats`, `Deliveroo`, `Just Eat`
+  - Présence web existante : ancien site, `Wix`, `Wordpress`, `Linktree`, page FB/Insta servant de site
+- La réservation / prise de RDV / contact / carte sont **natifs au site** : formulaire, `tel:`, email, flux de réservation maison, ancre interne `#reservation`, bloc horaires, carte affichée. Jamais un bouton « Réserver sur X ».
+- **Exceptions OK** (ne sont pas le service remplacé) : iframe Google Maps (localisation), liens réseaux sociaux du client en footer (notoriété), téléphone et email du client.
+- **Why** : lier vers Planity/TheFork/ancien site = pub gratuite au concurrent qu'on remplace, contredit le pitch « votre nouveau site tout-en-un », et envoie le visiteur ailleurs au lieu de convertir. Voir `feedback_replace_existing_service.md`.
+
 ## Stack technique imposé (démo site)
 
 - HTML5 unique (`site/index.html`) auto-suffisant
 - Tailwind CSS via CDN : `https://cdn.tailwindcss.com`
 - Google Fonts via `<link rel="preconnect">` + `<link href="...family=...">`
-- Animations : **Motion One** via CDN `https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.min.js`
-- Smooth scroll (optionnel) : **Lenis** via CDN `https://unpkg.com/lenis@1.1.13/dist/lenis.min.js`
+- Animations : **Motion One** (`inView`/`animate` uniquement, ESM `+esm`). Pas de `scroll((p)=>...)` scroll-linked.
+- **Scroll NATIF obligatoire. Lenis (et tout smooth-scroll hijack) INTERDIT.** Smooth des ancres via CSS `html{scroll-behavior:smooth}` seulement. Pas de parallaxe ni de tracé piloté par la position de scroll (incident 2026-05-29 Horizon Coiffure). Animations one-shot via `inView` à l'entrée viewport.
 - Google Maps : iframe `https://maps.google.com/maps?q=LAT,LNG&output=embed` (sans clé API)
 - Aucun build step : le fichier doit s'ouvrir en double-clic et fonctionner hors-ligne sauf pour les CDN et images externes.
 
-## L'agence — Menghi Computer Science
+## Le produit — SpeedPost.fr (WebAgentic Builder)
 
-Menghi Computer Science est une **boîte tech & créative** qui fait, sous un seul toit :
+**SpeedPost.fr** est un service de la **SAS Mindlet** (siège : Corte, Corse). Le produit phare est **WebAgentic Builder** : sites web premium codés main, livrés clé en main, pilotés par un agent IA pour les modifications.
 
-- **Sites web** sur-mesure (pas de templates — code écrit à la main par des pros)
-- **Graphisme** : logos, affiches, identité visuelle, print, supports
-- **Réseaux sociaux & marketing digital** : contenu, stratégie, campagnes
-- **Applications & logiciels dédiés** : métiers, internes, mobiles
+Site produit : `webagentic.speedpost.fr`
+Émetteur des emails : **Anto** pour SpeedPost.fr.
+Contact signature : `contact@speedpost.fr`.
 
-Tous les emails doivent positionner clairement l'entreprise comme une agence complète, pas un simple prestataire site web. L'émetteur est Anto pour Menghi Computer Science. Contact à utiliser dans la signature : email `menghicomputerscience@gmail.com` + téléphone `06 43 87 91 14`.
+Crédentiels à afficher (preuve de sérieux, en signature email) :
+- Lauréat **PEPITE France** & **PEPITE Corse**
+- Lauréat **Start'in Corsica**
+- Lauréat **Tecnulugia**
+- Lauréat **Fundtruck Régional**
 
-## Offre commerciale (étape email)
+Les emails ne décrivent PAS une "agence complète multi-services". On vend UN produit : un site premium fait main + maintenance + agent IA.
 
-### Prix : ~~1740€~~ **1500€** tout compris (année 1, 0€/mois)
+## Offre commerciale (étape email) — tout en HT
 
-Ce que le 1500€ inclut — **à rédiger en toutes lettres dans chaque email** :
+Deux formules au choix du client :
 
-- **Site codé main, sur-mesure** — zéro template, zéro compromis, tout est modifiable (textes, photos, couleurs, sections, polices)
-- **Identité graphique** cohérente avec le site (logo si besoin, palette, visuels, déclinaisons)
-- **Référencement Google (SEO)** — technique + éditorial : indexation, balisage, mots-clés, sitemap, robots, structured data
-- **Optimisation performance** — chargement rapide, mobile-first, expérience fluide
-- **Indexation & citations par les IA** — ChatGPT, Gemini, Perplexity, Copilot : structured data + signaux d'autorité pour apparaître dans les réponses génératives (GEO : Generative Engine Optimization)
-- **Hébergement + nom de domaine** gérés par nous
-- **Maintenance + support** direct sous 24h pendant toute l'année 1
-- **Aucun abonnement année 1** — 0€/mois
+### Formule A — One-shot + mensuel sans engagement
 
-### Année 2
+- **1500€ HT** une fois (création du site)
+- **+ 20€/mois HT** (maintenance, agent IA pour modifier le site en langage naturel, rapport SEO mensuel + positionnement web)
+- **Sans engagement**, résiliable à tout moment
 
-- **20€/mois** (maintenance + hébergement)
+### Formule B — Tout-en-un mensuel engagé
 
-### Option premium (+10€/mois — soit 30€/mois année 2)
+- **89€/mois HT**, **engagé 12 mois**
+- Mêmes services inclus : site, maintenance, agent IA, rapport SEO mensuel
 
-- **Agent IA sécurisé connecté à WhatsApp** : vous demandez une modif en langage naturel, elle est appliquée
-- **Modifications du site en temps réel**
-- **Sauvegardes automatiques**
-- **Versionning complet** (rollback possible)
-- **Assistance 24/7**
+### Inclus dans les deux formules
+
+- **Site codé main, sur-mesure** — zéro template, tout modifiable (textes, photos, couleurs, sections)
+- **Hébergement + nom de domaine** gérés par SpeedPost
+- **Référencement Google (SEO)** technique + éditorial
+- **Indexation & citations par les IA** (ChatGPT, Gemini, Perplexity, Copilot)
+- **Agent IA** pour demander des modifs en langage naturel
+- **Rapport SEO mensuel** (positionnement, trafic, recommandations)
+- **Support** sous 24h
 
 ### Bénéfices à mettre en avant dans l'email
 
@@ -121,6 +142,8 @@ Ce que le 1500€ inclut — **à rédiger en toutes lettres dans chaque email**
 - **Conversion** : CTA clairs, coordonnées accessibles, Google Maps intégré
 
 **Règle absolue** : on ne vend pas un template, on livre un vrai site codé par des pros, entièrement personnalisable. C'est le cœur de la différenciation et ça doit apparaître dans l'email.
+
+**Règle ton email** : court, simple, pro. **120-180 mots** de corps (offre listée incluse). Pas de blocs « Année 2 », pas de markdown lourd, pas de tableau de bénéfices. L'email vend la démo, pas l'agence.
 
 ## Interdictions absolues
 

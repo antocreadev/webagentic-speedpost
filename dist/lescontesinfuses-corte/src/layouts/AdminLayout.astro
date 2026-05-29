@@ -277,25 +277,28 @@ const notifications = [
 
               <details class="relative" id="lci-avatar">
                 <summary class="list-none cursor-pointer flex items-center gap-2 pl-2 pr-1 py-1 border-l border-line hover:bg-cream-100 rounded-r-md">
-                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-terracotta-400 to-cocoa-500 flex items-center justify-center text-cream-50 text-xs font-medium">PA</div>
+                  <div id="lci-avatar-initials" class="w-8 h-8 rounded-full bg-gradient-to-br from-terracotta-400 to-cocoa-500 flex items-center justify-center text-cream-50 text-xs font-medium">A</div>
                   <div class="hidden sm:block leading-tight text-left">
-                    <p class="text-sm text-cocoa-700">Paul-Antoine</p>
-                    <p class="text-[10px] text-cocoa-400">Gérant</p>
+                    <p id="lci-avatar-name" class="text-sm text-cocoa-700">Admin</p>
+                    <p class="text-[10px] text-cocoa-400">Administration</p>
                   </div>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-cocoa-400 hidden sm:block"><path d="m6 9 6 6 6-6"/></svg>
                 </summary>
-                <div class="absolute right-0 mt-2 w-56 bg-cream-50 border border-line rounded-xl shadow-[0_18px_40px_-15px_rgba(74,45,31,0.35)] overflow-hidden z-50">
+                <div class="absolute right-0 mt-2 w-60 bg-cream-50 border border-line rounded-xl shadow-[0_18px_40px_-15px_rgba(74,45,31,0.35)] overflow-hidden z-50">
                   <div class="px-4 py-3 border-b border-line">
-                    <p class="text-sm text-cocoa-700 font-medium">Paul-Antoine Battesti</p>
-                    <p class="text-[11px] text-cocoa-400">paul-antoine@lescontesinfuses.corsica</p>
+                    <p id="lci-avatar-fullname" class="text-sm text-cocoa-700 font-medium">Administrateur</p>
+                    <p id="lci-avatar-email" class="text-[11px] text-cocoa-400 truncate">admin@lescontesinfuses.corsica</p>
                   </div>
                   <ul class="py-1 text-sm">
-                    <li><a href="#" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Mon profil</a></li>
-                    <li><a href="#" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Paramètres</a></li>
-                    <li><a href="#" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Préférences notifications</a></li>
+                    <li><a href="/compte" class="flex items-center gap-2 px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      Mon espace client
+                    </a></li>
+                    <li><a href="/compte/informations" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Mon profil</a></li>
+                    <li><a href="/compte/preferences" class="block px-4 py-2 hover:bg-cream-100/60 text-cocoa-700">Préférences</a></li>
                   </ul>
                   <div class="border-t border-line py-1">
-                    <a href="/" class="block px-4 py-2 text-sm text-terracotta-600 hover:bg-cream-100/60">Déconnexion</a>
+                    <button id="lci-admin-logout" type="button" class="block w-full text-left px-4 py-2 text-sm text-terracotta-600 hover:bg-cream-100/60">Déconnexion</button>
                   </div>
                 </div>
               </details>
@@ -306,7 +309,7 @@ const notifications = [
           <slot />
         </main>
         <footer class="px-5 lg:px-8 py-6 text-xs text-cocoa-400 border-t border-line bg-cream-100/40 flex items-center justify-between flex-wrap gap-2">
-          <p>Espace admin Les Contes Infusés, version mock 0.4. Connexion LibriSoft, en cours de raccord.</p>
+          <p>Espace admin Les Contes Infusés. Connexion LibriSoft active.</p>
           <p class="font-mono">build 2026.04.20</p>
         </footer>
       </div>
@@ -334,6 +337,37 @@ const notifications = [
       });
       document.getElementById("lci-cmdk-trigger")?.addEventListener("click", () => {
         window.dispatchEvent(new CustomEvent("lci:command-palette"));
+      });
+      // Fill admin avatar with real user info from localStorage
+      function syncAdminAvatar() {
+        try {
+          var raw = localStorage.getItem("lci_user");
+          if (!raw) return;
+          var u = JSON.parse(raw);
+          var first = (u.first_name || "").trim();
+          var last = (u.last_name || "").trim();
+          var full = (first + " " + last).trim() || u.email || "Admin";
+          var initials = ((first[0] || u.email?.[0] || "A") + (last[0] || "")).toUpperCase();
+          var initEl = document.getElementById("lci-avatar-initials");
+          var nameEl = document.getElementById("lci-avatar-name");
+          var fullEl = document.getElementById("lci-avatar-fullname");
+          var emailEl = document.getElementById("lci-avatar-email");
+          if (initEl) initEl.textContent = initials;
+          if (nameEl) nameEl.textContent = first || u.email || "Admin";
+          if (fullEl) fullEl.textContent = full;
+          if (emailEl) emailEl.textContent = u.email || "";
+        } catch (e) { /* ignore */ }
+      }
+      syncAdminAvatar();
+      document.addEventListener("astro:page-load", syncAdminAvatar);
+      window.addEventListener("lci:auth", syncAdminAvatar);
+
+      document.getElementById("lci-admin-logout")?.addEventListener("click", () => {
+        try {
+          localStorage.removeItem("lci_token");
+          localStorage.removeItem("lci_user");
+        } catch (e) { /* ignore */ }
+        window.location.replace("/admin/login");
       });
     </script>
   </body>

@@ -1,13 +1,34 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import LaceMedallion from "@/components/icons/LaceMedallion.astro";
 import BookCatalog from "@/components/islands/BookCatalog.tsx";
-import { books } from "@/data/books";
-import { genres } from "@/data/genres";
+import EmptyState from "@/components/empty/EmptyState.astro";
+import { listBooks, listGenres } from "@/lib/api";
+import { toItems, toLegacyBook, toLegacyGenre, safe } from "@/lib/adapters";
+
+const url = Astro.url;
+const params = {
+  genre: url.searchParams.get("genre") ?? undefined,
+  q: url.searchParams.get("q") ?? undefined,
+  sort: url.searchParams.get("sort") ?? undefined,
+  min_price: url.searchParams.get("min_price") ? Number(url.searchParams.get("min_price")) : undefined,
+  max_price: url.searchParams.get("max_price") ? Number(url.searchParams.get("max_price")) : undefined,
+  limit: 100,
+};
+
+const [booksRes, genresRes] = await Promise.all([
+  safe(listBooks(params), [] as any),
+  safe(listGenres(), []),
+]);
+
+const books = toItems(booksRes.data as any).map(toLegacyBook);
+const genres = (genresRes.data ?? []).map(toLegacyGenre);
+const apiError = booksRes.error || genresRes.error;
 ---
 <BaseLayout
   title="La bibliothèque, catalogue, Les Contes Infusés"
-  description="Tous les livres de la librairie : 24 titres à Corte, romans, polars, BD, beaux-livres, jeunesse, poésie, Corse."
+  description="Tous les livres de la librairie. Romans, polars, BD, beaux-livres, jeunesse, poésie, Corse."
 >
   <section class="relative" data-chapter="1">
     <div class="absolute inset-x-0 top-0 h-72 bg-cream-100/40 border-b border-line pointer-events-none" aria-hidden="true"></div>
@@ -24,12 +45,21 @@ import { genres } from "@/data/genres";
         La bibliothèque
       </h1>
       <p class="font-body italic text-cocoa-400 mt-4 max-w-xl mx-auto" data-reveal data-fade-direction="up" style="transition-delay:120ms">
-        Vingt-quatre titres choisis avec lenteur. Romans, poésie, beaux-livres, voix corses. Ce que nous aurions envie de vous tendre, en main propre.
+        Des titres choisis avec lenteur. Romans, poésie, beaux-livres, voix corses. Ce que nous aurions envie de vous tendre, en main propre.
       </p>
     </div>
   </section>
 
   <section class="max-w-7xl mx-auto px-5 sm:px-8 py-12" data-chapter="2">
-    <BookCatalog books={books} genres={genres} client:load />
+    {apiError ? (
+      <EmptyState
+        title="Le catalogue n'a pas pu être chargé"
+        description="Le service est momentanément indisponible. Merci de réessayer dans un instant."
+        ctaLabel="Réessayer"
+        ctaHref="/livres"
+      />
+    ) : (
+      <BookCatalog books={books} genres={genres} client:load />
+    )}
   </section>
 </BaseLayout>

@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import LoginForm from "../../components/islands/LoginForm.tsx";
+export const prerender = false;
+---
+<BaseLayout title="Connexion admin | Les Contes Infuses">
+  <main class="min-h-[70vh] flex items-center justify-center px-4 py-16">
+    <div class="w-full max-w-sm">
+      <h1 class="text-2xl font-semibold mb-6 text-center">Espace administrateur</h1>
+      <LoginForm client:load mode="admin" redirectTo="/admin" />
+      <p class="text-xs text-neutral-500 mt-6 text-center">
+        Acces reserve. Si vous n'etes pas administrateur, retournez a la <a href="/" class="underline">boutique</a>.
+      </p>
+    </div>
+  </main>
+</BaseLayout>

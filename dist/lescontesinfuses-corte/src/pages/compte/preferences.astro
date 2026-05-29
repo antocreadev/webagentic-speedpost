@@ -1,61 +1,17 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
-
-const toggles = [
-  { id: "newsletter", label: "Lettre mensuelle", desc: "Une fois par mois, les coups de cœur, les événements à venir, les coulisses de la maison.", on: true },
-  { id: "events", label: "Rappels d'événements", desc: "Un message la veille des événements auxquels vous êtes inscrit.", on: true },
-  { id: "stock", label: "Alertes stock", desc: "Quand un livre que vous avez sauvegardé revient en rayon.", on: false },
-  { id: "promo", label: "Bons plans", desc: "Soldes encadrées, ventes privées d'éditeurs partenaires. Au plus 4 par an.", on: false },
-  { id: "sms", label: "Notifications SMS", desc: "Pour le retrait Click & Collect et la disponibilité en relais.", on: true },
-];
-
-const consents = [
-  { label: "Cookies analytiques (Plausible auto-hébergé)", on: true },
-  { label: "Personnalisation des recommandations", on: true },
-  { label: "Partage de listes de souhaits", on: false },
-];
+import AuthGuard from "@/components/AuthGuard.astro";
+import { MyPreferencesForm } from "@/components/islands/MyAccount.tsx";
 ---
 <BaseLayout title="Préférences, Les Contes Infusés">
+  <AuthGuard redirectTo="/auth/connexion?next=/compte/preferences" requireAdmin={false} />
   <section class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
     <header class="mb-10">
       <p class="eyebrow"><a href="/compte" class="hover:text-terracotta-400">Compte</a> · Préférences</p>
       <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Préférences</h1>
       <p class="font-body text-cocoa-400 mt-2">Maîtrisez ce que la maison vous adresse, et quand.</p>
     </header>
-
-    <section class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8">
-      <h2 class="font-display italic text-2xl text-cocoa-700">Communications</h2>
-      <ul class="mt-6 divide-y divide-line">
-        {toggles.map(t => (
-          <li class="py-4 flex items-start gap-4">
-            <button type="button" role="switch" aria-checked={String(t.on)} class={`shrink-0 mt-1 w-11 h-6 rounded-full p-0.5 transition-colors ${t.on ? 'bg-terracotta-400' : 'bg-cream-200'}`}>
-              <span class={`block w-5 h-5 rounded-full bg-cream-50 shadow transition-transform ${t.on ? 'translate-x-5' : ''}`}></span>
-            </button>
-            <div class="flex-1">
-              <p class="font-display italic text-lg text-cocoa-700">{t.label}</p>
-              <p class="text-xs text-cocoa-400 mt-1 leading-relaxed">{t.desc}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    <section class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8 mt-6">
-      <h2 class="font-display italic text-2xl text-cocoa-700">Consentements</h2>
-      <ul class="mt-6 space-y-3">
-        {consents.map(c => (
-          <li class="flex items-center gap-3 p-3 rounded-lg bg-cream-100/50 border border-line">
-            <input type="checkbox" checked={c.on} class="accent-terracotta-400 w-4 h-4" />
-            <span class="text-sm text-cocoa-700">{c.label}</span>
-          </li>
-        ))}
-      </ul>
-      <p class="text-[11px] text-cocoa-400 mt-4">Voir aussi notre <a href="/cookies" class="underline text-terracotta-400">page cookies</a> et la <a href="/rgpd" class="underline text-terracotta-400">politique RGPD</a>.</p>
-    </section>
-
-    <div class="mt-8 flex justify-end gap-3">
-      <a href="/compte" class="btn-ghost">Retour</a>
-      <button type="button" class="btn-terracotta">Enregistrer mes choix</button>
-    </div>
+    <MyPreferencesForm client:load />
   </section>
 </BaseLayout>

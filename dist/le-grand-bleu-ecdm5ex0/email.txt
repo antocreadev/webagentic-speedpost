@@ -1,53 +1,24 @@
 Sujet : Le Grand Bleu, sous le ficus de la Place du Canon
 
-Bonjour Bernard, bonjour Sébastien,
+Bonjour,
 
-J'ai passé un bon moment à regarder ce que vous faites au Grand Bleu, et je me suis dit qu'un vrai site digne de votre maison vous manquait. La terrasse dorée sous ce ficus de 35 ans sur la Place du Canon, le tartare découpé au couteau en salle, la pasta maison avec les raviolis ricotta-épinards à l'huile de menthe : ce sont exactement les détails qui font qu'un voyageur clique plutôt que de passer son chemin. Avec 4,4/5 sur 1 181 avis Google et le Travelers' Choice 2025, vous avez déjà la matière. Ce qui manque, c'est une vitrine qui le raconte.
+J'ai passé un bon moment à regarder ce que vous faites au Grand Bleu, et je me suis dit qu'un vrai site digne de votre maison vous manquait. La terrasse dorée sous ce ficus de 35 ans sur la Place du Canon, le tartare découpé au couteau en salle, la pasta maison avec les raviolis ricotta-épinards à l'huile de menthe : ce sont exactement les détails qui font qu'un voyageur clique plutôt que de passer son chemin.
 
-Chez Menghi Computer Science, nous sommes une équipe tech et créative. On fait du développement web sur-mesure, du graphisme (logos, identité, affiches), du marketing digital et réseaux sociaux, et des applications métier dédiées. Tout sous le même toit, tout codé ou conçu à la main.
+J'ai préparé une démo gratuite de votre site, codée à la main et 100% personnalisable :
+https://antocreadev.github.io/menghicomputerscience-le-grand-bleu-ecdm5ex0/
 
-J'ai pris l'initiative de vous préparer une démo complète, sans engagement, pour que vous puissiez juger sur pièces.
+Ce qu'on a mis en avant pour vous : la terrasse sous le ficus trentenaire en image d'accueil, parce que c'est le cadre unique que vos clients racontent en boucle.
 
-Le site que j'ai conçu pour vous : https://antocreadev.github.io/menghicomputerscience-le-grand-bleu-ecdm5ex0/
+Deux formules au choix (tarifs HT) :
+- 1500€ une fois + 20€/mois (maintenance, agent IA pour modifier le site, rapport SEO mensuel), sans engagement
+- 89€/mois engagé 12 mois, mêmes services
 
-Ce qui a été mis en avant pour Le Grand Bleu :
+Inclus dans les deux : hébergement, nom de domaine, SEO, indexation IA (ChatGPT, Gemini, Perplexity), support.
 
-- La terrasse sous le ficus trentenaire en image d'accueil, parce que c'est le cadre unique que vos clients racontent en boucle.
-- Le duo Bernard & Sébastien mis en récit dans une section "Notre maison" : cuisine franco-méditerranéenne, père et fils, produits locaux.
-- Vos plats-signatures (tartare au couteau, raviolis ricotta-épinards, pasta aux langoustines) sortis en trois cartes dédiées.
-- La preuve sociale solide : 4,4/5 sur 1 181 avis, #11 sur 65 à L'Île-Rousse, badge Travelers' Choice 2025 visible dès le hero.
-
-Ce n'est pas un site template. Chaque ligne de code est écrite à la main pour votre maison, ce qui veut dire qu'on peut changer absolument tout : couleurs, textes, photos, sections, structure, jusqu'au moindre détail. Vous n'êtes enfermé dans aucun thème WordPress.
-
-Ce qui est inclus dans le 1500€
-
-- Site codé main, sur-mesure : zéro template, tout est modifiable (textes, photos, couleurs, sections, polices)
-- Identité graphique cohérente (logo, palette, visuels)
-- Référencement Google (SEO) : technique + éditorial, balisage, mots-clés, sitemap, structured data
-- Optimisation performance : chargement rapide, mobile-first
-- Indexation & citations par les IA : ChatGPT, Gemini, Perplexity, Copilot, vous apparaissez quand un client demande "restaurant à L'Île-Rousse"
-- Hébergement + nom de domaine gérés par nous
-- Maintenance + support direct sous 24h pendant toute l'année 1
-- Aucun abonnement la première année : 0€/mois
-- Prix : 1740€ 1500€, une seule fois, tout compris
-
-Ensuite
-
-- Année 2 : 20€/mois (maintenance + hébergement)
-- Option premium (+10€/mois) :
-  - agent IA sécurisé connecté à WhatsApp (vous demandez une modif en langage naturel, elle est appliquée)
-  - modifications du site en temps réel
-  - sauvegardes automatiques
-  - versionning complet (rollback possible)
-  - assistance 24/7
-
-Concrètement : vous gagnez en visibilité (Google et IA), en crédibilité (un vrai site change radicalement le signal perçu), en image (cohérence graphique avec la bistronomie que vous proposez) et en trafic qualifié. Quand un voyageur en Balagne demandera à ChatGPT ou Gemini "restaurant à L'Île-Rousse", on veut que Le Grand Bleu ressorte en premier, pas un annuaire générique.
-
-Si le rendu vous plaît en l'état, je peux mettre le site en ligne sur votre nom de domaine dès cette semaine. Si vous voulez ajuster quelque chose avant (photos, textes, sections, couleurs), dites-moi simplement ce que vous voudriez voir évoluer.
-
-À très vite,
+Si la démo vous plaît, je la mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi ce qu'on ajuste.
 
 Anto
-Menghi Computer Science
-menghicomputerscience@gmail.com
-06 43 87 91 14
+SpeedPost.fr (WebAgentic Builder)
+Un service de SAS Mindlet, Corte (Corse)
+Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional
+contact@speedpost.fr  |  webagentic.speedpost.fr

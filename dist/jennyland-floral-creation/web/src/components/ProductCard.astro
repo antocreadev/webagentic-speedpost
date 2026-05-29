@@ -1,0 +1,79 @@
+---
+import type { Product } from "@/lib/api";
+import { formatEur } from "@/lib/format";
+
+interface Props {
+  product: Product;
+  index?: number;
+  number?: string;
+}
+const { product, index = 0, number } = Astro.props;
+
+const colorMap: Record<string, string> = {
+  peche: "#C7506E",
+  pastel: "#C7506E",
+  ivoire: "#FAEEEE",
+  blush: "#C7506E",
+  butter: "#C7506E",
+  sage: "#4A2536",
+  rouge: "#7A2D1F",
+  "rose-poudre": "#C7506E",
+  mixte: "#4A2536",
+};
+const fallbackColor = colorMap[product.primary_color || "peche"] || "#C7506E";
+const isOnSale = product.compare_at_cents && product.compare_at_cents > product.price_cents;
+const productHref = `/boutique/${product.category_slug}/${product.slug}`;
+const specNum = number || `0${(index % 9) + 1}/${String(index + 1).padStart(3, "0")}`;
+---
+
+<a
+  href={productHref}
+  class="specimen group block no-underline"
+  data-reveal
+  style={`--reveal-delay: ${index * 70}ms`}
+>
+  <!-- Top label strip -->
+  <div class="flex items-center justify-between px-5 py-3 border-b border-line">
+    <span class="spec-num text-ink-40 group-hover:text-rose-soft-200 transition-colors">{specNum}</span>
+    {product.badge && (
+      <span class="spec-num no-prefix text-rose-deep group-hover:text-blush transition-colors">{product.badge.toUpperCase()}</span>
+    )}
+  </div>
+
+  <!-- Image -->
+  <div class="relative crop-square overflow-hidden specimen-image" style={`background: ${fallbackColor}`}>
+    {product.image_url ? (
+      <img
+        src={product.image_url}
+        alt={product.name}
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+        loading="lazy"
+      />
+    ) : (
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="cursive text-7xl text-cream/40">J</span>
+      </div>
+    )}
+  </div>
+
+  <!-- Info block -->
+  <div class="px-5 py-5">
+    <h3 class="font-display text-2xl text-ink leading-tight">{product.name}</h3>
+    {product.short_description && (
+      <p class="mt-2 text-sm text-ink-60 leading-snug line-clamp-2">{product.short_description}</p>
+    )}
+    <div class="mt-5 flex items-baseline justify-between border-t border-line pt-4">
+      <span class="spec-num text-ink-40">
+        {product.is_unique ? "Unique" : `${product.stock} dispo.`}
+        <span class="opacity-50"> ✦ </span>
+        {product.prep_days_min}-{product.prep_days_max}j
+      </span>
+      <span class="font-display text-2xl text-ink">
+        {formatEur(product.price_cents)}
+        {isOnSale && product.compare_at_cents && (
+          <span class="ml-2 text-xs text-ink-40 line-through font-sans">{formatEur(product.compare_at_cents)}</span>
+        )}
+      </span>
+    </div>
+  </div>
+</a>

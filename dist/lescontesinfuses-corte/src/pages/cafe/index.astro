@@ -1,11 +1,16 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Teapot from "@/components/icons/Teapot.astro";
 import CoffeeBean from "@/components/icons/CoffeeBean.astro";
 import BoissonCard from "@/components/cards/BoissonCard.astro";
 import MenuLightbox from "@/components/islands/MenuLightbox.tsx";
-import { cafe } from "@/data/cafe";
 import SectionDivider from "@/components/SectionDivider.astro";
+import { listCafe } from "@/lib/api";
+import { toLegacyBoisson, safe } from "@/lib/adapters";
+
+const r = await safe(listCafe(), []);
+const cafe = (r.data ?? []).map(toLegacyBoisson);
 
 const cats: { slug: any; label: string; tagline: string }[] = [
   { slug: "cafe", label: "Café", tagline: "Pure origine, lait vapeur, mousse fine." },

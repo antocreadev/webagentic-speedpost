@@ -28,14 +28,14 @@ Construire une base fiable de contenu et d'assets pour un client donné, en part
    - `"<nom> <ville> menu"` ou `"<nom> <ville> carte"`
    - `"<categorie_principale> <ville>"` (pour le contexte concurrentiel)
 
-3. **Extraction des pages pertinentes**
+3. **Extraction des pages pertinentes + collecte des images réelles (priorité 2)**
    Avec `WebFetch`, récupérer 2-4 URLs parmi les résultats (ex. restaurantguru, tripadvisor, visit-corsica, pagesjaunes, site perso si présent). Extraire :
    - extraits de descriptions/avis **positifs uniquement**
-   - `og:image` → candidats visuels priorité 2
    - éléments différenciants mentionnés plusieurs fois
+   - **les images réelles du commerce.** Dès qu'une page **concerne ce commerce précis** (site officiel, Facebook/Instagram, TripAdvisor, RestaurantGuru, Sluurpy, presse/blog le citant…), tu es **autorisé et encouragé à télécharger ses images pertinentes** : pas seulement l'`og:image`, mais aussi les galeries photos, photos de plats, salle, terrasse, devanture, vue. Ce sont **ses propres photos** → priorité 2, toujours préférées à Unsplash. Applique les astuces HD (TripAdvisor `/photo-o/`, RestaurantGuru `_big`) avant téléchargement.
 
-4. **Images Unsplash (fallback thématique)**
-   Uniquement si aucune image pertinente n'a été trouvée. Utiliser Unsplash.com avec recherche ciblée : `<categorie> <ville>` + validation visuelle (cohérence activité ET localisation). Jamais `source.unsplash.com`.
+4. **Images Unsplash (fallback thématique, en tout dernier)**
+   Uniquement **après** avoir épuisé les photos réelles du commerce (CSV + web). Si tu as déjà ≥ 3 vraies photos HD, **n'utilise pas Unsplash du tout**. Sinon, en complément seulement : Unsplash.com avec recherche ciblée `<categorie> <ville>` + validation visuelle (cohérence activité ET localisation). Format `images.unsplash.com/photo-...`, jamais `source.unsplash.com`. Jamais en hero si une photo réelle existe.
 
 5. **Téléchargement local obligatoire**
    Télécharger tous les candidats retenus dans `dist/<slug>/site/assets/images/` via `tools.image_dl.download(url, out_dir, name_hint)`. Cela sert à :
@@ -65,6 +65,7 @@ Construire une base fiable de contenu et d'assets pour un client donné, en part
 - **Horaires :** <lisibles, formatés>
 - **Contact :** téléphone, email si disponibles
 - **Site actuel :** <URL ou "aucun">
+- **Service(s) existant(s) à remplacer :** <Planity / TheFork / Uber Eats / Wix / Linktree / page FB-Insta servant de site… ou "aucun"> — **marqué « à remplacer : ne PAS mettre en avant dans le site »**. Info utile pour le pitch email (le site SpeedPost remplace ce service), mais le builder ne doit ni le citer ni y lier. Voir `feedback_replace_existing_service.md`.
 
 ## 2. Contenu exploitable
 ### Résumés / descriptions extraites

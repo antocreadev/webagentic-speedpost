@@ -1,0 +1,13 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminGuard from "@/islands/AdminGuard";
+import AdminOrderDetail from "@/islands/AdminOrderDetail";
+
+const { reference } = Astro.params;
+---
+
+<AdminLayout title="Commande — Admin" active="orders">
+  <AdminGuard client:load>
+    <AdminOrderDetail client:load reference={reference!} />
+  </AdminGuard>
+</AdminLayout>

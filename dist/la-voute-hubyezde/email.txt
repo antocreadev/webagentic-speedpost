@@ -2,52 +2,23 @@ Sujet : La Voûte, Piana : une démo pour votre maison
 
 Bonjour,
 
-Je vous écris après avoir passé un moment à regarder ce que vous faites à Piana. Ce qui m'a frappé d'entrée : une note de 4,7/5 sur plus de 1 059 avis Google, la mention dans Le Routard, et cette voûte en pierre posée sur la Place de la Fontaine, à deux pas des Calanques classées UNESCO. Pour un restaurant ouvert 7j/7 en 12h-14h30 et 19h-22h, autant dire qu'il y a de quoi raconter.
+Je vous écris après avoir passé un moment à regarder ce que vous faites à Piana. Ce qui m'a frappé d'entrée : une note de 4,7/5 sur plus de 1 059 avis Google, la mention dans Le Routard, et cette voûte en pierre posée sur la Place de la Fontaine, à deux pas des Calanques classées UNESCO.
 
-Chez Menghi Computer Science, nous sommes une petite équipe tech et créative basée en France. On fait du développement web sur-mesure, du graphisme (logos, identité visuelle, affiches), du marketing digital et réseaux sociaux, et des applications métier dédiées. Tout sous le même toit, tout codé ou conçu à la main.
+J'ai préparé une démo gratuite de votre site, codée à la main et 100% personnalisable :
+https://antocreadev.github.io/menghicomputerscience-la-voute-hubyezde/
 
-Plutôt que d'envoyer un argumentaire vide, j'ai conçu une démo complète pour vous, sans engagement.
+Ce qu'on a mis en avant pour vous : la voûte en pierre et la façade du village classé de Piana mises en scène en accueil, parce que c'est votre signature visuelle évidente.
 
-Le site que j'ai conçu pour vous : https://antocreadev.github.io/menghicomputerscience-la-voute-hubyezde/
+Deux formules au choix (tarifs HT) :
+- 1500€ une fois + 20€/mois (maintenance, agent IA pour modifier le site, rapport SEO mensuel), sans engagement
+- 89€/mois engagé 12 mois, mêmes services
 
-Ce qui a été mis en avant pour La Voûte :
+Inclus dans les deux : hébergement, nom de domaine, SEO, indexation IA (ChatGPT, Gemini, Perplexity), support.
 
-- La voûte en pierre et la façade du village classé de Piana mises en scène en accueil, parce que c'est votre signature visuelle évidente.
-- La proximité des Calanques de Piana et du Golfe de Porto écrite noir sur blanc, pour capter les voyageurs qui préparent leur séjour.
-- Vos plats signature (pêche du jour, cannelloni au Brocciu, cabri d'Antoine) rassemblés dans une section dédiée, avec des photos réelles.
-- La note 4,7/5 et des extraits d'avis 5 étoiles mis en avant comme preuve sociale immédiate.
-
-Ce n'est pas un site template. Chaque ligne de code est écrite à la main pour votre maison, ce qui veut dire qu'on peut changer absolument tout : couleurs, textes, photos, sections, structure, jusqu'au moindre détail. Vous n'êtes pas enfermé dans un thème WordPress.
-
-Ce qui est inclus dans le 1500€
-
-- Site codé main, sur-mesure : zéro template, tout est modifiable (textes, photos, couleurs, sections, polices)
-- Identité graphique cohérente (logo, palette, visuels)
-- Référencement Google (SEO) : technique + éditorial, balisage, mots-clés, sitemap, structured data
-- Optimisation performance : chargement rapide, mobile-first
-- Indexation et citations par les IA : ChatGPT, Gemini, Perplexity, Copilot, vous apparaissez quand un client demande "bon restaurant aux Calanques de Piana"
-- Hébergement + nom de domaine gérés par nous
-- Maintenance + support direct sous 24h pendant toute l'année 1
-- Aucun abonnement la première année : 0€/mois
-- Prix : 1740€ 1500€, une seule fois, tout compris
-
-Ensuite
-
-- Année 2 : 20€/mois (maintenance + hébergement)
-- Option premium (+10€/mois) :
-  - agent IA sécurisé connecté à WhatsApp (vous demandez une modif en langage naturel, elle est appliquée)
-  - modifications du site en temps réel
-  - sauvegardes automatiques
-  - versionning complet (rollback possible)
-  - assistance 24/7
-
-Concrètement : vous gagnez en visibilité (Google + IA), en crédibilité (un vrai site change le signal perçu auprès des touristes qui préparent leur voyage), en image (cohérence graphique qui matche le niveau de votre cuisine) et en trafic qualifié. Quand un voyageur demandera à ChatGPT "restaurant aux Calanques de Piana", on veut que La Voûte ressorte en premier.
-
-Si le rendu vous plaît en l'état, je peux mettre le site en ligne sur votre nom de domaine dès cette semaine. Si vous voulez ajuster quelque chose avant (photos, textes, sections, couleurs), dites-moi simplement ce que vous voudriez voir évoluer.
-
-À très vite,
+Si la démo vous plaît, je la mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi ce qu'on ajuste.
 
 Anto
-Menghi Computer Science
-menghicomputerscience@gmail.com
-06 43 87 91 14
+SpeedPost.fr (WebAgentic Builder)
+Un service de SAS Mindlet, Corte (Corse)
+Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional
+contact@speedpost.fr  |  webagentic.speedpost.fr

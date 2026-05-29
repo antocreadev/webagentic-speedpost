@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page introuvable — Jennyland">
+  <section class="bath bath-rose-deep min-h-[80vh] flex items-center px-5 sm:px-8 md:px-12">
+    <div class="mx-auto max-w-[1400px] grid grid-cols-12 gap-6 md:gap-12 items-center">
+      <div class="col-span-12 md:col-span-7">
+        <span class="spec-num text-cream/60 mb-6 block">N° 404 · Égarée dans l'atelier</span>
+        <h1 class="font-display text-display-xl text-cream leading-[0.9]">
+          Cette page<br/>
+          a <span class="cursive text-blush">fané.</span>
+        </h1>
+        <p class="mt-10 font-display-italic text-2xl text-cream/90 max-w-md">
+          La page que vous cherchez n'existe pas (ou plus). Mais l'atelier reste ouvert.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a href="/" class="btn btn-cream">Retour à l'accueil →</a>
+          <a href="/boutique" class="btn btn-secondary">Voir la boutique</a>
+        </div>
+      </div>
+      <div class="col-span-12 md:col-span-5 text-right">
+        <span class="font-display text-[200px] md:text-[280px] leading-none text-blush">404</span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

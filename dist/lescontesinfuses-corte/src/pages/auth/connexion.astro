@@ -1,0 +1,21 @@
+---
+export const prerender = false;
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LoginForm from "@/components/islands/LoginForm.tsx";
+import LaceMedallion from "@/components/icons/LaceMedallion.astro";
+---
+<BaseLayout title="Connexion, Les Contes Infusés" description="Connectez-vous à votre espace personnel.">
+  <section class="max-w-md mx-auto px-5 sm:px-8 py-12 md:py-16">
+    <div class="text-center mb-8">
+      <div class="flex justify-center opacity-80 mb-4"><LaceMedallion size={100} /></div>
+      <p class="eyebrow">Espace personnel</p>
+      <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Bonjour à nouveau</h1>
+    </div>
+    <div class="bg-cream-50 border border-line rounded-2xl p-7 md:p-8">
+      <LoginForm client:load redirectTo="/compte" />
+    </div>
+    <p class="text-center text-xs text-cocoa-400 mt-5">
+      Vous préférez un suivi sans compte ? <a href="/retrouver-ma-commande" class="underline text-terracotta-400">Retrouver ma commande</a>
+    </p>
+  </section>
+</BaseLayout>

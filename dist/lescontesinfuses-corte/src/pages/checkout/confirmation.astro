@@ -1,67 +1,118 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Teapot from "@/components/icons/Teapot.astro";
 import LaurelBranch from "@/components/icons/LaurelBranch.astro";
+import { getOrder } from "@/lib/api";
+import { formatPrice } from "@/lib/format";
 
-const orderId = "CI-2026-0042";
+const orderId = Astro.url.searchParams.get("order") ?? "";
+const token = Astro.url.searchParams.get("token") ?? "";
+
+let order: any = null;
+let errorMsg: string | null = null;
+if (orderId && token) {
+  try {
+    order = await getOrder(orderId, token);
+  } catch (e: any) {
+    errorMsg = e?.message || "Commande introuvable";
+  }
+} else {
+  errorMsg = "Paramètres manquants";
+}
+
 const steps = [
   { n: "1", title: "Confirmation par email", desc: "Vous recevrez un récapitulatif détaillé sous quelques minutes à votre adresse." },
   { n: "2", title: "Préparation soignée", desc: "Sous 24 à 48 heures ouvrées, votre commande est emballée à la main, papier kraft et ficelle." },
   { n: "3", title: "Expédition Mondial Relay", desc: "Un numéro de suivi vous est transmis dès le dépôt en relais. Délai 3 à 5 jours ouvrés." },
   { n: "4", title: "Lecture, infusion", desc: "On vous souhaite de longues heures lentes. Repassez nous voir, place Paoli, pour un café." },
 ];
+
+const totalCents = order?.total_cents ?? 0;
+const items = order?.items ?? [];
 ---
 <BaseLayout title="Commande confirmée, Les Contes Infusés" description="Merci pour votre commande. Récapitulatif, prochaines étapes et numéro de suivi.">
-  <section class="relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute -top-24 -left-32 w-[460px] opacity-50"><LaurelBranch size={460} /></div>
-      <div class="absolute top-32 -right-32 w-[460px] opacity-50"><LaurelBranch size={460} flip /></div>
-    </div>
-    <div class="relative max-w-3xl mx-auto px-5 sm:px-8 pt-16 pb-20 text-center">
-      <div class="mx-auto inline-flex items-center justify-center w-32 h-32 rounded-full bg-cream-100 border border-line">
-        <Teapot size={86} />
+  {errorMsg ? (
+    <section class="max-w-2xl mx-auto px-5 sm:px-8 py-20 text-center">
+      <p class="eyebrow">Oups</p>
+      <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-3">Commande introuvable</h1>
+      <p class="font-body text-cocoa-400 mt-3">{errorMsg}</p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="/retrouver-ma-commande" class="btn-terracotta">Retrouver ma commande</a>
+        <a href="/contact" class="btn-ghost">Nous contacter</a>
       </div>
-      <p class="eyebrow mt-8"><span class="filet"></span><span class="mx-3">Merci infiniment</span><span class="filet"></span></p>
-      <h1 class="font-display italic text-5xl md:text-6xl text-cocoa-600 mt-4 leading-tight">Votre commande est confirmée</h1>
-      <p class="font-script text-3xl text-terracotta-400 mt-5">L'infusion commence.</p>
+    </section>
+  ) : (
+    <>
+      <section class="relative overflow-hidden">
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute -top-24 -left-32 w-[460px] opacity-50"><LaurelBranch size={460} /></div>
+          <div class="absolute top-32 -right-32 w-[460px] opacity-50"><LaurelBranch size={460} flip /></div>
+        </div>
+        <div class="relative max-w-3xl mx-auto px-5 sm:px-8 pt-16 pb-20 text-center">
+          <div class="mx-auto inline-flex items-center justify-center w-32 h-32 rounded-full bg-cream-100 border border-line">
+            <Teapot size={86} />
+          </div>
+          <p class="eyebrow mt-8"><span class="filet"></span><span class="mx-3">Merci infiniment</span><span class="filet"></span></p>
+          <h1 class="font-display italic text-5xl md:text-6xl text-cocoa-600 mt-4 leading-tight">Votre commande est confirmée</h1>
+          <p class="font-script text-3xl text-terracotta-400 mt-5">L'infusion commence.</p>
 
-      <div class="mt-10 inline-block lace-frame bg-paper">
-        <p class="font-smallcap tracking-windier text-xs text-cocoa-400 uppercase">Numéro de commande</p>
-        <p class="font-display italic text-3xl text-cocoa-700 mt-1 tabular-nums">{orderId}</p>
-      </div>
-    </div>
-  </section>
+          <div class="mt-10 inline-block lace-frame bg-paper">
+            <p class="font-smallcap tracking-windier text-xs text-cocoa-400 uppercase">Numéro de commande</p>
+            <p class="font-display italic text-3xl text-cocoa-700 mt-1 tabular-nums">{orderId}</p>
+            <p class="text-xs text-cocoa-400 mt-2">Total réglé <span class="price-tab">{formatPrice(totalCents / 100)}</span></p>
+          </div>
+        </div>
+      </section>
 
-  <section class="max-w-4xl mx-auto px-5 sm:px-8 pb-16">
-    <header class="mb-10 text-center">
-      <p class="eyebrow">Et maintenant</p>
-      <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600 mt-2">Quatre étapes paisibles</h2>
-    </header>
-    <ol class="grid sm:grid-cols-2 gap-5">
-      {steps.map(s => (
-        <li class="bg-cream-50 border border-line rounded-2xl p-6">
-          <span class="font-display italic text-5xl text-terracotta-400 leading-none">{s.n}</span>
-          <p class="font-display italic text-xl text-cocoa-700 mt-3">{s.title}</p>
-          <p class="font-body text-sm text-cocoa-400 mt-2 leading-relaxed">{s.desc}</p>
-        </li>
-      ))}
-    </ol>
-  </section>
+      {items.length > 0 && (
+        <section class="max-w-3xl mx-auto px-5 sm:px-8 pb-8">
+          <div class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8">
+            <p class="eyebrow">Articles</p>
+            <ul class="mt-4 divide-y divide-line">
+              {items.map((it: any) => (
+                <li class="py-3 flex justify-between gap-3 text-sm">
+                  <span class="text-cocoa-700">{it.title ?? it.name ?? it.slug} <span class="text-cocoa-400">×{it.qty ?? it.quantity}</span></span>
+                  <span class="price-tab">{formatPrice(((it.unit_price_cents ?? it.price_cents ?? 0) * (it.qty ?? it.quantity ?? 1)) / 100)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
-  <section class="max-w-4xl mx-auto px-5 sm:px-8 pb-24">
-    <div class="bg-cocoa-700 text-cream-100 rounded-3xl p-8 md:p-10 grid md:grid-cols-3 gap-6">
-      <a href={`/suivi/${orderId}`} class="bg-cream-50/5 hover:bg-cream-50/10 border border-cream-100/15 rounded-xl p-5 transition-colors text-center">
-        <p class="font-smallcap tracking-widest uppercase text-[10px] text-cream-100/60">Suivi</p>
-        <p class="font-display italic text-xl text-cream-50 mt-1">Suivre mon colis</p>
-      </a>
-      <a href="/compte/commandes" class="bg-cream-50/5 hover:bg-cream-50/10 border border-cream-100/15 rounded-xl p-5 transition-colors text-center">
-        <p class="font-smallcap tracking-widest uppercase text-[10px] text-cream-100/60">Compte</p>
-        <p class="font-display italic text-xl text-cream-50 mt-1">Mes commandes</p>
-      </a>
-      <a href="/livres" class="bg-cream-50/5 hover:bg-cream-50/10 border border-cream-100/15 rounded-xl p-5 transition-colors text-center">
-        <p class="font-smallcap tracking-widest uppercase text-[10px] text-cream-100/60">Continuer</p>
-        <p class="font-display italic text-xl text-cream-50 mt-1">Lire encore</p>
-      </a>
-    </div>
-  </section>
+      <section class="max-w-4xl mx-auto px-5 sm:px-8 pb-16">
+        <header class="mb-10 text-center">
+          <p class="eyebrow">Et maintenant</p>
+          <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600 mt-2">Quatre étapes paisibles</h2>
+        </header>
+        <ol class="grid sm:grid-cols-2 gap-5">
+          {steps.map(s => (
+            <li class="bg-cream-50 border border-line rounded-2xl p-6">
+              <span class="font-display italic text-5xl text-terracotta-400 leading-none">{s.n}</span>
+              <p class="font-display italic text-xl text-cocoa-700 mt-3">{s.title}</p>
+              <p class="font-body text-sm text-cocoa-400 mt-2 leading-relaxed">{s.desc}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="max-w-4xl mx-auto px-5 sm:px-8 pb-24">
+        <div class="bg-cocoa-700 text-cream-100 rounded-3xl p-8 md:p-10 grid md:grid-cols-3 gap-6">
+          <a href={`/suivi/${orderId}?token=${encodeURIComponent(token)}`} class="bg-cream-50/5 hover:bg-cream-50/10 border border-cream-100/15 rounded-xl p-5 transition-colors text-center">
+            <p class="font-smallcap tracking-widest uppercase text-[10px] text-cream-100/60">Suivi</p>
+            <p class="font-display italic text-xl text-cream-50 mt-1">Suivre mon colis</p>
+          </a>
+          <a href="/compte/commandes" class="bg-cream-50/5 hover:bg-cream-50/10 border border-cream-100/15 rounded-xl p-5 transition-colors text-center">
+            <p class="font-smallcap tracking-widest uppercase text-[10px] text-cream-100/60">Compte</p>
+            <p class="font-display italic text-xl text-cream-50 mt-1">Mes commandes</p>
+          </a>
+          <a href="/livres" class="bg-cream-50/5 hover:bg-cream-50/10 border border-cream-100/15 rounded-xl p-5 transition-colors text-center">
+            <p class="font-smallcap tracking-widest uppercase text-[10px] text-cream-100/60">Continuer</p>
+            <p class="font-display italic text-xl text-cream-50 mt-1">Lire encore</p>
+          </a>
+        </div>
+      </section>
+    </>
+  )}
 </BaseLayout>

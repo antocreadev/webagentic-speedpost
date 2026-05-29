@@ -1,0 +1,101 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const whatsapp = (import.meta.env.PUBLIC_WHATSAPP as string) || "+33600000000";
+const message = "Bonjour Jenny, j'aimerais discuter d'une commande sur-mesure. Voici l'idée :";
+const url = `https://wa.me/${whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(message)}`;
+---
+
+<BaseLayout title="Sur-mesure — Jennyland">
+  <section class="bath bath-rose-deep section">
+    <div class="mx-auto max-w-[1400px]">
+      <nav class="spec-num text-cream/60 mb-12">
+        <a href="/" class="hover:text-blush">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>Sur-mesure</span>
+      </nav>
+      <div class="grid grid-cols-12 gap-6 md:gap-8 items-end" data-reveal>
+        <div class="col-span-12 md:col-span-8">
+          <span class="spec-num text-cream/60 mb-6 block">N° XIII · Sur-mesure</span>
+          <h1 class="font-display text-display-xl text-cream leading-[0.9]">
+            <span class="font-display-italic">La pièce qui</span><br/>
+            n'existe que <span class="cursive text-blush">pour vous.</span>
+          </h1>
+        </div>
+        <div class="col-span-12 md:col-span-4">
+          <p class="font-display-italic text-xl text-cream/90 leading-tight">
+            Bouquet de mariée unique, hommage à une fleur, reproduction d'un bouquet de famille, décor événementiel.
+          </p>
+          <a href={url} target="_blank" rel="noopener noreferrer" class="btn btn-cream mt-8">
+            WhatsApp →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px]">
+      <h2 class="font-display text-display-l text-ink leading-[0.92] mb-16" data-reveal>
+        De l'idée à la livraison,<br/>
+        <span class="font-display-italic text-rose-deep">en quatre temps.</span>
+      </h2>
+      <ol class="grid grid-cols-1 md:grid-cols-4 border-t border-ink">
+        {[
+          { num: "01", title: "Brief", text: "Vous me racontez votre projet sur WhatsApp. Photos, couleurs, occasion, budget." },
+          { num: "02", title: "Devis", text: "Sous 48h, devis détaillé + croquis. Validation aller-retour autant que nécessaire." },
+          { num: "03", title: "Acompte 30%", text: "Validation finale, je commande les fils. Démarrage atelier dans la foulée." },
+          { num: "04", title: "Livraison", text: "Solde 70% à la livraison. Emballage cadeau, photos avant départ, suivi WhatsApp." },
+        ].map((step, i) => (
+          <li class={`p-7 border-b border-r border-ink ${i === 3 ? "md:border-r-0" : ""}`} data-reveal style={`--reveal-delay: ${i * 100}ms`}>
+            <span class="spec-num text-rose-deep">{step.num}</span>
+            <h3 class="font-display text-3xl text-ink mt-6">{step.title}</h3>
+            <p class="mt-3 text-sm text-ink-60 leading-relaxed">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1400px]">
+      <h2 class="font-display text-display-l text-ink leading-[0.92] mb-12" data-reveal>
+        Ce qui sort souvent<br/>
+        <span class="font-display-italic text-rose-deep">de l'atelier.</span>
+      </h2>
+      <ul class="grid grid-cols-2 md:grid-cols-4 border-t border-ink">
+        {[
+          { title: "Bouquet de mariée", price: "à partir de 250 €" },
+          { title: "Demoiselles d'honneur", price: "à partir de 95 €" },
+          { title: "Bouquet d'anniversaire", price: "à partir de 65 €" },
+          { title: "Couronne fleurie", price: "à partir de 55 €" },
+          { title: "Boutonnière marié", price: "à partir de 25 €" },
+          { title: "Hommage funéraire", price: "à partir de 80 €" },
+          { title: "Décor mariage table", price: "sur devis" },
+          { title: "Cadeau Saint-Valentin", price: "à partir de 75 €" },
+        ].map((idea, i) => (
+          <li class={`p-6 border-b border-r border-ink ${(i + 1) % 4 === 0 ? "md:border-r-0" : ""}`} data-reveal style={`--reveal-delay: ${i * 50}ms`}>
+            <span class="spec-num text-ink-40">N° 0{i + 1}</span>
+            <h3 class="font-display text-2xl text-ink mt-4 leading-tight">{idea.title}</h3>
+            <p class="mt-2 text-sm text-rose-deep">{idea.price}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bath bath-ink section">
+    <div class="mx-auto max-w-[1000px] text-center">
+      <h2 class="font-display text-display-xl text-cream leading-[0.9]" data-reveal>
+        Prête à parler<br/>
+        <span class="cursive text-blush">de votre projet ?</span>
+      </h2>
+      <p class="mt-10 font-display-italic text-2xl text-cream/80 max-w-xl mx-auto">
+        Il n'y a pas de "trop bizarre" ou de "trop demandeur". Si l'idée vous a fait réfléchir trois fois, elle a déjà sa place dans l'atelier.
+      </p>
+      <a href={url} target="_blank" rel="noopener noreferrer" class="btn btn-cream mt-10">
+        Écrire à Jenny sur WhatsApp →
+      </a>
+    </div>
+  </section>
+</BaseLayout>

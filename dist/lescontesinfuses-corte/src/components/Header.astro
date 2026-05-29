@@ -3,10 +3,16 @@ import Logo from "./icons/Logo.astro";
 import LaurelBranch from "./icons/LaurelBranch.astro";
 import Frise from "./icons/decor/Frise.astro";
 import Ornament2 from "./icons/decor/Ornament2.astro";
-import { coupsDeCoeur } from "@/data/books";
+import { listBooks } from "@/lib/api";
+import { toItems, toLegacyBook, safe } from "@/lib/adapters";
 import { formatPrice } from "@/lib/format";
 
-const featured = coupsDeCoeur().slice(0, 3);
+const featuredRes = await safe(listBooks({ limit: 50 }), [] as any);
+const allFeatured = toItems(featuredRes.data as any).map(toLegacyBook);
+const featured = (allFeatured.filter((b) => b.coupDeCoeur).slice(0, 3).length > 0
+  ? allFeatured.filter((b) => b.coupDeCoeur)
+  : allFeatured
+).slice(0, 3);
 const genreChips = [
   { slug: "roman", label: "Roman", color: "terracotta" },
   { slug: "corse", label: "Corse", color: "sage" },
@@ -91,6 +97,9 @@ const genreChips = [
       <a href="/panier" class="relative p-2 hover:text-terracotta-400 transition-colors sm:hidden" aria-label="Panier">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span id="cart-count-mobile" class="absolute -top-0.5 -right-0.5 hidden min-w-[18px] h-[18px] px-1 rounded-full bg-terracotta-400 text-cream-50 text-[10px] font-sans font-medium leading-[18px] text-center">0</span>
+      </a>
+      <a id="lci-admin-link" href="/admin" class="p-2 hover:text-terracotta-400 transition-colors hidden" aria-label="Administration" title="Administration">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
       </a>
       <a href="/compte" class="p-2 hover:text-terracotta-400 transition-colors hidden sm:inline-flex" aria-label="Mon compte">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -275,6 +284,7 @@ const genreChips = [
     <a href="/journal" class="nav-link text-base py-3 border-b border-line/60">Journal</a>
     <a href="/contact" class="nav-link text-base py-3 border-b border-line/60">Contact</a>
     <a href="/compte" class="nav-link text-base py-3">Mon compte</a>
+    <a id="lci-mobile-admin-link" href="/admin" class="nav-link text-base py-3 text-terracotta-400 hidden">Espace administration</a>
   </nav>
   <div class="px-6 pt-4 pb-8 border-t border-line/60 mt-4">
     <p class="eyebrow mb-3">Suivez-nous</p>
@@ -300,6 +310,27 @@ const genreChips = [
 <div id="lci-overlay" class="fixed inset-0 z-30 bg-cocoa-900/40 hidden lg:hidden"></div>
 
 <script>
+  // Show admin shortcut if user has admin scope (re-runs on view-transition page-load)
+  function syncAdminLink() {
+    const adminLink = document.getElementById("lci-admin-link");
+    const mobileAdmin = document.getElementById("lci-mobile-admin-link");
+    try {
+      const raw = localStorage.getItem("lci_user");
+      const user = raw ? JSON.parse(raw) : null;
+      const isAdmin = !!(user && user.scope === "admin");
+      if (adminLink) {
+        adminLink.classList.toggle("hidden", !isAdmin);
+        adminLink.classList.toggle("inline-flex", isAdmin);
+      }
+      if (mobileAdmin) {
+        mobileAdmin.classList.toggle("hidden", !isAdmin);
+      }
+    } catch { /* ignore */ }
+  }
+  syncAdminLink();
+  document.addEventListener("astro:page-load", syncAdminLink);
+  window.addEventListener("lci:auth", syncAdminLink);
+
   const burger = document.getElementById("lci-burger");
   const close = document.getElementById("lci-close");
   const panel = document.getElementById("lci-mobile-panel");

@@ -1,0 +1,331 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import CategoryCard from "@/components/CategoryCard.astro";
+import { api, safe, type Product, type Category } from "@/lib/api";
+
+const [{ data: catData }, { data: prodData }, { data: contentData }] = await Promise.all([
+  safe(api.categories(), { categories: [] as Category[] }),
+  safe(api.products({ featured: true, limit: 4 }), { products: [] as Product[] }),
+  safe(api.content(), { content: {} as Record<string, string>, settings: {} as Record<string, string> }),
+]);
+
+const categories = catData.categories;
+const featured = prodData.products;
+const content = contentData.content;
+const heroSubtitle = content["hero.subtitle"] || "Bouquets et compositions sur-mesure, faits à la main au crochet, pour traverser les années aussi bien que vos souvenirs.";
+const aboutIntro = content["about.intro"] || "Je m'appelle Jenny. Depuis 2019, je crée des fleurs au crochet dans mon atelier corse.";
+const aboutStory = content["about.story"] || "";
+---
+
+<BaseLayout description={heroSubtitle}>
+  <!-- ========== I. HERO ========== -->
+  <section class="bath bath-rose-soft relative">
+    <!-- Spec strip integrated tight at the top (under header) -->
+    <div class="border-b border-line">
+      <div class="mx-auto max-w-[1400px] px-5 sm:px-8 md:px-12 py-3 flex items-center justify-between text-ink-60">
+        <span class="spec-num">N° 2026 / 01</span>
+        <span class="eyebrow hidden sm:inline">Atelier de création florale</span>
+        <span class="spec-num">Fait main · Bastia</span>
+      </div>
+    </div>
+
+    <!-- Hero content : type left, photo right -->
+    <div class="mx-auto max-w-[1400px] px-5 sm:px-8 md:px-12 pt-10 md:pt-14 pb-10 md:pb-14 grid grid-cols-12 gap-6 md:gap-10 items-center">
+      <div class="col-span-12 md:col-span-7" data-reveal>
+        <h1 class="font-display text-display-xl text-ink leading-[0.92]">
+          Des fleurs<br/>
+          <span class="font-display-italic text-rose-deep">qui ne fanent</span><br/>
+          jamais.
+        </h1>
+        <p class="mt-7 font-display-italic text-2xl md:text-3xl text-ink-60 leading-tight max-w-xl">
+          {heroSubtitle}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/boutique" class="btn btn-rose">Boutique →</a>
+          <a href="/composer" class="btn btn-secondary">
+            <span class="inline-block w-1 h-1 rounded-full bg-rose-deep"></span>
+            Composer mon bouquet
+          </a>
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-5 relative" data-reveal style="--reveal-delay: 200ms">
+        <div class="relative crop-portrait overflow-hidden bg-rose-deep">
+          <img
+            src="/assets/bouquet-hero.png"
+            alt="Bouquet de fleurs au crochet"
+            class="absolute inset-0 h-full w-full object-cover"
+          />
+          <div class="absolute top-4 left-4 right-4 flex items-center justify-between text-cream">
+            <span class="spec-num">N° 0143</span>
+            <span class="spec-num no-prefix">Pièce unique</span>
+          </div>
+          <div class="absolute bottom-4 left-4 right-4 flex items-baseline justify-between text-cream">
+            <span class="cursive text-3xl">Première Lumière</span>
+            <span class="font-display text-xl">65 €</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="border-t border-line">
+      <div class="mx-auto max-w-[1400px] px-5 sm:px-8 md:px-12 py-7 grid grid-cols-3 gap-6 md:gap-10 items-baseline">
+        <div>
+          <span class="spec-stat text-ink">5</span>
+          <span class="font-display-italic text-3xl text-rose-deep">+</span>
+          <div class="eyebrow text-ink-60 mt-2">Ans d'atelier</div>
+        </div>
+        <div>
+          <span class="spec-stat text-ink">300</span>
+          <span class="font-display-italic text-3xl text-rose-deep">h</span>
+          <div class="eyebrow text-ink-60 mt-2">Bouquet de mariée</div>
+        </div>
+        <div>
+          <span class="spec-stat text-ink">∞</span>
+          <div class="eyebrow text-ink-60 mt-2">Sans entretien</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== II. MARQUEE — Material credentials ========== -->
+  <section class="bath bath-rose-deep overflow-hidden border-y border-cream/15 py-8">
+    <div class="marquee-row animate-marquee text-display-m text-cream">
+      {Array.from({ length: 2 }, () => null).map(() => (
+        <>
+          <span>Coton mercerisé</span>
+          <span class="text-blush">●</span>
+          <span class="font-display-italic">teinté à la main</span>
+          <span class="text-blush">●</span>
+          <span>Aiguilles 2 mm</span>
+          <span class="text-blush">●</span>
+          <span class="font-display-italic">fait en Corse</span>
+          <span class="text-blush">●</span>
+          <span>Pièces uniques</span>
+          <span class="text-blush">●</span>
+          <span class="font-display-italic">sans entretien</span>
+          <span class="text-blush">●</span>
+        </>
+      ))}
+    </div>
+  </section>
+
+  <!-- ========== III. CATÉGORIES — Color baths ========== -->
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-12 gap-6 md:gap-8 mb-16 items-end" data-reveal>
+        <div class="col-span-12 md:col-span-7">
+          <span class="spec-num text-ink-40 mb-6 block">N° III · Univers</span>
+          <h2 class="font-display text-display-l text-ink leading-[0.92]">
+            Quatre univers,<br/>
+            <span class="font-display-italic text-rose-deep">mille</span> possibles.
+          </h2>
+        </div>
+        <div class="col-span-12 md:col-span-5 md:text-right">
+          <p class="font-display-italic text-xl text-ink-60 leading-tight">
+            Choisissez par occasion, par pièce ou par envie.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        {categories.slice(0, 4).map((cat, i) => (
+          <CategoryCard category={cat} index={i} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== IV. SPÉCIMENS — Featured products ========== -->
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16" data-reveal>
+        <div>
+          <span class="spec-num text-ink-40 mb-6 block">N° IV · Sélection 2026</span>
+          <h2 class="font-display text-display-l text-ink leading-[0.92]">
+            Les pièces dont<br/>
+            je suis <span class="font-display-italic text-rose-deep">la plus fière</span>.
+          </h2>
+        </div>
+        <a href="/boutique" class="btn btn-secondary self-start md:self-end">Voir toute la boutique →</a>
+      </div>
+
+      <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        {featured.map((p, i) => (
+          <ProductCard product={p} index={i} number={`N° 0${(i + 1).toString().padStart(3, "0")} / 010`} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== V. CONFIGURATEUR ========== -->
+  <section class="bath bath-blush section">
+    <div class="mx-auto max-w-[1400px] grid grid-cols-12 gap-6 md:gap-12 items-center">
+      <div class="col-span-12 md:col-span-5 order-2 md:order-1" data-reveal>
+        <span class="spec-num text-ink-80 mb-6 block">N° V · Geste signature</span>
+        <h2 class="font-display text-display-l text-ink leading-[0.92]">
+          Composez<br/>
+          <span class="font-display-italic">le bouquet</span><br/>
+          qui n'existe<br/>
+          que pour <span class="cursive text-rose-deep">vous.</span>
+        </h2>
+        <p class="mt-8 font-display-italic text-xl text-ink-80 leading-snug max-w-md">
+          Choisissez les fleurs une à une dans l'atelier numérique. Chaque clic se voit en temps réel. Quand vous êtes prête, je crochète à la main.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a href="/composer" class="btn btn-primary">Commencer →</a>
+        </div>
+        <div class="mt-12 grid grid-cols-2 gap-6">
+          <div>
+            <span class="spec-stat text-ink-80 leading-none">20</span>
+            <div class="eyebrow text-ink-80 mt-2 opacity-70">Fleurs et déco</div>
+          </div>
+          <div>
+            <span class="spec-stat text-ink-80 leading-none">7-10</span>
+            <span class="font-display-italic text-2xl text-ink-80">j</span>
+            <div class="eyebrow text-ink-80 mt-2 opacity-70">Préparation</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-7 order-1 md:order-2" data-reveal style="--reveal-delay: 200ms">
+        <!-- Live workspace illustration : circle with flower color samples -->
+        <div class="relative aspect-square max-w-[600px] mx-auto">
+          <svg viewBox="0 0 400 400" class="w-full h-full">
+            <circle cx="200" cy="200" r="180" fill="#FAF7EE" stroke="#191512" stroke-width="1"/>
+            <!-- Flower color samples around the circle -->
+            <g>
+              <circle cx="200" cy="60" r="36" fill="#C7506E"/>
+              <circle cx="320" cy="140" r="28" fill="#C7506E"/>
+              <circle cx="320" cy="260" r="32" fill="#4A2536"/>
+              <circle cx="200" cy="340" r="40" fill="#4A2536"/>
+              <circle cx="80" cy="260" r="26" fill="#C7506E" opacity="0.7"/>
+              <circle cx="80" cy="140" r="34" fill="#C7506E" opacity="0.85"/>
+              <circle cx="200" cy="200" r="60" fill="#C7506E"/>
+              <circle cx="160" cy="180" r="20" fill="#FAF7EE"/>
+              <circle cx="240" cy="220" r="18" fill="#4A2536"/>
+            </g>
+            <!-- Center label -->
+            <text x="200" y="195" text-anchor="middle" font-family="Pinyon Script" font-size="28" fill="#191512">votre</text>
+            <text x="200" y="220" text-anchor="middle" font-family="Pinyon Script" font-size="28" fill="#191512">bouquet</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== VI. ABOUT ========== -->
+  <section class="bath bath-aubergine section">
+    <div class="mx-auto max-w-[1400px] grid grid-cols-12 gap-6 md:gap-12 items-start">
+      <div class="col-span-12 md:col-span-4">
+        <span class="spec-num text-cream/50 block mb-6">N° VI · Atelier</span>
+        <div class="brand-tag mb-8" style="background: var(--cream); color: var(--ink);">
+          <div>
+            <div class="cursive text-2xl leading-none">Jenny</div>
+            <div class="text-[7px] uppercase tracking-widest mt-1 opacity-60">Floral Création</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-12 md:col-span-8" data-reveal>
+        <h2 class="font-display text-display-l text-cream leading-[0.92]">
+          <span class="font-display-italic">Je m'appelle</span><br/>
+          <span class="cursive text-blush text-display-xl">Jenny.</span>
+        </h2>
+        <p class="mt-10 font-display-italic text-2xl md:text-3xl text-cream leading-tight max-w-2xl">
+          {aboutIntro}
+        </p>
+        <p class="mt-6 text-lg text-cream/80 leading-relaxed max-w-2xl">
+          {aboutStory}
+        </p>
+        <a href="/a-propos" class="btn btn-cream mt-10 inline-flex">Lire l'histoire →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== VII. PROCESS ========== -->
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-12 gap-6 md:gap-8 mb-20" data-reveal>
+        <div class="col-span-12 md:col-span-7">
+          <span class="spec-num text-ink-40 mb-6 block">N° VII · Du choix à votre porte</span>
+          <h2 class="font-display text-display-l text-ink leading-[0.92]">
+            Comment ça <span class="font-display-italic text-rose-deep">se passe.</span>
+          </h2>
+        </div>
+      </div>
+
+      <ol class="grid grid-cols-1 md:grid-cols-4 border-t border-ink">
+        {[
+          { num: "01", title: "Choisir", text: "Une pièce du catalogue, ou composez via le configurateur." },
+          { num: "02", title: "Valider", text: "Paiement PayPal sécurisé. Confirmation immédiate par email." },
+          { num: "03", title: "Crochet", text: "5 à 10 jours d'aiguilles selon la pièce. Suivi photo Instagram." },
+          { num: "04", title: "Recevoir", text: "Mondial Relay ou Colissimo. Livraison offerte dès 100 €." },
+        ].map((step, i) => (
+          <li class={`p-7 border-b border-r border-ink ${i === 3 ? "md:border-r-0" : ""}`} data-reveal style={`--reveal-delay: ${i * 100}ms`}>
+            <span class="spec-num text-rose-deep">{step.num}</span>
+            <h3 class="font-display text-3xl text-ink mt-6 leading-tight">{step.title}</h3>
+            <p class="mt-3 text-sm text-ink-60 leading-relaxed">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ========== VIII. TÉMOIGNAGES ========== -->
+  <section class="bath bath-aubergine section">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-12 gap-6 md:gap-8 mb-16" data-reveal>
+        <div class="col-span-12 md:col-span-7">
+          <span class="spec-num text-cream/60 mb-6 block">N° VIII · Témoignages</span>
+          <h2 class="font-display text-display-l text-cream leading-[0.92]">
+            Des mots qui valent<br/>
+            <span class="font-display-italic">cinq étoiles.</span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {[
+          { text: "Le bouquet de mariée que j'avais imaginé pendant deux ans, mais en mieux. Trois mois après, il trône dans le salon et chaque visite me demande qui l'a fait.", author: "Léa", location: "Mariée, Bonifacio" },
+          { text: "Commandé pour la fête des mères. Ma mère a pleuré. Pas un truc symbolique : elle a vraiment pleuré. Le service après-vente Jennyland mérite un Nobel.", author: "Marc", location: "Ajaccio" },
+          { text: "Le configurateur est génial. J'ai passé 30 minutes à composer mon bouquet, j'avais l'impression d'être dans l'atelier. Reçu en 8 jours, conforme à la preview.", author: "Sophie", location: "Bastia" },
+        ].map((t, i) => (
+          <figure class="bg-cream/8 border border-cream/20 p-7 flex flex-col" data-reveal style={`--reveal-delay: ${i * 100}ms`}>
+            <span class="spec-num text-blush mb-6">N° 0{i + 1}/03</span>
+            <blockquote class="font-display-italic text-xl text-cream leading-snug flex-1">
+              "{t.text}"
+            </blockquote>
+            <figcaption class="mt-8 pt-4 border-t border-cream/15 flex items-baseline justify-between">
+              <span class="cursive text-2xl text-blush">{t.author}</span>
+              <span class="spec-num text-cream/60">{t.location}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== IX. CTA FINAL ========== -->
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px] grid grid-cols-12 gap-6 md:gap-12 items-end">
+      <div class="col-span-12 md:col-span-8" data-reveal>
+        <span class="spec-num text-ink-40 mb-6 block">N° IX · Une commande spéciale</span>
+        <h2 class="font-display text-display-xl text-ink leading-[0.9]">
+          Écrivez-moi<br/>
+          <span class="font-display-italic">sur</span> <span class="cursive text-rose-deep text-display-xl">WhatsApp.</span>
+        </h2>
+      </div>
+      <div class="col-span-12 md:col-span-4 md:text-right" data-reveal style="--reveal-delay: 200ms">
+        <p class="font-display-italic text-xl text-ink-60 mb-6">
+          Réponse sous 24h, du lundi au samedi. Pour les commandes complexes, on peut s'appeler.
+        </p>
+        <div class="flex flex-wrap md:justify-end gap-3">
+          <a href="/sur-mesure" class="btn btn-primary">Demander un devis →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

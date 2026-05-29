@@ -1,4 +1,5 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import LaurelBranch from "@/components/icons/LaurelBranch.astro";
 import LaceMedallion from "@/components/icons/LaceMedallion.astro";
@@ -10,17 +11,48 @@ import EventCard from "@/components/cards/EventCard.astro";
 import ProductCard from "@/components/cards/ProductCard.astro";
 import BoissonCard from "@/components/cards/BoissonCard.astro";
 import BookCard from "@/components/cards/BookCard.tsx";
-import { coupsDeCoeur } from "@/data/books";
-import { events } from "@/data/events";
-import { artisans } from "@/data/artisans";
-import { cafeSignature, cafe } from "@/data/cafe";
 import SectionDivider from "@/components/SectionDivider.astro";
 import Frise from "@/components/icons/decor/Frise.astro";
+import { api, listBooks, listCafe, listArtisans, getArtisanBySlug } from "@/lib/api";
+import type { Event as ApiEvent } from "@/lib/api";
+import { toItems, toLegacyBook, toLegacyEvent, toLegacyBoisson, toLegacyProduct, safe } from "@/lib/adapters";
+import type { ArtisanProduct } from "@/data/artisans";
 
-const featuredBooks = coupsDeCoeur().slice(0, 4);
-const featuredEvents = events.slice(0, 3);
-const featuredArtisans = artisans.slice(0, 4);
-const featuredBoissons = [...cafeSignature(), ...cafe.filter(c => !c.signature)].slice(0, 6);
+const [booksRes, eventsRes, cafeRes, artisansRes] = await Promise.all([
+  safe(listBooks({ limit: 100 }), [] as any),
+  safe(api.get("catalog/events", { searchParams: { upcoming: true, limit: 6 } }).json<ApiEvent[]>(), [] as ApiEvent[]),
+  safe(listCafe(), []),
+  safe(listArtisans(), []),
+]);
+
+const allBooks = toItems(booksRes.data as any).map(toLegacyBook);
+const featuredBooks = allBooks.filter((b) => b.coupDeCoeur).slice(0, 4);
+// Fallback: if no coup_de_coeur returned, take 4 first.
+if (featuredBooks.length === 0) featuredBooks.push(...allBooks.slice(0, 4));
+
+const featuredEvents = (eventsRes.data ?? []).map(toLegacyEvent).slice(0, 3);
+
+const allBoissons = (cafeRes.data ?? []).map(toLegacyBoisson);
+const featuredBoissons = [
+  ...allBoissons.filter((c) => c.signature),
+  ...allBoissons.filter((c) => !c.signature),
+].slice(0, 6);
+
+let featuredArtisans: ArtisanProduct[] = [];
+const artisansList = artisansRes.data ?? [];
+if (artisansList.length) {
+  // Take products from first few artisans to avoid too many calls.
+  const first = artisansList.slice(0, 4);
+  const details = await Promise.all(first.map((a) => getArtisanBySlug(a.slug).catch(() => null)));
+  for (const d of details) {
+    if (!d) continue;
+    for (const p of d.products ?? []) {
+      featuredArtisans.push(toLegacyProduct(p, { name: d.name, city: d.city }));
+      if (featuredArtisans.length >= 4) break;
+    }
+    if (featuredArtisans.length >= 4) break;
+  }
+}
 
 const insta = [
   ["#5C3820", "#3A2014"], ["#C77A4F", "#9A4F2A"], ["#8A9876", "#5A6647"],

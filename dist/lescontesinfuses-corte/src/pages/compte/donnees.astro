@@ -1,17 +1,12 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import AuthGuard from "@/components/AuthGuard.astro";
 import DeleteAccountModal from "@/components/islands/DeleteAccountModal.tsx";
-
-const consents = [
-  { date: "2026-04-12", objet: "Newsletter mensuelle", action: "Acceptation", ip: "82.66.18.214" },
-  { date: "2026-04-12", objet: "Cookies analytiques (Plausible)", action: "Acceptation", ip: "82.66.18.214" },
-  { date: "2026-03-30", objet: "Partage liste de souhaits", action: "Refus", ip: "82.66.18.214" },
-  { date: "2026-02-04", objet: "SMS Click & Collect", action: "Acceptation", ip: "82.66.18.214" },
-  { date: "2026-02-04", objet: "Cookies marketing tiers", action: "Refus", ip: "82.66.18.214" },
-  { date: "2026-01-18", objet: "Création du compte (CGU)", action: "Acceptation", ip: "82.66.18.214" },
-];
+import RgpdExportButton from "@/components/islands/RgpdExportButton.tsx";
 ---
 <BaseLayout title="Mes données, Les Contes Infusés">
+  <AuthGuard redirectTo="/auth/connexion?next=/compte/donnees" requireAdmin={false} />
   <section class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
     <header class="mb-10">
       <p class="eyebrow"><a href="/compte" class="hover:text-terracotta-400">Compte</a> · Mes données</p>
@@ -24,11 +19,7 @@ const consents = [
       <p class="text-sm text-cocoa-700 mt-3 leading-relaxed">
         Téléchargez l'ensemble de vos informations (profil, commandes, inscriptions, consentements) au format JSON et CSV dans une archive ZIP. Conforme à l'article 20 du RGPD (portabilité).
       </p>
-      <p class="text-xs text-cocoa-400 mt-2">Dernier export généré il y a 2 mois.</p>
-      <button type="button" class="btn-terracotta mt-5">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Télécharger mes données (ZIP)
-      </button>
+      <RgpdExportButton client:load />
     </section>
 
     <section class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8 mt-6">
@@ -38,35 +29,6 @@ const consents = [
       </div>
       <div class="mt-5">
         <DeleteAccountModal client:idle />
-      </div>
-    </section>
-
-    <section class="bg-cream-50 border border-line rounded-2xl p-6 md:p-8 mt-6">
-      <h2 class="font-display italic text-2xl text-cocoa-700">Historique des consentements</h2>
-      <p class="text-xs text-cocoa-400 mt-2">Trace horodatée de chaque choix exprimé, conservée 3 ans.</p>
-      <div class="mt-5 overflow-x-auto">
-        <table class="w-full text-sm font-sans">
-          <thead>
-            <tr class="text-left text-xs uppercase tracking-widest text-cocoa-400 border-b border-line">
-              <th class="py-2 pr-4 font-medium">Date</th>
-              <th class="py-2 pr-4 font-medium">Objet</th>
-              <th class="py-2 pr-4 font-medium">Action</th>
-              <th class="py-2 font-medium">IP</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-line">
-            {consents.map(c => (
-              <tr class="text-cocoa-700">
-                <td class="py-3 pr-4 tabular-nums text-xs">{c.date}</td>
-                <td class="py-3 pr-4">{c.objet}</td>
-                <td class="py-3 pr-4">
-                  <span class={`chip ${c.action === "Refus" ? "!text-terracotta-600 !border-terracotta-200" : "!text-sage-600 !border-sage-200"}`}>{c.action}</span>
-                </td>
-                <td class="py-3 text-xs text-cocoa-400 tabular-nums">{c.ip}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </section>
 

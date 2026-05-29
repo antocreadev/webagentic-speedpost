@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { X, Check } from "lucide-react";
+import { recordConsent, apiError } from "@/lib/api";
+import { toast } from "@/lib/toast";
 
 export default function CookiePrefsModal() {
   const [open, setOpen] = useState(false);
@@ -55,7 +57,16 @@ export default function CookiePrefsModal() {
               <button type="button" onClick={() => setOpen(false)} className="btn-ghost">Annuler</button>
               <button
                 type="button"
-                onClick={() => { console.log("cookie prefs", { analytics }); setSaved(true); setTimeout(() => setOpen(false), 900); }}
+                onClick={async () => {
+                  try {
+                    await recordConsent({ key: "analytics", granted: analytics });
+                    setSaved(true);
+                    setTimeout(() => setOpen(false), 900);
+                  } catch (err) {
+                    const ee = await apiError(err);
+                    toast.error("Enregistrement impossible", ee.message);
+                  }
+                }}
                 className="btn-terracotta"
               >
                 {saved ? <><Check size={14} /> Enregistré</> : "Enregistrer"}

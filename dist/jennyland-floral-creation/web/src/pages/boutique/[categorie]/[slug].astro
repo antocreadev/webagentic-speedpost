@@ -1,0 +1,155 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import AddToCart from "@/islands/AddToCart";
+import { api, safe, type Product } from "@/lib/api";
+import { formatEur } from "@/lib/format";
+
+const { slug, categorie } = Astro.params;
+if (!slug || !categorie) return Astro.redirect("/boutique");
+
+const { data: prodData } = await safe(api.product(slug), { product: null as Product | null });
+if (!prodData.product) return Astro.redirect("/boutique");
+const product = prodData.product;
+
+const { data: catData } = await safe(api.category(categorie), { category: null, products: [] as Product[] });
+const related = (catData.products || []).filter((p) => p.slug !== product.slug).slice(0, 3);
+
+const colorMap: Record<string, string> = {
+  peche: "#C7506E", pastel: "#C7506E", ivoire: "#FAEEEE", blush: "#C7506E",
+  butter: "#C7506E", sage: "#4A2536", rouge: "#7A2D1F",
+  "rose-poudre": "#C7506E", mixte: "#4A2536",
+};
+const fallbackColor = colorMap[product.primary_color || "peche"] || "#C7506E";
+const isOnSale = product.compare_at_cents && product.compare_at_cents > product.price_cents;
+const heroImage = product.images?.[0]?.url || null;
+const galleryImages = (product.images || []).slice(1);
+---
+
+<BaseLayout title={`${product.name} — Jennyland`} description={product.short_description || product.description || ""}>
+  <article class="bath bath-rose-soft pt-12 pb-12 px-5 sm:px-8 md:px-12">
+    <div class="mx-auto max-w-[1400px]">
+      <nav class="spec-num text-ink-40 mb-12">
+        <a href="/" class="hover:text-rose-deep">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <a href="/boutique" class="hover:text-rose-deep">Boutique</a>
+        <span class="opacity-50 mx-2">/</span>
+        <a href={`/boutique/${product.category_slug}`} class="hover:text-rose-deep">{product.category_name || product.category_slug}</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>{product.name}</span>
+      </nav>
+
+      <div class="grid grid-cols-12 gap-6 md:gap-12">
+        <!-- Image (large) -->
+        <div class="col-span-12 lg:col-span-7" data-reveal>
+          <div class="relative crop-portrait overflow-hidden" style={`background: ${fallbackColor}`}>
+            {heroImage ? (
+              <img src={heroImage} alt={product.name} class="absolute inset-0 h-full w-full object-cover"/>
+            ) : (
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="cursive text-9xl text-cream/40">J</span>
+              </div>
+            )}
+            <!-- Spec strip overlay -->
+            <div class="absolute top-4 left-4 right-4 flex items-center justify-between text-cream">
+              <span class="spec-num">N° 0{product.id.toString().padStart(3, "0")}</span>
+              {product.badge && <span class="spec-num no-prefix">{product.badge.toUpperCase()}</span>}
+            </div>
+          </div>
+          {galleryImages.length > 0 && (
+            <div class="mt-3 grid grid-cols-4 gap-2">
+              {galleryImages.map((img) => (
+                <div class="crop-square overflow-hidden border border-line">
+                  <img src={img.url} alt={img.alt || product.name} class="h-full w-full object-cover"/>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Info -->
+        <div class="col-span-12 lg:col-span-5 lg:sticky lg:top-24 lg:self-start" data-reveal style="--reveal-delay: 200ms">
+          <span class="spec-num text-ink-40 mb-4 block">{product.category_name}</span>
+          <h1 class="font-display text-display-l text-ink leading-[0.92]">{product.name}</h1>
+          <div class="mt-6 flex items-baseline gap-3">
+            <span class="font-display text-display-m text-rose-deep leading-none">{formatEur(product.price_cents)}</span>
+            {isOnSale && product.compare_at_cents && (
+              <span class="text-base text-ink-40 line-through">{formatEur(product.compare_at_cents)}</span>
+            )}
+          </div>
+
+          {product.short_description && (
+            <p class="mt-6 font-display-italic text-xl text-ink-80 leading-snug">{product.short_description}</p>
+          )}
+
+          <div class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-ink pt-6">
+            {[
+              { label: "Dimensions", value: product.dimensions },
+              { label: "Matériaux", value: product.materials },
+              { label: "Préparation", value: `${product.prep_days_min}-${product.prep_days_max} jours` },
+              { label: "Disponibilité", value: product.is_unique ? "Pièce unique" : `${product.stock} en stock` },
+            ].filter(({ value }) => value).map(({ label, value }) => (
+              <div>
+                <span class="spec-num text-ink-40">{label}</span>
+                <div class="text-sm text-ink mt-1">{value}</div>
+              </div>
+            ))}
+          </div>
+
+          {product.description && (
+            <div class="mt-8">
+              <span class="spec-num text-ink-40 mb-3 block">Composition</span>
+              <p class="text-sm text-ink-80 leading-relaxed">{product.description}</p>
+            </div>
+          )}
+
+          {product.story && (
+            <div class="mt-8 border-l border-rose-deep pl-6">
+              <span class="cursive text-3xl text-rose-deep block mb-2">— Jenny</span>
+              <p class="font-display-italic text-base text-ink-80 leading-relaxed">{product.story}</p>
+            </div>
+          )}
+
+          {product.care_instructions && (
+            <div class="mt-8 p-5 bg-blush-50 border border-blush text-sm text-ink">
+              <strong>Entretien.</strong> {product.care_instructions}
+            </div>
+          )}
+
+          <div class="mt-10">
+            <AddToCart
+              client:load
+              product={{
+                id: product.id, slug: product.slug, name: product.name,
+                price_cents: product.price_cents, image_url: heroImage,
+                short_description: product.short_description, stock: product.stock,
+                is_unique: !!product.is_unique,
+              }}
+            />
+          </div>
+
+          <p class="mt-5 text-xs text-ink-60 leading-relaxed">
+            Mondial Relay (8 €) ou Colissimo Suivi (12 €). <strong class="text-ink">Offerte dès 100 €.</strong>
+            Sur-mesure ? <a href="/sur-mesure" class="text-rose-deep underline">Demandez Jenny sur WhatsApp.</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="bath bath-cream section">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="mb-12" data-reveal>
+          <span class="spec-num text-ink-40 mb-3 block">Vous aimerez peut-être</span>
+          <h2 class="font-display text-display-l text-ink leading-[0.92]">Dans la même <span class="font-display-italic text-rose-deep">famille.</span></h2>
+        </div>
+        <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {related.map((p, i) => (
+            <ProductCard product={p} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

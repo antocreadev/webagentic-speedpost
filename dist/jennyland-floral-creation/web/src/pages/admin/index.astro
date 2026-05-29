@@ -1,0 +1,11 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminGuard from "@/islands/AdminGuard";
+import AdminDashboard from "@/islands/AdminDashboard";
+---
+
+<AdminLayout title="Dashboard — Jennyland Admin" active="home">
+  <AdminGuard client:load>
+    <AdminDashboard client:load />
+  </AdminGuard>
+</AdminLayout>

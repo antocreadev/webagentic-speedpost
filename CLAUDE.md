@@ -8,12 +8,14 @@ Pour chaque ligne de `clients.csv` (~5085 petits commerces scrapés depuis Googl
 
 1. Un **rapport de recherche enrichi** (web + CSV)
 2. Un **design brief bespoke** (UX + UI + palette + typo + archétype unique)
-3. Un **site premium single-file** (Tailwind CDN + Google Fonts + Motion One + Lenis) publié sur **GitHub Pages** sous un repo dédié
-4. Un **email de conversion vendeur** en FR avec l'offre Menghi (1500€) et le lien public du site
+3. Un **site premium single-file** (Tailwind pré-compilé + Google Fonts + Motion One, scroll natif sans Lenis) publié sur **GitHub Pages** sous un repo dédié
+4. Un **email de conversion court** en FR (120-180 mots) avec l'offre SpeedPost (2 formules HT) et le lien public du site
 5. Une **revue qualité** qui gate la livraison
 
-**Positionnement commercial** : Menghi Computer Science = agence tech + créative (web sur-mesure, graphisme, social/marketing, apps/logiciels dédiés).
-**Émetteur / contact dans tous les emails :** Anto / Menghi Computer Science / `menghicomputerscience@gmail.com` / `06 43 87 91 14`.
+**Produit vendu** : **SpeedPost.fr — WebAgentic Builder** (`webagentic.speedpost.fr`). Service de la **SAS Mindlet**, basée à **Corte (Corse)**. Crédentiels : Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional.
+**Émetteur / contact dans tous les emails :** Anto / SpeedPost.fr / `contact@speedpost.fr` / `webagentic.speedpost.fr`.
+
+> Note rebrand 2026-05-29 : l'ancien produit s'appelait « Menghi Computer Science » avec email `menghicomputerscience@gmail.com` et tél `06 43 87 91 14`. Ces éléments sont **bannis** des nouveaux livrables client-facing. Les 10 sites déjà publiés gardent leur URL legacy `menghicomputerscience-<slug>` (ne pas casser le DNS / liens existants). Les nouveaux sites utilisent `speedpost-<slug>`.
 
 ## État au dernier run (2026-04-20)
 
@@ -133,6 +135,12 @@ open "https://antocreadev.github.io/menghicomputerscience-<slug>/"
 ### Design & UX
 
 - **Layout radicalement unique par client.** Jamais 2 sites avec le même squelette. Archétype choisi parmi : `magazine-editorial`, `carnet-scrapbook`, `bento-grid`, `long-scroll-horizontal`, `split-sticky`, `timeline-verticale`, `fullbleed-photo-first`, `showcase-catalogue`, `scrolljack-sequence`, `asymmetric-collage`, `wordmark-xxl`, `circular-petal`, ou inventé. **Obligation d'inventer au moins UN geste d'UI singulier par site** (compas altimétrique / curseur année / composez-votre-cornet / etc.).
+- **CLARTÉ AVANT CONCEPT (prioritaire sur l'unicité).** Pour un commerce de quartier, un site « original mais incompréhensible » est un ÉCHEC. Test « 2 secondes » : on comprend QUOI (activité) + OÙ (ville) + COMMENT réserver. Le hero = message clair + belle photo, jamais une interaction à deviner. Le geste UI singulier doit rester **discret, secondaire, et ne jamais cacher d'info** (hover/reveal subtils). INTERDIT par défaut : slider before/after en hero, sections numérotées cryptiques (« N°01/N°02 »), faux « codes » de métier à la place des libellés, monospace décoratif partout, dégradés sur titres, marquees. La singularité passe d'abord par palette + typo + photos + qualité de mise en page. Incident 2026-05-29 MOOD (« trop complexe on comprend rien »). Voir `feedback_clarity_over_concept.md`.
+- **PALETTE INVENTÉE PAR CLIENT — palette défaut Claude INTERDITE.** Le combo cream `#FFF8EE` + butter `#F4C66D` + peach `#E89B7B` + chocolate ink `#2C1F18` est devenu un tell IA reconnaissable d'un client à l'autre (incident 2026-05-08 sur Jennyland). Pour chaque client : (1) lire l'identité visuelle existante (logo, photos), (2) faire des recherches web visuelles (Pinterest / Behance / Awwwards / Dribbble), (3) lister 4-5 directions opposées avant de fixer, (4) vérifier que la palette ne reprend pas plus d'1 token des 3 derniers clients livrés. Light mode obligatoire, mais light mode ≠ cream warm — peut être blanc glacé, ivoire pur, lavande pâle, vert tendre, gris perle, rose poudré, etc.
+- **Recherche web visuelle obligatoire pour clients hors-CSV** (e-commerce, artisan, marque). Pour clients du CSV, au moins 2-3 références extérieures hors-secteur pour s'inspirer hors du défaut.
+- **Design MATERIAL-DRIVEN obligatoire pour les artisans.** Le métier du client (crochet, bois, pierre, cuir, encre, pâte, mer…) dicte les textures, bordures, typographie et décor. Le site doit donner envie de **toucher** la matière. Un site qui pourrait illustrer n'importe quel autre métier en 2 clics = template = REFUSÉ. Voir `feedback_material_driven_design.md` pour la checklist complète. **Permission explicite d'installer des libs npm** (roughjs, rough-notation, gsap, splitting, lottie-react, paper.js, three.js…) pour atteindre la qualité matérielle visée — viser < 100kb gz cumulés côté client.
+- **Le site REMPLACE le service existant du client : zéro référence à ce service.** Si le client utilise déjà un service tiers (réservation/RDV `Planity`, `Treatwell`, `Fresha` ; réservation resto `TheFork`/`LaFourchette`, `OpenTable`, `Zenchef`, `Guestonline`, `Resengo` ; commande/livraison `Uber Eats`, `Deliveroo`, `Just Eat` ; ancien site/`Wix`/`Linktree`), le nouveau site **ne le cite pas, ne le mentionne pas, n'y lie pas**. La réservation / prise de RDV / contact / menu sont **natifs** (formulaire, `tel:`, flux maison, bloc horaires). Exceptions tolérées (pas « le service remplacé ») : iframe Google Maps, liens réseaux sociaux du client en footer, téléphone/email. Voir `feedback_replace_existing_service.md`.
+- **SVG dessiné main = petits éléments décoratifs UNIQUEMENT.** Les SVG hand-made sont réservés aux petites icônes, puces, dividers/filets, petits motifs de fond subtils, petits accents. **INTERDIT en grand format, en premier plan ou en hero** : pas de grande illustration/scène SVG plein écran, pas de hero construit autour d'un SVG dessiné, pas de gros « dessin » SVG en money shot. Le hero et les visuels de premier plan utilisent les **vraies photos** du commerce. Raison : un grand SVG manuel fait amateur/clipart, trahit l'IA, et écrase les vraies photos (les refontes 2026-04-20 type `arcade-keystone`/`livre-de-bord`/carte Corse abusaient du SVG structurant — à ne plus reproduire en grand).
 - **Réflexion UX 7 questions obligatoire** avant tout choix visuel (visiteur-type, intention primaire, contrainte structurante, émotion-cible, money shot…) — voir `workflows/02_design.md` section "Réflexion UX obligatoire".
 - **Light mode uniquement**, mobile-first, **positif uniquement** (jamais 1★/2★, jamais de comparaison concurrentielle, jamais de négatif implicite).
 - Niveau attendu : **Awwwards / FWA / CSS Design Awards**, pas de "template basique".
@@ -141,22 +149,24 @@ open "https://antocreadev.github.io/menghicomputerscience-<slug>/"
 
 - HTML5 (`site/index.html`) + `tailwind.css` pré-compilé local. Auto-suffisant, servi en statique sur GitHub Pages.
 - **Tailwind PRÉ-COMPILÉ** (jamais le CDN play). Le builder doit :
-  1. Écrire `site/tw.config.js` (theme.extend palette + fontFamily du brief) et `site/tw.in.css` (`@tailwind base/components/utilities`).
+  1. Écrire `site/tw.config.js` (theme.extend palette + fontFamily du brief) et `site/tw.in.css` (`@tailwind base/components/utilities`). **`content` DOIT être le chemin ABSOLU** vers `index.html` (`['/Users/.../dist/<slug>/site/index.html']`) : le binaire résout `content` par rapport au CWD au compile, pas au fichier config. Un `content:['./index.html']` lancé depuis la racine ne scanne RIEN → purge 100% des utilities.
   2. Compiler : `/tmp/tailwindcss -c site/tw.config.js -i site/tw.in.css -o site/tailwind.css --minify` (binaire standalone, télécharger depuis https://github.com/tailwindlabs/tailwindcss/releases v3.4.17 macos-arm64 si absent).
-  3. Référencer `<link rel="stylesheet" href="./tailwind.css"/>` dans `index.html`.
-  4. Supprimer `tw.config.js` et `tw.in.css` (artefacts), garder uniquement `tailwind.css`.
-  - **Raison** : `cdn.tailwindcss.com` est régulièrement bloqué par les adblockers (Brave, uBlock) → layout cassé, page perçue "vide" / "horrible". Incident 2026-05-01 sur Ile de Beauté.
+  3. **Vérifier la compile** : `wc -c site/tailwind.css` > ~12000 ET `grep -c '\.flex{' site/tailwind.css` ≥ 1. CSS < 8KB = purge ratée = page sans style, ne pas livrer.
+  4. Référencer `<link rel="stylesheet" href="./tailwind.css"/>` dans `index.html`. Définir les classes custom (scrim, chip, eyebrow, on-photo, photo-tone, header-solid) dans le `<style>` inline (après le `<link>`) pour survivre à toute purge.
+  5. Supprimer `tw.config.js` et `tw.in.css` (artefacts), garder uniquement `tailwind.css`.
+  - **Raison** : `cdn.tailwindcss.com` est régulièrement bloqué par les adblockers (Brave, uBlock) → layout cassé, page perçue "vide" / "horrible". Incident 2026-05-01 sur Ile de Beauté. Purge totale (content path mal résolu) → CSS 5ko sans aucune utility, page sans style : incident 2026-05-29 Ranch l'Indianna (le reviewer avait faussement PASS car il vérifiait seulement l'existence du fichier).
 - **Reveals robustes** : `[data-reveal]{opacity:0}` doit être conditionné par une classe `.js-ready` ajoutée par le module script. Ajouter aussi un `@keyframes autoreveal` CSS qui force opacity:1 après ~0.5s en filet de sécurité si Motion plante. Animation reveal courte (0.4-0.6s, jamais 0.9-1.4s) sinon perçue comme lente.
+- **Données réelles ou rien (filet anti-zéro)** : toute stat/chiffre affiché = vraie valeur écrite **en dur dans le HTML**. Compteurs animés : `<span class="count" data-to="20">20</span>` (jamais `>0<`). L'animation count-up est une amélioration progressive guardée (`if(!reduce)`), qui restaure la valeur finale et reste correcte si `inView` ne fire pas (section déjà visible) ou si Motion est bloqué. Donnée manquante → retirer la stat ou la récupérer, jamais `0`/placeholder. Incident 2026-05-29 espace-jc-coiffure.
 - **Google Fonts** via `<link rel="preconnect">` + `<link href="...&display=swap">`.
-- **Motion One** + **Lenis** en ESM (`import { animate, inView, scroll } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`).
+- **Motion One** en ESM (`import { animate, inView } from 'https://cdn.jsdelivr.net/npm/motion@10.18.0/+esm'`). **SCROLL NATIF obligatoire : Lenis INTERDIT** (et tout smooth-scroll hijack). **Pas d'effets scroll-linked** (`scroll((p)=>...)`, parallaxe hero, tracé SVG scrubbé) : perçus "bizarres / scroll cassé" (incident 2026-05-29 Horizon Coiffure). Smooth des ancres via CSS `html{scroll-behavior:smooth}` seulement ; animations d'apparition one-shot via `inView`.
 - **Google Maps iframe** sans clé : `https://maps.google.com/maps?q=LAT,LNG&z=15&output=embed`.
 - **Aucun build step**, aucun framework avec bundler (React/Vue/Svelte interdits).
 
 ### Images
 
 1. **Priorité 1** : `premiere_image` / `thumbnail` CSV (vraies photos Google Maps lh3) — utilisation démo outreach acceptée
-2. **Priorité 2** : `og:image` extraits des pages trouvées par recherche web
-3. **Priorité 3** : `images.unsplash.com/photo-...` (réel) si cohérent activité ET localisation
+2. **Priorité 2** : **toutes les images réelles du commerce trouvées pendant la recherche web** — dès qu'une page le concerne (site officiel, Facebook/Instagram, TripAdvisor, RestaurantGuru, Sluurpy, presse locale…), télécharger ses galeries photos / `og:image` / photos de plats-salle-terrasse, pas seulement l'`og:image`. Ses propres photos priment toujours sur Unsplash.
+3. **Priorité 3** : `images.unsplash.com/photo-...` (réel) — **seulement après** avoir épuisé les photos réelles du commerce, si cohérent activité ET localisation
 4. **Fallback** : `placehold.co/WxH?text=...` (usage minimal)
 5. **INTERDIT** : `source.unsplash.com/*` (service mort depuis juin 2024)
 
@@ -183,29 +193,25 @@ open "https://antocreadev.github.io/menghicomputerscience-<slug>/"
 - **Em-dash `—` (U+2014) INTERDIT** dans emails (md+html) et textes du site. Substituts : `:` (clarification), `,` (parenthétique), `.` (pause forte), `()` (incise). Le tiret simple `-` reste autorisé.
 - Check QA : `grep -c $'\u2014' dist/<slug>/site/index.html  # doit être 0`.
 
-## Offre commerciale (mot-pour-mot)
+## Offre commerciale (tout HT — 2 formules au choix client)
 
-### Prix : ~~1740€~~ **1500€** tout compris année 1 (0€/mois)
+### Formule A — One-shot + mensuel sans engagement
+- **1500€ HT** une fois (création du site)
+- **+ 20€/mois HT** : maintenance + agent IA pour modifier le site en langage naturel + rapport SEO mensuel (positionnement web)
+- **Sans engagement**
 
-Inclus dans le 1500€ :
-- **Site codé main, sur-mesure** (zéro template, tout modifiable)
-- **Identité graphique** cohérente (logo, palette, visuels, déclinaisons)
-- **Référencement Google (SEO)**, technique + éditorial (balisage, sitemap, structured data)
-- **Optimisation performance** (rapide, mobile-first)
-- **Indexation & citations par les IA** (ChatGPT, Gemini, Perplexity, Copilot)
-- **Hébergement + nom de domaine** gérés par nous
-- **Maintenance + support** sous 24h pendant toute l'année 1
-- **Aucun abonnement année 1**
+### Formule B — Tout-en-un mensuel
+- **89€/mois HT**, **engagé 12 mois**
+- Mêmes services inclus que la formule A
 
-### Année 2
-- **20€/mois** (maintenance + hébergement)
-
-### Option premium (+10€/mois, soit 30€/mois année 2)
-- Agent IA sécurisé connecté à WhatsApp (modif en langage naturel)
-- Modifications du site en temps réel
-- Sauvegardes automatiques
-- Versionning complet (rollback)
-- Assistance 24/7
+### Inclus dans les deux formules
+- Site codé main, sur-mesure (zéro template, tout modifiable)
+- Hébergement + nom de domaine
+- Référencement Google (SEO) technique + éditorial
+- Indexation & citations par les IA (ChatGPT, Gemini, Perplexity, Copilot)
+- Agent IA pour modifs en langage naturel
+- Rapport SEO mensuel
+- Support sous 24h
 
 ## Persistence de l'état
 
@@ -229,7 +235,7 @@ Source de vérité du pipeline. JSON atomique (tmp + `os.replace`). Clés = `pla
 
 ### `clients.csv` colonne `site`
 
-Mise à jour après chaque publish via `tools.csv_update.set_site(place_id, url)`. Rewrite atomique de la CSV entière (5086 lignes, ~5.8 MB). Source de vérité finale pour "quels clients ont un site Menghi".
+Mise à jour après chaque publish via `tools.csv_update.set_site(place_id, url)`. Rewrite atomique de la CSV entière (5086 lignes, ~5.8 MB). Source de vérité finale pour "quels clients ont un site SpeedPost".
 
 ## Répertoires
 
@@ -313,6 +319,7 @@ Tirées des itérations précédentes, toutes persistées dans `~/.claude/projec
 - `feedback_text_on_image_contrast.md` — Scrim permanent + text-shadow + couleurs solides obligatoires dès qu'un texte est posé sur photo.
 - `feedback_tailwind_precompile.md` — Tailwind doit être pré-compilé en local (`tailwind.css`), jamais le CDN play (bloqué adblockers). Reveals avec filet de sécurité CSS.
 - `feedback_self_improvement.md` — Boucle d'auto-amélioration sur chaque erreur user-signalée (memory + CLAUDE.md + workflows + agents).
+- `feedback_no_placeholder_zero_data.md` — Données réelles ou rien : vraie valeur en dur dans le HTML (compteurs `>20<` pas `>0<`), animation = enhancement guardé. Pas de donnée → récupérer ou retirer. Incident espace-jc-coiffure.
 - `project_commercial_offer.md`, `project_pipeline_rules.md`, `project_tech_defaults.md`, `project_data_source.md`, `project_overview.md`, `user_profile.md`.
 
 ## Techniques éprouvées (raccourcis opérationnels)
@@ -322,6 +329,8 @@ Toutes détaillées dans `workflows/rules.md` section "Techniques éprouvées". 
 - **HD images** : toujours resize avant téléchargement. lh3 `=w2400-h1800-k-no`, TripAdvisor `/photo-o/`, RestaurantGuru `_big`. Minimum 1200px en hero.
 - **`image_dl.download(url, out_dir, name_hint)`** : le 2ᵉ arg est le chemin complet du dossier (`dist/<slug>/site/assets/images`), pas le slug seul.
 - **Builders sandbox-denied sur `git`** : l'orchestrateur exécute `git add/commit/push` depuis `dist/<slug>/site/` après chaque build.
+- **GATE TAILWIND orchestrateur (NE PAS faire confiance au self-report du builder)** : builder ET reviewer ont skippé leurs propres assertions Tailwind 2× le 2026-05-29 (Ranch l'Indianna + salon-deborah → CSS 4-5ko purgé, page sans style, faux PASS). Après chaque build, l'orchestrateur VÉRIFIE lui-même : `wc -c dist/<slug>/site/tailwind.css` > 8000 (riche > 12000) + `grep -c '\.flex{'` ≥ 1. Si purgé : recréer `tw.config.js` (`content:["./index.html"]`) + `tw.in.css` DANS `site/`, recompiler `/tmp/tailwindcss` depuis `site/`, supprimer les artefacts. Le `content` se résout au CWD du compile, pas au fichier config. Cf. `feedback_tailwind_precompile.md`.
+- **GATE VISUELLE obligatoire avant `done`** : lancer `seo-visual` (desktop 1440 + mobile 390) sur le `index.html` ; c'est le seul check qui attrape la purge Tailwind et les layouts effondrés. Ne jamais marquer `done` sur la seule foi des verdicts builder/reviewer.
 - **Researchers sandbox-denied sur `Bash`** : prendre la liste d'URLs qu'ils remontent et exécuter le script Python groupé depuis l'orchestrateur (plus rapide de toute façon).
 - **Contraste texte-sur-image** : scrim permanent + `filter: brightness(.92)` + `text-shadow` + couleurs solides + chips pour infos.
 - **Rejet client → refonte** : TaskStop builders en cours, relancer designer avec blacklist d'archétype + consigne "radicalement différent", puis builder.
@@ -340,6 +349,7 @@ Pour continuer la production :
 ## Comptes & noms de repo
 
 - GitHub owner : `antocreadev` (compte perso, public)
-- Pattern de nommage : `menghicomputerscience-<slug>`, où `<slug> = slugify(nom, place_id)` (suffixe 8 chars du place_id pour unicité)
+- Pattern de nommage (nouveaux clients) : `speedpost-<slug>`, où `<slug> = slugify(nom, place_id)` (suffixe 8 chars du place_id pour unicité)
+- Pattern legacy (10 sites publiés avant 2026-05-29, à NE PAS renommer) : `menghicomputerscience-<slug>`
 - GitHub Pages : branche `main`, racine `/`
-- URL publique : `https://antocreadev.github.io/menghicomputerscience-<slug>/`
+- URL publique nouveaux : `https://antocreadev.github.io/speedpost-<slug>/`

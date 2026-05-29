@@ -1,4 +1,5 @@
 ---
+export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import BookCard from "@/components/cards/BookCard.tsx";
 import StickyCta from "@/components/mobile/StickyCta.astro";
@@ -6,113 +7,147 @@ import Quill from "@/components/icons/Quill.astro";
 import Teapot from "@/components/icons/Teapot.astro";
 import LaurelBranch from "@/components/icons/LaurelBranch.astro";
 import LaceMedallion from "@/components/icons/LaceMedallion.astro";
-import { books, type Book } from "@/data/books";
-import { genres, type Genre } from "@/data/genres";
+import { listBooks, listGenres, getBookBySlug } from "@/lib/api";
+import { toItems, toLegacyBook, toLegacyGenre } from "@/lib/adapters";
 import { formatPrice, formatDate } from "@/lib/format";
+import { imageUrl } from "@/lib/img";
 
-export function getStaticPaths() {
-  const paths: any[] = [];
-  for (const g of genres) {
-    paths.push({ params: { genre: g.slug }, props: { kind: "genre", genre: g } });
+const slug = Astro.params.genre as string;
+
+// Try genre first.
+const genres = await listGenres().catch(() => []);
+const legacyGenres = genres.map(toLegacyGenre);
+const matchedGenre = legacyGenres.find((g) => g.slug === slug);
+
+let kind: "genre" | "book" | "missing" = "missing";
+let book: ReturnType<typeof toLegacyBook> | null = null;
+let apiBookImage: string | null = null;
+
+if (matchedGenre) {
+  kind = "genre";
+} else {
+  // Try book by slug.
+  try {
+    const apiBook = await getBookBySlug(slug);
+    book = toLegacyBook(apiBook);
+    apiBookImage = apiBook.image_url ?? null;
+    kind = "book";
+  } catch {
+    kind = "missing";
   }
-  for (const b of books) {
-    paths.push({ params: { genre: b.slug }, props: { kind: "book", book: b } });
-  }
-  return paths;
 }
 
-const { kind } = Astro.props as { kind: "genre" | "book" };
----
-{kind === "genre" && (() => {
-  const g = (Astro.props as any).genre as Genre;
-  const slug = g.slug;
-  let list: Book[] = [];
+if (kind === "missing") {
+  return new Response(null, { status: 404, statusText: "Not Found" });
+}
+
+let list: ReturnType<typeof toLegacyBook>[] = [];
+let same: ReturnType<typeof toLegacyBook>[] = [];
+
+if (kind === "genre" && matchedGenre) {
   if (slug === "nouveautes") {
-    list = books.slice().sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt)).slice(0, 12);
+    const all = await listBooks({ sort: "recent", limit: 12 }).catch(() => []);
+    list = toItems(all as any).map(toLegacyBook);
   } else {
-    list = books.filter((b) => b.genre === slug);
+    const r = await listBooks({ genre: slug, limit: 100 }).catch(() => []);
+    list = toItems(r as any).map(toLegacyBook);
   }
-  const others = genres.filter((x) => x.slug !== slug);
-  return (
-    <BaseLayout title={`${g.label}, Les Contes Infusés`} description={g.description}>
-      <section class="relative overflow-hidden">
-        <div class="absolute inset-0 pointer-events-none">
-          <div class="absolute -top-10 -left-20 opacity-30">
-            <LaurelBranch size={420} />
-          </div>
-          <div class="absolute -top-10 -right-20 opacity-30">
-            <LaurelBranch size={420} flip />
-          </div>
-        </div>
-        <div class="relative max-w-5xl mx-auto px-5 sm:px-8 pt-14 pb-16 text-center">
-          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6" style={`background: ${g.color}22; color: ${g.color}`}>
-            {(slug === "poesie" || slug === "essai-histoire") ? <Quill size={48} /> : <Teapot size={56} />}
-          </div>
-          <p class="eyebrow">Genre</p>
-          <h1 class="font-display italic text-5xl md:text-8xl mt-3 leading-[0.95]" style={`color: ${g.color}`}>
-            {g.label}
-          </h1>
-          <p class="font-body italic text-cocoa-400 mt-6 max-w-2xl mx-auto text-lg">{g.description}</p>
-          <div class="mt-8">
-            <a href="/livres" class="btn-ghost">Tous les genres</a>
-          </div>
-        </div>
-      </section>
-      <section class="max-w-7xl mx-auto px-5 sm:px-8 py-10 grid lg:grid-cols-[200px_1fr] gap-10">
-        <aside class="lg:sticky lg:top-28 lg:self-start">
-          <p class="eyebrow">Autres rayons</p>
-          <ul class="mt-3 space-y-2 text-sm font-body">
-            {others.map((x) => (
-              <li>
-                <a href={`/livres/${x.slug}`} class="text-cocoa-700 hover:text-terracotta-400 transition flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full" style={`background: ${x.color}`}></span>
-                  {x.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </aside>
-        <div>
-          <p class="eyebrow mb-6">{list.length} {list.length > 1 ? "titres" : "titre"}</p>
-          {list.length > 0 ? (
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
-              {list.map((b) => <BookCard book={b} client:visible />)}
-            </div>
-          ) : (
-            <div class="bg-cream-50 border border-line rounded-2xl p-12 text-center">
-              <p class="font-display italic text-2xl text-cocoa-600">Rayon en cours d'installation.</p>
-              <p class="mt-2 text-sm text-cocoa-400">Repassez la semaine prochaine.</p>
-            </div>
-          )}
-        </div>
-      </section>
-    </BaseLayout>
-  );
-})()}
+}
 
-{kind === "book" && (() => {
-  const b = (Astro.props as any).book as Book;
-  const g = genres.find((x) => x.slug === b.genre);
-  const same = books.filter((x) => x.genre === b.genre && x.slug !== b.slug).slice(0, 4);
-  const [c1, c2] = b.coverGradient;
-  return (
-    <BaseLayout title={`${b.title}, ${b.author}`} description={b.summary}>
-      <section class="relative max-w-7xl mx-auto px-5 sm:px-8 py-12">
-        <nav class="text-xs font-sans text-cocoa-400 mb-8">
-          <a href="/livres" class="hover:text-terracotta-400">Catalogue</a>
-          <span class="mx-2">/</span>
-          {g && <a href={`/livres/${g.slug}`} class="hover:text-terracotta-400">{g.label}</a>}
-        </nav>
+if (kind === "book" && book) {
+  if (book.genre) {
+    const r = await listBooks({ genre: book.genre, limit: 5 }).catch(() => []);
+    same = toItems(r as any).map(toLegacyBook).filter((x) => x.slug !== book!.slug).slice(0, 4);
+  }
+}
 
-        <div class="grid lg:grid-cols-[440px_1fr] gap-12 lg:gap-20 items-start">
-          <div class="lg:sticky lg:top-28 lg:self-start">
-            <div class="relative mx-auto max-w-[320px] lg:max-w-none [perspective:1400px]">
+const others = matchedGenre ? legacyGenres.filter((x) => x.slug !== matchedGenre.slug) : [];
+const g = book ? legacyGenres.find((x) => x.slug === book.genre) : undefined;
+const c1 = book?.coverGradient[0];
+const c2 = book?.coverGradient[1];
+---
+{kind === "genre" && matchedGenre && (
+  <BaseLayout title={`${matchedGenre.label}, Les Contes Infusés`} description={matchedGenre.description}>
+    <section class="relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute -top-10 -left-20 opacity-30">
+          <LaurelBranch size={420} />
+        </div>
+        <div class="absolute -top-10 -right-20 opacity-30">
+          <LaurelBranch size={420} flip />
+        </div>
+      </div>
+      <div class="relative max-w-5xl mx-auto px-5 sm:px-8 pt-14 pb-16 text-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6" style={`background: ${matchedGenre.color}22; color: ${matchedGenre.color}`}>
+          {(matchedGenre.slug === "poesie" || matchedGenre.slug === "essai-histoire") ? <Quill size={48} /> : <Teapot size={56} />}
+        </div>
+        <p class="eyebrow">Genre</p>
+        <h1 class="font-display italic text-5xl md:text-8xl mt-3 leading-[0.95]" style={`color: ${matchedGenre.color}`}>
+          {matchedGenre.label}
+        </h1>
+        <p class="font-body italic text-cocoa-400 mt-6 max-w-2xl mx-auto text-lg">{matchedGenre.description}</p>
+        <div class="mt-8">
+          <a href="/livres" class="btn-ghost">Tous les genres</a>
+        </div>
+      </div>
+    </section>
+    <section class="max-w-7xl mx-auto px-5 sm:px-8 py-10 grid lg:grid-cols-[200px_1fr] gap-10">
+      <aside class="lg:sticky lg:top-28 lg:self-start">
+        <p class="eyebrow">Autres rayons</p>
+        <ul class="mt-3 space-y-2 text-sm font-body">
+          {others.map((x) => (
+            <li>
+              <a href={`/livres/${x.slug}`} class="text-cocoa-700 hover:text-terracotta-400 transition flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full" style={`background: ${x.color}`}></span>
+                {x.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+      <div>
+        <p class="eyebrow mb-6">{list.length} {list.length > 1 ? "titres" : "titre"}</p>
+        {list.length > 0 ? (
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
+            {list.map((b) => <BookCard book={b} client:visible />)}
+          </div>
+        ) : (
+          <div class="bg-cream-50 border border-line rounded-2xl p-12 text-center">
+            <p class="font-display italic text-2xl text-cocoa-600">Rayon en cours d'installation.</p>
+            <p class="mt-2 text-sm text-cocoa-400">Repassez la semaine prochaine.</p>
+          </div>
+        )}
+      </div>
+    </section>
+  </BaseLayout>
+)}
+
+{kind === "book" && book && (
+  <BaseLayout title={`${book.title}, ${book.author}`} description={book.summary}>
+    <section class="relative max-w-7xl mx-auto px-5 sm:px-8 py-12">
+      <nav class="text-xs font-sans text-cocoa-400 mb-8">
+        <a href="/livres" class="hover:text-terracotta-400">Catalogue</a>
+        <span class="mx-2">/</span>
+        {g && <a href={`/livres/${g.slug}`} class="hover:text-terracotta-400">{g.label}</a>}
+      </nav>
+
+      <div class="grid lg:grid-cols-[440px_1fr] gap-12 lg:gap-20 items-start">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <div class="relative mx-auto max-w-[320px] lg:max-w-none [perspective:1400px]">
+            {apiBookImage ? (
+              <img
+                src={imageUrl(apiBookImage)}
+                alt={book.title}
+                class="w-full aspect-[2/3] object-cover rounded-sm shadow-page"
+                loading="eager"
+              />
+            ) : (
               <div data-book-cover-parallax class="relative aspect-[2/3] rounded-sm shadow-page will-change-transform" style={`transform: rotateY(-12deg); transform-style: preserve-3d; background: linear-gradient(155deg, ${c1}, ${c2})`}>
                 <div class="absolute inset-0 flex flex-col justify-between p-8">
-                  <div class="text-cream-50/80 text-[11px] font-smallcap tracking-windier uppercase">{b.publisher}</div>
+                  <div class="text-cream-50/80 text-[11px] font-smallcap tracking-windier uppercase">{book.publisher}</div>
                   <div>
-                    <p class="text-cream-50 font-display italic text-3xl leading-tight">{b.title}</p>
-                    <p class="text-cream-50/80 mt-2 text-sm">{b.author}</p>
+                    <p class="text-cream-50 font-display italic text-3xl leading-tight">{book.title}</p>
+                    <p class="text-cream-50/80 mt-2 text-sm">{book.author}</p>
                   </div>
                   <div class="flex items-end justify-between">
                     <div class="w-10 h-px bg-cream-50/40"></div>
@@ -122,83 +157,83 @@ const { kind } = Astro.props as { kind: "genre" | "book" };
                 <div class="absolute top-0 bottom-0 left-0 w-3 bg-black/25" style="transform: translateZ(2px)"></div>
                 <div class="absolute top-0 bottom-0 right-0 w-2 bg-cream-50/60"></div>
               </div>
-            </div>
-          </div>
-
-          <div>
-            {g && <a href={`/livres/${g.slug}`} class="eyebrow inline-block hover:text-terracotta-400">{g.label}</a>}
-            <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-3 leading-[0.95]">{b.title}</h1>
-            <p class="mt-4 font-body text-lg text-cocoa-400">par <span class="text-cocoa-600">{b.author}</span></p>
-
-            <p class="mt-8 font-body text-cocoa-700 text-[17px] leading-[1.7] max-w-2xl">{b.summary}</p>
-
-            <dl class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl border-y border-line py-6">
-              <div>
-                <dt class="eyebrow">Éditeur</dt>
-                <dd class="font-body text-cocoa-700 text-sm mt-1">{b.publisher}</dd>
-              </div>
-              <div>
-                <dt class="eyebrow">Parution</dt>
-                <dd class="font-body text-cocoa-700 text-sm mt-1">{formatDate(b.publishedAt, "short")}</dd>
-              </div>
-              <div>
-                <dt class="eyebrow">ISBN</dt>
-                <dd class="font-sans text-cocoa-700 text-sm mt-1 tabular-nums">{b.isbn}</dd>
-              </div>
-              <div>
-                <dt class="eyebrow">Pages</dt>
-                <dd class="font-sans text-cocoa-700 text-sm mt-1 tabular-nums">312 p.</dd>
-              </div>
-            </dl>
-
-            <div class="mt-10 flex items-end gap-6 flex-wrap">
-              <div>
-                <p class="eyebrow">Prix</p>
-                <p class="price-tab text-5xl mt-1">{formatPrice(b.price)}</p>
-              </div>
-              <div class="flex-1 min-w-[260px] flex flex-wrap gap-3">
-                <button class="btn-terracotta" data-add-cart={b.slug} data-price={b.price} data-name={b.title}>Ajouter au panier</button>
-                <a href="/cafe/commander" class="btn-ghost">Commander en click & collect</a>
-              </div>
-            </div>
-            <p class="mt-3 text-xs text-cocoa-400">
-              {b.stock > 0 ? `${b.stock} exemplaires disponibles en boutique.` : "Sur commande, livraison sous 5 jours."}
-            </p>
+            )}
           </div>
         </div>
 
-        {b.coupDeCoeur && (
-          <div class="relative mt-20 bg-cream-100 border border-line rounded-2xl p-8 md:p-14 max-w-4xl mx-auto">
-            <div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-80">
-              <LaceMedallion size={70} />
-            </div>
-            <p class="eyebrow text-center">Pourquoi on l'a aimé</p>
-            <p class="font-script text-3xl md:text-5xl text-terracotta-400 text-center leading-tight mt-4">
-              "Un livre qui se boit comme un thé long, en silence, près de la fenêtre."
-            </p>
-            <p class="font-body italic text-cocoa-700 mt-6 text-center max-w-2xl mx-auto">
-              On l'a lu, relu, prêté, racheté. {b.author} signe ici une voix qui s'imprime, une langue qui prend la lumière. À glisser dans la pile haute des livres qui restent.
-            </p>
-            <p class="mt-4 eyebrow text-center"><span class="filet"></span><span class="mx-3">L'équipe</span><span class="filet"></span></p>
-          </div>
-        )}
+        <div>
+          {g && <a href={`/livres/${g.slug}`} class="eyebrow inline-block hover:text-terracotta-400">{g.label}</a>}
+          <h1 class="font-display italic text-5xl md:text-7xl text-cocoa-600 mt-3 leading-[0.95]">{book.title}</h1>
+          <p class="mt-4 font-body text-lg text-cocoa-400">par <span class="text-cocoa-600">{book.author}</span></p>
 
-        {same.length > 0 && (
-          <div class="mt-24">
-            <header class="flex items-end justify-between mb-8 flex-wrap gap-4">
-              <div>
-                <p class="eyebrow">Dans le même rayon</p>
-                <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600 mt-1">{g?.label}</h2>
-              </div>
-              {g && <a href={`/livres/${g.slug}`} class="btn-ghost">Tout le rayon</a>}
-            </header>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {same.map((x) => <BookCard book={x} client:visible />)}
+          <p class="mt-8 font-body text-cocoa-700 text-[17px] leading-[1.7] max-w-2xl">{book.summary}</p>
+
+          <dl class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl border-y border-line py-6">
+            <div>
+              <dt class="eyebrow">Éditeur</dt>
+              <dd class="font-body text-cocoa-700 text-sm mt-1">{book.publisher || "-"}</dd>
+            </div>
+            <div>
+              <dt class="eyebrow">Parution</dt>
+              <dd class="font-body text-cocoa-700 text-sm mt-1">{book.publishedAt ? formatDate(book.publishedAt, "short") : "—"}</dd>
+            </div>
+            <div>
+              <dt class="eyebrow">ISBN</dt>
+              <dd class="font-sans text-cocoa-700 text-sm mt-1 tabular-nums">{book.isbn || "-"}</dd>
+            </div>
+            <div>
+              <dt class="eyebrow">Stock</dt>
+              <dd class="font-sans text-cocoa-700 text-sm mt-1 tabular-nums">{book.stock} ex.</dd>
+            </div>
+          </dl>
+
+          <div class="mt-10 flex items-end gap-6 flex-wrap">
+            <div>
+              <p class="eyebrow">Prix</p>
+              <p class="price-tab text-5xl mt-1">{formatPrice(book.price)}</p>
+            </div>
+            <div class="flex-1 min-w-[260px] flex flex-wrap gap-3">
+              <button class="btn-terracotta" data-add-cart={book.slug} data-price={book.price} data-name={book.title}>Ajouter au panier</button>
+              <a href="/cafe/commander" class="btn-ghost">Commander en click & collect</a>
             </div>
           </div>
-        )}
-      </section>
-      <StickyCta label={`Ajouter au panier · ${formatPrice(b.price)}`} href="#" />
-    </BaseLayout>
-  );
-})()}
+          <p class="mt-3 text-xs text-cocoa-400">
+            {book.stock > 0 ? `${book.stock} exemplaires disponibles en boutique.` : "Sur commande, livraison sous 5 jours."}
+          </p>
+        </div>
+      </div>
+
+      {book.coupDeCoeur && (
+        <div class="relative mt-20 bg-cream-100 border border-line rounded-2xl p-8 md:p-14 max-w-4xl mx-auto">
+          <div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-80">
+            <LaceMedallion size={70} />
+          </div>
+          <p class="eyebrow text-center">Pourquoi on l'a aimé</p>
+          <p class="font-script text-3xl md:text-5xl text-terracotta-400 text-center leading-tight mt-4">
+            "Un livre qui se boit comme un thé long, en silence, près de la fenêtre."
+          </p>
+          <p class="font-body italic text-cocoa-700 mt-6 text-center max-w-2xl mx-auto">
+            On l'a lu, relu, prêté, racheté. {book.author} signe ici une voix qui s'imprime, une langue qui prend la lumière.
+          </p>
+          <p class="mt-4 eyebrow text-center"><span class="filet"></span><span class="mx-3">L'équipe</span><span class="filet"></span></p>
+        </div>
+      )}
+
+      {same.length > 0 && (
+        <div class="mt-24">
+          <header class="flex items-end justify-between mb-8 flex-wrap gap-4">
+            <div>
+              <p class="eyebrow">Dans le même rayon</p>
+              <h2 class="font-display italic text-3xl md:text-4xl text-cocoa-600 mt-1">{g?.label}</h2>
+            </div>
+            {g && <a href={`/livres/${g.slug}`} class="btn-ghost">Tout le rayon</a>}
+          </header>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {same.map((x) => <BookCard book={x} client:visible />)}
+          </div>
+        </div>
+      )}
+    </section>
+    <StickyCta label={`Ajouter au panier · ${formatPrice(book.price)}`} href="#" />
+  </BaseLayout>
+)}

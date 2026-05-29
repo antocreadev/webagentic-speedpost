@@ -1,0 +1,60 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Configurateur from "@/islands/Configurateur";
+import { api, safe, type UnitItem } from "@/lib/api";
+
+const { data } = await safe(api.unitItems(), {
+  items: [] as UnitItem[],
+  palette: [] as { color: string; hex: string }[],
+});
+---
+
+<BaseLayout title="Composer mon bouquet — Jennyland">
+  <section class="bath bath-blush section relative overflow-hidden">
+    <div class="mx-auto max-w-[1400px]">
+      <div class="grid grid-cols-12 gap-6 md:gap-8 items-end mb-12">
+        <div class="col-span-12 md:col-span-7" data-reveal>
+          <span class="spec-num text-ink-80 opacity-70 mb-6 block">N° V · Atelier interactif</span>
+          <h1 class="font-display text-display-xl text-ink leading-[0.9]">
+            Composez<br/>
+            <span class="font-display-italic">le bouquet</span> qui<br/>
+            n'existe que <span class="cursive text-rose-deep">pour vous.</span>
+          </h1>
+        </div>
+        <div class="col-span-12 md:col-span-5 md:text-right">
+          <p class="font-display-italic text-xl text-ink leading-tight">
+            Choisissez fleur par fleur. Chaque ajout se voit en temps réel. Quand vous êtes prête, je crochète.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1400px]">
+      <Configurateur client:load initialItems={data.items} initialPalette={data.palette} />
+    </div>
+  </section>
+
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px]">
+      <h2 class="font-display text-display-l text-ink leading-[0.92] mb-16" data-reveal>
+        Trois étapes,<br/>
+        <span class="font-display-italic text-rose-deep">tout en douceur.</span>
+      </h2>
+      <ol class="grid grid-cols-1 md:grid-cols-3 border-t border-ink">
+        {[
+          { num: "01", title: "Vous composez", text: "Cliquez sur les fleurs, voyez votre bouquet prendre forme." },
+          { num: "02", title: "Vous validez", text: "Au panier, paiement PayPal sécurisé. Jenny vous écrit pour confirmer." },
+          { num: "03", title: "Jenny crée", text: "Préparation 7 à 10 jours, livré chez vous, prêt à offrir." },
+        ].map((step, i) => (
+          <li class={`p-7 border-b border-r border-ink ${i === 2 ? "md:border-r-0" : ""}`}>
+            <span class="spec-num text-rose-deep">{step.num}</span>
+            <h3 class="font-display text-3xl text-ink mt-6">{step.title}</h3>
+            <p class="mt-3 text-sm text-ink-60 leading-relaxed">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>

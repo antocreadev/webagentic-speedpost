@@ -1,0 +1,11 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminGuard from "@/islands/AdminGuard";
+import AdminCategories from "@/islands/AdminCategories";
+---
+
+<AdminLayout title="Catégories — Admin" active="categories">
+  <AdminGuard client:load>
+    <AdminCategories client:load />
+  </AdminGuard>
+</AdminLayout>

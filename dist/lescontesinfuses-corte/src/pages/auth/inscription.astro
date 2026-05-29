@@ -1,0 +1,19 @@
+---
+export const prerender = false;
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import RegisterForm from "@/components/islands/RegisterForm.tsx";
+import LaceMedallion from "@/components/icons/LaceMedallion.astro";
+---
+<BaseLayout title="Créer un compte, Les Contes Infusés" description="Créez votre compte pour suivre vos commandes et gérer vos préférences.">
+  <section class="max-w-lg mx-auto px-5 sm:px-8 py-12 md:py-16">
+    <div class="text-center mb-8">
+      <div class="flex justify-center opacity-80 mb-4"><LaceMedallion size={100} /></div>
+      <p class="eyebrow">Bienvenue</p>
+      <h1 class="font-display italic text-4xl md:text-5xl text-cocoa-600 mt-2">Créer mon compte</h1>
+      <p class="text-sm text-cocoa-400 mt-3">Pour retrouver vos commandes et vos préférences.</p>
+    </div>
+    <div class="bg-cream-50 border border-line rounded-2xl p-7 md:p-8">
+      <RegisterForm client:load />
+    </div>
+  </section>
+</BaseLayout>

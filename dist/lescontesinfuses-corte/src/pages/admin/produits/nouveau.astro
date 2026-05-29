@@ -1,7 +1,10 @@
 ---
 import AdminLayout from "@/layouts/AdminLayout.astro";
+import AuthGuard from "@/components/AuthGuard.astro";
 import ProductForm from "@/components/islands/ProductForm.tsx";
+export const prerender = false;
 ---
+<AuthGuard />
 <AdminLayout title="Nouveau produit, Admin" section="produits" breadcrumb={[{ label: "Produits", href: "/admin/produits" }, { label: "Nouveau" }]}>
   <header class="mb-7">
     <p class="eyebrow !text-[10px]">Création</p>

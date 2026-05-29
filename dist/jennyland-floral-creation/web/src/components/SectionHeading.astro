@@ -1,0 +1,35 @@
+---
+interface Props {
+  number?: string;
+  eyebrow?: string;
+  title: string;
+  cursive?: string;
+  alignment?: "left" | "center";
+  className?: string;
+}
+const { number, eyebrow, title, cursive, alignment = "left", className = "" } = Astro.props;
+const align = alignment === "center" ? "text-center mx-auto" : "text-left";
+---
+
+<header class={`${align} ${className}`} data-reveal>
+  {(number || eyebrow) && (
+    <div class={`flex items-baseline gap-4 mb-6 ${alignment === "center" ? "justify-center" : ""}`}>
+      {number && (
+        <span class="spec-num text-ink-40">{number}</span>
+      )}
+      {eyebrow && (
+        <span class="eyebrow text-ink-60">{eyebrow}</span>
+      )}
+    </div>
+  )}
+  <h2 class="font-display text-display-l text-ink leading-[0.92]">
+    {title}
+    {cursive && (
+      <>
+        <br/>
+        <span class="cursive text-display-m" style="line-height: 0.8;">{cursive}</span>
+      </>
+    )}
+  </h2>
+  <slot />
+</header>

@@ -1,0 +1,89 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import { api, safe, type Category, type Product } from "@/lib/api";
+
+const { categorie } = Astro.params;
+if (!categorie) return Astro.redirect("/boutique");
+
+const { data } = await safe(api.category(categorie), {
+  category: null as Category | null,
+  products: [] as Product[],
+});
+if (!data.category) return Astro.redirect("/boutique");
+const cat = data.category;
+const products = data.products;
+
+const bathMap: Record<string, string> = {
+  "bouquets-romantiques": "bath-rose-deep",
+  "bouquets-mariage": "bath-blush",
+  compositions: "bath-aubergine",
+  decorations: "bath-aubergine",
+  "fleurs-unitaires": "bath-rose-soft",
+};
+const bath = bathMap[categorie] || "bath-rose-soft";
+const isOnDark = ["bath-rose-deep", "bath-aubergine", "bath-aubergine", "bath-ink"].includes(bath);
+---
+
+<BaseLayout title={`${cat.name} — Jennyland`} description={cat.description || cat.tagline || ""}>
+  <section class={`bath ${bath} pt-16 pb-20 px-5 sm:px-8 md:px-12 relative`}>
+    <div class="mx-auto max-w-[1400px]">
+      <nav class={`spec-num mb-12 ${isOnDark ? "text-cream/60" : "text-ink-40"}`}>
+        <a href="/" class="hover:opacity-70">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <a href="/boutique" class="hover:opacity-70">Boutique</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>{cat.name}</span>
+      </nav>
+
+      <div class="grid grid-cols-12 gap-6 md:gap-8 items-end" data-reveal>
+        <div class="col-span-12 md:col-span-8">
+          <span class={`spec-num mb-6 block ${isOnDark ? "text-cream/60" : "text-ink-40"}`}>Univers · {cat.slug}</span>
+          <h1 class={`font-display text-display-xl leading-[0.9] ${isOnDark ? "text-cream" : "text-ink"}`}>
+            {cat.name.split(" ")[0]}<br/>
+            <span class="font-display-italic">{cat.name.split(" ").slice(1).join(" ") || ""}</span>
+          </h1>
+        </div>
+        <div class={`col-span-12 md:col-span-4 ${isOnDark ? "text-cream" : "text-ink"}`}>
+          {cat.tagline && (
+            <p class="font-display-italic text-2xl leading-tight mb-4">{cat.tagline}</p>
+          )}
+          {cat.description && (
+            <p class={`text-sm leading-relaxed ${isOnDark ? "text-cream/80" : "text-ink-60"}`}>{cat.description}</p>
+          )}
+        </div>
+      </div>
+
+      <div class={`mt-16 pt-6 grid grid-cols-3 gap-4 border-t ${isOnDark ? "border-cream/15" : "border-line"}`}>
+        <div>
+          <span class={`spec-num ${isOnDark ? "text-cream/60" : "text-ink-40"}`}>Pièces</span>
+          <div class="font-display text-3xl mt-1">{products.length}</div>
+        </div>
+        <div>
+          <span class={`spec-num ${isOnDark ? "text-cream/60" : "text-ink-40"}`}>Pièces uniques</span>
+          <div class="font-display text-3xl mt-1">{products.filter((p) => p.is_unique).length}</div>
+        </div>
+        <div>
+          <span class={`spec-num ${isOnDark ? "text-cream/60" : "text-ink-40"}`}>Fait main</span>
+          <div class="font-display text-3xl mt-1">100%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1400px]">
+      {products.length === 0 ? (
+        <div class="text-center py-32">
+          <p class="font-display-italic text-3xl text-ink-60">L'atelier prépare cette catégorie.</p>
+        </div>
+      ) : (
+        <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {products.map((p, i) => (
+            <ProductCard product={p} index={i} number={`N° 0${(i + 1).toString().padStart(3, "0")}`} />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

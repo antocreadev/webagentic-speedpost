@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CartFull from "@/islands/CartFull";
+---
+
+<BaseLayout title="Panier — Jennyland">
+  <section class="bath bath-rose-soft pt-12 pb-12 px-5 sm:px-8 md:px-12">
+    <div class="mx-auto max-w-[1200px]">
+      <nav class="spec-num text-ink-40 mb-12">
+        <a href="/" class="hover:text-rose-deep">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>Panier</span>
+      </nav>
+      <span class="spec-num text-ink-40 mb-6 block">N° X · Récapitulatif</span>
+      <h1 class="font-display text-display-xl text-ink leading-[0.9]">
+        Votre <span class="font-display-italic text-rose-deep">panier.</span>
+      </h1>
+    </div>
+  </section>
+
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1200px]">
+      <CartFull client:load />
+    </div>
+  </section>
+</BaseLayout>

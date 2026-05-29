@@ -1,0 +1,54 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="CGV — Jennyland">
+  <section class="bath bath-rose-soft section">
+    <div class="mx-auto max-w-[1000px]">
+      <nav class="spec-num text-ink-40 mb-12">
+        <a href="/" class="hover:text-rose-deep">Accueil</a>
+        <span class="opacity-50 mx-2">/</span>
+        <span>CGV</span>
+      </nav>
+      <span class="spec-num text-ink-40 mb-6 block">N° XV · Légal</span>
+      <h1 class="font-display text-display-xl text-ink leading-[0.9]">
+        Conditions générales <span class="font-display-italic text-rose-deep">de vente.</span>
+      </h1>
+      <p class="text-sm text-ink-60 mt-6">Mises à jour le {new Date().toLocaleDateString("fr-FR")}</p>
+    </div>
+  </section>
+
+  <section class="bath bath-cream section">
+    <div class="mx-auto max-w-[1000px] prose-jenny">
+      <h2 class="font-display text-display-m text-ink mt-12">Article 1 — Objet</h2>
+      <p>Les présentes CGV régissent les relations contractuelles entre Jennyland Floral Création et toute personne effectuant un achat sur le site jennyland.fr.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 2 — Produits</h2>
+      <p>Les produits proposés sont des créations florales en crochet, faites à la main et en pièce unique pour la majorité.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 3 — Prix</h2>
+      <p>Les prix sont exprimés en euros TTC.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 4 — Commande</h2>
+      <p>La commande est validée après paiement complet via PayPal.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 5 — Livraison</h2>
+      <p>Les délais sont indicatifs ; un retard ne saurait justifier l'annulation sauf au-delà de 30 jours après la date initiale.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 6 — Droit de rétractation</h2>
+      <p>Conformément à l'article L221-18 du Code de la consommation, le Client dispose d'un délai de 14 jours pour exercer son droit de rétractation. Ce droit ne s'applique pas aux commandes personnalisées (article L221-28).</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 7 — Garanties</h2>
+      <p>Les produits bénéficient de la garantie légale de conformité et de la garantie contre les vices cachés.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 8 — Propriété intellectuelle</h2>
+      <p>Toutes les créations Jennyland sont protégées par le droit d'auteur.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 9 — Données personnelles</h2>
+      <p>Les données collectées sont nécessaires au traitement de la commande. RGPD respecté.</p>
+
+      <h2 class="font-display text-display-m text-ink mt-12">Article 10 — Litiges</h2>
+      <p>Les présentes CGV sont soumises au droit français.</p>
+    </div>
+  </section>
+</BaseLayout>

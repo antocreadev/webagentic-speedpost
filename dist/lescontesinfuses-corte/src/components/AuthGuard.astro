@@ -1,0 +1,39 @@
+---
+interface Props {
+  redirectTo?: string;
+  requireAdmin?: boolean;
+}
+const { redirectTo = "/admin/login", requireAdmin = true } = Astro.props;
+---
+<noscript>
+  <meta http-equiv="refresh" content={`0;url=${redirectTo}`} />
+</noscript>
+<script is:inline define:vars={{ redirectTo, requireAdmin }}>
+  (function () {
+    try {
+      var t = localStorage.getItem("lci_token");
+      if (!t) { window.location.replace(redirectTo); return; }
+      // Decode JWT payload (no signature check, just to read scope/exp)
+      var parts = t.split(".");
+      if (parts.length !== 3) { localStorage.removeItem("lci_token"); window.location.replace(redirectTo); return; }
+      var pad = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+      while (pad.length % 4) pad += "=";
+      var payload = JSON.parse(atob(pad));
+      var now = Math.floor(Date.now() / 1000);
+      if (payload.exp && payload.exp < now) {
+        localStorage.removeItem("lci_token");
+        localStorage.removeItem("lci_user");
+        window.location.replace(redirectTo);
+        return;
+      }
+      var isAdmin = payload.scope === "admin" || (Array.isArray(payload.scopes) && payload.scopes.indexOf("admin") !== -1);
+      if (requireAdmin && !isAdmin) {
+        window.location.replace(redirectTo);
+        return;
+      }
+    } catch (e) {
+      window.location.replace(redirectTo);
+    }
+  })();
+</script>
+<slot />

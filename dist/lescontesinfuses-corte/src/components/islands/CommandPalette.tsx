@@ -34,15 +34,6 @@ const STATIC_ITEMS: Item[] = [
   { id: "a_new", label: "Ajouter un produit", group: "Actions", href: "/admin/produits/nouveau", icon: Plus, hint: "N" },
   { id: "a_print", label: "Imprimer toutes les étiquettes", group: "Actions", href: "/admin/etiquettes", icon: Tag },
   { id: "a_news", label: "Composer une newsletter", group: "Actions", href: "/admin", icon: Mail },
-  { id: "c_42", label: "CI-2026-0042 · Pierre Antonelli", group: "Commandes", href: "/admin/commandes/CI-2026-0042", icon: ShoppingBag },
-  { id: "c_41", label: "CI-2026-0041 · Marie Filippi", group: "Commandes", href: "/admin/commandes/CI-2026-0041", icon: ShoppingBag },
-  { id: "c_40", label: "CI-2026-0040 · Lucia Marchetti", group: "Commandes", href: "/admin/commandes/CI-2026-0040", icon: ShoppingBag },
-  { id: "b_murt", label: "Murtoriu, M. Biancarelli", group: "Livres", href: "/admin/produits", icon: BookOpen },
-  { id: "b_hadr", label: "Mémoires d'Hadrien, M. Yourcenar", group: "Livres", href: "/admin/produits", icon: BookOpen },
-  { id: "b_petit", label: "Le Petit Prince, Saint-Exupéry", group: "Livres", href: "/admin/produits", icon: BookOpen },
-  { id: "cl_pa", label: "Pierre Antonelli", group: "Clients", href: "/admin/clients", icon: Users, hint: "p.antonelli@orange.fr" },
-  { id: "cl_mf", label: "Marie Filippi", group: "Clients", href: "/admin/clients", icon: Users, hint: "marie.f@gmail.com" },
-  { id: "cl_lm", label: "Lucia Marchetti", group: "Clients", href: "/admin/clients", icon: Users, hint: "lucia.marchetti@laposte.net" },
 ];
 
 export default function CommandPalette() {

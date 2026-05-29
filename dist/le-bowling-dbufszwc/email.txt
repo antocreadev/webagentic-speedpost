@@ -4,50 +4,21 @@ Bonjour,
 
 Une maison qui tient la côte ouest depuis 1966, transmise sur trois générations dans la famille Mattei, avec un laboratoire dirigé par Pascal Filidori (formé auprès de Pierre Hermé et Christophe Michalak) : Le Bowling n'est pas un glacier comme un autre à Sagone. La pâtisserie signature Picasso, les quarante parfums composés chaque jour, les thés Mariage Frères servis en terrasse, le 4,5 sur 1 002 avis Google : on a pris le temps de regarder votre maison avant d'écrire.
 
-Chez Menghi Computer Science, nous sommes une petite équipe tech et créative basée en France. On fait du développement web sur-mesure, du graphisme (logos, identité visuelle, affiches), du marketing digital et réseaux sociaux, et des applications métier dédiées. Tout sous le même toit, tout codé ou conçu à la main.
+J'ai préparé une démo gratuite de votre site, codée à la main et 100% personnalisable :
+https://antocreadev.github.io/menghicomputerscience-le-bowling-dbufszwc/
 
-On vous a préparé une démo complète, sans engagement, pour vous montrer concrètement ce que ça donnerait.
+Ce qu'on a mis en avant pour vous : l'héritage familial de 1966 raconté en section dédiée (Jérôme, Josette et Nicole Mattei, transmission sur trois générations) : c'est ce qui rend votre maison rare, ça devait ouvrir le récit.
 
-Le site que j'ai conçu pour vous : https://antocreadev.github.io/menghicomputerscience-le-bowling-dbufszwc/
+Deux formules au choix (tarifs HT) :
+- 1500€ une fois + 20€/mois (maintenance, agent IA pour modifier le site, rapport SEO mensuel), sans engagement
+- 89€/mois engagé 12 mois, mêmes services
 
-Ce qui a été mis en avant :
+Inclus dans les deux : hébergement, nom de domaine, SEO, indexation IA (ChatGPT, Gemini, Perplexity), support.
 
-- L'héritage familial de 1966 raconté en section dédiée (Jérôme, Josette et Nicole Mattei, transmission sur trois générations) : c'est ce qui rend votre maison rare, ça devait ouvrir le récit.
-- L'excellence pâtissière mise au premier plan : Pascal Filidori, Pierre Hermé et Christophe Michalak nommés, la pâtisserie Picasso traitée comme une vraie signature.
-- Les quarante parfums de glaces artisanales, les thés Mariage Frères et le vacherin maison sortis en cartes produits, parce que ce sont les détails que vos clients citent.
-- Une ambiance crème, cacao et terracotta qui évoque la côte ouest corse, loin des codes touristiques générique bleu azur.
-
-Ce n'est pas un site template. Chaque ligne de code est écrite à la main pour Le Bowling, ce qui veut dire qu'on peut changer absolument tout : couleurs, textes, photos, sections, structure, polices, jusqu'au moindre détail. Vous n'êtes enfermé dans aucun thème.
-
-Ce qui est inclus dans le 1500€
-
-- Site codé main, sur-mesure : zéro template, zéro compromis, tout est modifiable (textes, photos, couleurs, sections, polices)
-- Identité graphique cohérente avec le site (logo si besoin, palette, visuels, déclinaisons)
-- Référencement Google (SEO) : technique et éditorial (indexation, balisage, mots-clés, sitemap, robots)
-- Optimisation performance : chargement rapide, mobile-first, expérience fluide
-- Indexation et citations par les IA : ChatGPT, Gemini, Perplexity, Copilot, pour apparaître dans les réponses génératives
-- Hébergement et nom de domaine gérés par nous
-- Maintenance et support direct sous 24h pendant toute l'année 1
-- Aucun abonnement année 1 : 0€/mois
-- Prix : 1740€ 1500€, une seule fois, tout compris
-
-Ensuite
-
-- Année 2 : 20€/mois (maintenance + hébergement)
-- Option premium (+10€/mois, soit 30€/mois année 2) :
-  - agent IA sécurisé connecté à WhatsApp (vous demandez une modif en langage naturel, elle est appliquée)
-  - modifications du site en temps réel
-  - sauvegardes automatiques
-  - versionning complet (rollback possible)
-  - assistance 24/7
-
-Concrètement : vous gagnez en visibilité (Google et IA), en crédibilité (un vrai site change le signal perçu), en image (cohérence graphique avec votre héritage) et en trafic qualifié. Quand quelqu'un demandera à ChatGPT "glacier à Sagone" ou "pâtisserie à Vico", on veut que Le Bowling ressorte en premier, avec les bons mots : 1966, Mattei, Filidori, Picasso.
-
-Si le rendu vous plaît en l'état, je peux mettre le site en ligne sur votre nom de domaine dès cette semaine. Si vous voulez ajuster quelque chose avant (photos, textes, sections, couleurs), dites-moi simplement ce que vous voudriez voir évoluer.
-
-À très vite,
+Si la démo vous plaît, je la mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi ce qu'on ajuste.
 
 Anto
-Menghi Computer Science
-menghicomputerscience@gmail.com
-06 43 87 91 14
+SpeedPost.fr (WebAgentic Builder)
+Un service de SAS Mindlet, Corte (Corse)
+Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional
+contact@speedpost.fr  |  webagentic.speedpost.fr

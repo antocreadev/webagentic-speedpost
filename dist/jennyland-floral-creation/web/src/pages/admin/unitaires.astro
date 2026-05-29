@@ -1,0 +1,11 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminGuard from "@/islands/AdminGuard";
+import AdminUnitItems from "@/islands/AdminUnitItems";
+---
+
+<AdminLayout title="Fleurs unitaires — Admin" active="items">
+  <AdminGuard client:load>
+    <AdminUnitItems client:load />
+  </AdminGuard>
+</AdminLayout>

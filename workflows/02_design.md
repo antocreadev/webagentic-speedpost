@@ -130,11 +130,11 @@ Choisir **un** des archétypes de layout ci-dessous (ou en inventer un) et **l'a
 
 ## Motion language
 
-- **Entrées scroll** : `Motion.inView` avec `opacity 0→1 + translateY 20px→0`, durée 0.8s, easing `[0.2, 0.7, 0.2, 1]`, stagger 60ms sur groupes.
-- **Hero image** : parallax vertical 10% sur scroll (Motion + scrollY).
+- **Entrées (apparition one-shot)** : `Motion.inView` avec `opacity 0→1 + translateY 20px→0`, durée 0.4-0.6s, easing `[0.2, 0.7, 0.2, 1]`, stagger 60ms sur groupes. Déclenchées UNE fois à l'entrée viewport, jamais scrubbées sur la position de scroll.
+- **Hero image** : PAS de parallaxe scroll-linked (interdit). Un léger `scale` statique ou une animation d'entrée one-shot suffit.
 - **Marquee** : animation CSS `@keyframes marquee` 30s linear infinite.
 - **Cards hover** : `translateY(-3px)` + shadow soft, transition 180ms.
-- **Smooth scroll global** : Lenis actif.
+- **SCROLL NATIF obligatoire** : Lenis (et tout smooth-scroll hijack) INTERDIT. Smooth des ancres `#section` uniquement via CSS `html{scroll-behavior:smooth}`. Pas d'effet collé à la position de scroll (`scroll((p)=>...)`). Incident 2026-05-29 Horizon Coiffure.
 - **Pas d'auto-play** de vidéo, pas de cursor follower, pas de popup.
 
 ## Images sélectionnées

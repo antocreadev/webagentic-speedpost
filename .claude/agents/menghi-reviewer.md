@@ -59,12 +59,34 @@ python3 -c "from html.parser import HTMLParser; HTMLParser().feed(open('dist/<sl
 # Tailwind pré-compilé local (jamais le CDN play, bloqué adblockers → site cassé)
 grep -c 'cdn.tailwindcss.com' dist/<slug>/site/index.html  # doit être 0
 grep -c 'href="./tailwind.css"' dist/<slug>/site/index.html  # doit être ≥ 1
-test -s dist/<slug>/site/tailwind.css && echo ok            # fichier doit exister non vide
+# PURGE RATÉE = page SANS STYLE (incident 2026-05-29 Ranch l'Indianna : CSS 5.2ko a faussement PASS).
+# Le fichier "existe non vide" NE SUFFIT PAS. Exiger des utilities réelles :
+wc -c dist/<slug>/site/tailwind.css   # doit être > 8000 (site riche > 12000). < 8000 = FAIL (purge ratée)
+grep -c '\.flex{' dist/<slug>/site/tailwind.css   # doit être ≥ 1
+grep -c 'bg-accent\|text-ink' dist/<slug>/site/tailwind.css   # doit être ≥ 1 (couleurs custom compilées)
+# OBLIGATION : COLLER LES 3 CHIFFRES RÉELS dans le verdict (ex. "tailwind.css=15234o, .flex=1, bg-accent=1").
+# Un verdict Tailwind sans ces 3 nombres exécutés = revue invalide. RÉCIDIVE 2026-05-29 (salon-deborah) :
+# le reviewer a écrit "Tailwind pré-compilé local" sans lancer wc/grep → CSS 4,7ko purgé non détecté (faux PASS).
+# Si tu ne peux pas exécuter ces commandes, écris-le explicitement et marque le point "non vérifié", pas PASS.
 
-# Reveals robustes (filet de sécurité contre Motion qui plante)
-grep -c '.js-ready \[data-reveal\]' dist/<slug>/site/index.html  # doit être ≥ 1
-grep -c '@keyframes autoreveal' dist/<slug>/site/index.html       # doit être ≥ 1
-grep -c "classList.add('js-ready')" dist/<slug>/site/index.html   # doit être ≥ 1
+# Contenu visible par défaut (règle durcie anti-scroll-hijack, cf. feedback_no_scroll_hijack.md)
+# Le pattern PRÉFÉRÉ et suffisant : [data-reveal]{opacity:1;transform:none} = contenu toujours affiché,
+# zéro Motion, zéro masquage en attente de scroll. C'est un PASS. Vérifier l'ABSENCE de masquage :
+grep -c '\[data-reveal\]{opacity:0' dist/<slug>/site/index.html   # doit être 0 (sinon risque page vide)
+grep -c '.js-ready \[data-reveal\]{opacity:0' dist/<slug>/site/index.html  # 0 (masquage conditionnel toléré SEULEMENT si @keyframes autoreveal présent)
+# NE JAMAIS exiger de RÉINTRODUIRE .js-ready/[data-reveal]{opacity:0}/inView/autoreveal quand le contenu
+# est déjà visible par défaut : ce serait un FAUX FAIL contraire à la règle. Incident 2026-05-29 le-temple-d-oris
+# (reviewer a halluciné des "animations inView" inexistantes et FAIL un site correct visible par défaut).
+
+# Filet anti-zéro sur les compteurs : la valeur de repos en dur dans le HTML
+# (PAS d'animation-depuis-0 comme seul état). Incident espace-jc-coiffure.
+grep -oE 'class="count"[^>]*>[^<]*<' dist/<slug>/site/index.html  # AUCUN ">0<" ni ">0,0<" : FAIL si un compteur repose à 0
+
+# Palette défaut Claude BANNIE même déguisée sous nom chic ("ivoire & champagne" = cream+butter+chocolate).
+# Vérifier les HEX RÉELS, pas la prose du brief. Incident pri-vilege (faux PASS).
+grep -ioE 'fff8ee|faf6ee|f4c66d|e8c987|e89b7b|2c1f18' dist/<slug>/site/index.html dist/<slug>/site/tailwind.css  # présent en --bg/--accent = FAIL
+# Hero JAMAIS vide : la 1re section / <header> doit contenir une vraie image (img OU background-image),
+# même quand aucune vraie photo du commerce n'est dispo (Unsplash/contexte plein cadre + scrim). Hero typographique vide = FAIL "page vide".
 ```
 
 ## Verdict

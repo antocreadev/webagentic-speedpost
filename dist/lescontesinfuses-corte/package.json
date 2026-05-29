@@ -11,11 +11,14 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^4.2.0",
     "@astrojs/tailwind": "^6.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "astro": "^5.1.0",
+    "jose": "^6.2.3",
+    "ky": "^2.0.2",
     "lucide-react": "^0.469.0",
     "motion": "^11.15.0",
     "react": "^19.0.0",
