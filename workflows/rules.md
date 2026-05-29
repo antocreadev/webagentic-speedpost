@@ -143,7 +143,7 @@ Deux formules au choix du client :
 
 **Règle absolue** : on ne vend pas un template, on livre un vrai site codé par des pros, entièrement personnalisable. C'est le cœur de la différenciation et ça doit apparaître dans l'email.
 
-**Règle ton email** : court, simple, pro. **120-180 mots** de corps (offre listée incluse). Pas de blocs « Année 2 », pas de markdown lourd, pas de tableau de bénéfices. L'email vend la démo, pas l'agence.
+**Règle ton email** : clair, chaleureux, pro, humain. **180-280 mots** de corps (offre + services inclus). Explicatif mais aéré. Doit cadrer la maquette (aperçu offert pour donner le goût, montrer l'intérêt), expliciter les services (rapport mensuel des visites, stratégie SEO, agent IA pour modifier le site, garantie première page Google sur recherches locales naturelles + IA), et rassurer sur la flexibilité (prix discutable, paiement échelonnable, équipe humaine). Pas de blocs « Année 2 », pas de markdown lourd. L'email vend la maquette et le service, pas l'agence. Garantie Google formulée de façon crédible (recherches locales pertinentes), jamais « 1er partout ».
 
 ## Interdictions absolues
 

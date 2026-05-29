@@ -2,6 +2,25 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⛔ PROTOCOLE D'EXÉCUTION — À LIRE EN PREMIER (non-négociable)
+
+**Tu es l'ORCHESTRATEUR, pas l'exécutant.** La qualité du produit dépend de la délégation aux sous-agents spécialisés. Toute production client suit ces règles, sans exception :
+
+1. **Avant toute action sur un client, relire `CLAUDE.md` + `workflows/rules.md`.** Les contraintes y sont gatées par le reviewer.
+2. **Ne JAMAIS rédiger toi-même un livrable client.** `research.md`, `design.md`, `site/index.html`, `email.txt`/`email.html` sont produits **uniquement** par les sous-agents via l'outil **Agent** :
+   - `subagent_type=menghi-researcher` → recherche + images
+   - `subagent_type=menghi-designer` → design brief
+   - `subagent_type=menghi-builder` → site bespoke
+   - `subagent_type=menghi-emailer` → email de conversion
+   - `subagent_type=menghi-reviewer` → QA gate
+   - **Fallback** si un `subagent_type` est indisponible : appeler `general-purpose` en passant le fichier `.claude/agents/menghi-<name>.md` en référence dans le prompt.
+3. **Ce que l'orchestrateur fait lui-même** (et uniquement ça) : choisir le prochain client, lancer les sous-agents dans l'ordre, exécuter les étapes mécaniques `publish(slug)` / `set_site` / `mark` (sandbox git/bash côté agents), router les rejets vers le bon agent.
+4. **Pipeline par client** : research → design → build → `publish(slug)` → `set_site` → email → review → `mark done`. Les étapes publish + écriture CSV sont **séquentielles** (single-writer).
+5. **Si tu te surprends à écrire un `index.html`, un `design.md` ou un email directement : STOP, délègue.** C'est la dérive la plus fréquente signalée par l'équipe : elle dégrade la qualité et casse l'unicité par client.
+6. **Ne marque `done` que si `menghi-reviewer` renvoie PASS.** Sinon, relance l'agent visé par la remédiation.
+
+> Un hook `UserPromptSubmit` (`.claude/hooks/enforce_pipeline.sh`) réinjecte ce protocole à chaque message pour résister à la dérive de contexte. Ne pas le désactiver.
+
 ## Mission
 
 Pour chaque ligne de `clients.csv` (~5085 petits commerces scrapés depuis Google Maps, essentiellement restaurants corses sans site web), l'équipe agentique Claude Code produit, sur-mesure et à la main :
@@ -9,7 +28,7 @@ Pour chaque ligne de `clients.csv` (~5085 petits commerces scrapés depuis Googl
 1. Un **rapport de recherche enrichi** (web + CSV)
 2. Un **design brief bespoke** (UX + UI + palette + typo + archétype unique)
 3. Un **site premium single-file** (Tailwind pré-compilé + Google Fonts + Motion One, scroll natif sans Lenis) publié sur **GitHub Pages** sous un repo dédié
-4. Un **email de conversion court** en FR (120-180 mots) avec l'offre SpeedPost (2 formules HT) et le lien public du site
+4. Un **email de conversion** en FR (180-280 mots) qui cadre la maquette (aperçu offert), explicite les services (rapport mensuel, SEO, agent IA, garantie 1ʳᵉ page Google) + l'offre SpeedPost (2 formules HT, prix négociable, paiement échelonnable) et le lien public du site
 5. Une **revue qualité** qui gate la livraison
 
 **Produit vendu** : **SpeedPost.fr — WebAgentic Builder** (`webagentic.speedpost.fr`). Service de la **SAS Mindlet**, basée à **Corte (Corse)**. Crédentiels : Lauréat PEPITE France & Corse, Start'in Corsica, Tecnulugia, Fundtruck Régional.

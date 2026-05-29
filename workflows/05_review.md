@@ -59,7 +59,11 @@ Valider ou rejeter la sortie d'un client avant de le marquer `done`. Refuser san
 - [ ] Sujet ≤ 55 caractères, spécifique
 - [ ] Au moins 2 éléments spécifiques au client cités dans les bénéfices
 - [ ] Offre reproduite **mot pour mot** (rebrand 2026-05-29) : **Formule A** = 1500€ HT une fois + 20€/mois HT (maintenance + agent IA modif langage naturel + rapport SEO mensuel), sans engagement ; **Formule B** = 89€/mois HT engagé 12 mois, mêmes services. (PAS de prix barré 1740€, PAS d'« année 2 », PAS d'option premium +10€/mois : ce sont des reliquats de l'ancienne offre Menghi, désormais bannis.)
-- [ ] Corps **120-180 mots** (offre incluse), FR uniquement
+- [ ] Corps **180-280 mots** (offre + services inclus), FR uniquement
+- [ ] **Maquette cadrée** : l'email dit explicitement que le lien est une maquette / un aperçu offert (pour donner le goût et montrer l'intérêt), pas un produit facturé
+- [ ] **Services explicités** : rapport mensuel des visites, stratégie SEO, agent IA pour modifier le site, garantie première page Google (recherches locales naturelles + IA). Les 4 doivent être présents et compréhensibles.
+- [ ] **Flexibilité explicitée** : prix discutable + paiement échelonnable (en plusieurs fois) + « on s'adapte / équipe humaine »
+- [ ] **Garantie Google crédible** : formulée sur des recherches locales pertinentes, jamais comme « 1er partout / sur tous les mots-clés »
 - [ ] Émetteur/signature rebrand : Anto / SpeedPost.fr / contact@speedpost.fr / webagentic.speedpost.fr. **Aucune** trace de l'ancienne marque (Menghi Computer Science, menghicomputerscience@gmail.com, 06 43 87 91 14)
 - [ ] URL GitHub Pages en clair dans le corps (pas de lien masqué)
 - [ ] Le numéro du commerce client (ex. 06 66 63 88 21) **n'a pas à figurer** dans l'email : c'est un outreach VERS le commerçant, le CTA est de répondre à Anto, pas d'appeler son propre numéro

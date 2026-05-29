@@ -6,16 +6,19 @@
 
 ## Objectif
 
-Email **court, simple, professionnel** qui :
+Email **clair, chaleureux, professionnel** qui **explique bien ce qu'on propose** :
 
 1. **Accroche** sur 1-2 faits précis du commerce (preuve qu'on a regardé)
-2. **Donne la démo** (URL GitHub Pages en clair)
-3. **Propose 2 formules** simples au choix
-4. **Signe** avec les crédentiels Mindlet pour la crédibilité
+2. **Cadre la maquette** : pour le moment c'est un aperçu offert, fait pour donner le goût du rendu et montrer qu'on s'est intéressé à eux. Pas une facture. URL GitHub Pages en clair.
+3. **Rassure sur la personnalisation** : le site final est 100% modifiable.
+4. **Explicite les services** livrés avec le site : rapport mensuel des visites, stratégie SEO, agent IA pour modifier le site, garantie première page Google (recherches locales naturelles + IA).
+5. **Propose 2 formules** simples au choix (HT).
+6. **Rassure sur la flexibilité humaine** : prix discutable, paiement échelonnable, on s'adapte.
+7. **Signe** avec les crédentiels Mindlet pour la crédibilité.
 
-Pas de présentation longue d'agence. Pas de tableau de bénéfices. Pas de bloc « Année 2 ». La démo parle d'elle-même.
+Pas de présentation longue d'agence. Email explicatif mais aéré : le gérant doit comprendre que c'est une maquette, ce que contient l'offre, et qu'on est humains et flexibles.
 
-## Structure type (120-180 mots de corps)
+## Structure type (180-280 mots de corps)
 
 ```
 Sujet : <accroche tendue, ≤ 55 chars, spécifique au client>
@@ -24,18 +27,25 @@ Bonjour <prénom si exploitable, sinon ->,
 
 <ACCROCHE — 2 phrases max. 2-3 faits précis du commerce (spécialité, vue, note Google, détail d'un avis récurrent, emplacement). Pas de "Je me permets de...".>
 
-J'ai préparé une démo gratuite de votre site, codée à la main, 100% personnalisable :
+Pour vous montrer concrètement (et parce que votre <établissement> m'a donné envie de m'y pencher), je vous ai préparé une première maquette de votre site, codée à la main :
 https://antocreadev.github.io/speedpost-<slug>/
 
-<UNE phrase sur ce qu'on a mis en avant pour eux (ancrée dans le research).>
+C'est une maquette de présentation, juste pour vous donner le goût du rendu : le site final est 100% personnalisable (textes, photos, couleurs, sections, tout se modifie).
+
+Ce qu'on propose avec le site :
+- un rapport mensuel des visites de votre site
+- une stratégie de référencement (SEO) suivie
+- un agent IA pour ajouter ou modifier votre site facilement, en langage naturel
+- l'engagement de vous positionner en première page Google sur de vraies recherches locales naturelles, en SEO local et sur les IA (ChatGPT, Gemini, Perplexity)
 
 Deux formules au choix (tarifs HT) :
-- 1500€ une fois + 20€/mois (maintenance, agent IA pour modifier le site, rapport SEO mensuel), sans engagement
-- 89€/mois engagé 12 mois, mêmes services
+- 1500€ une fois + 20€/mois, sans engagement
+- 89€/mois engagé 12 mois
+Inclus dans les deux : hébergement et nom de domaine.
 
-Inclus dans les deux : hébergement, nom de domaine, SEO, indexation IA (ChatGPT, Gemini, Perplexity), support.
+Et surtout : le prix reste discutable, on peut échelonner le paiement en plusieurs fois, on s'adapte. On est une petite équipe humaine et joignable.
 
-Si la démo vous plaît, je la mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi ce qu'on ajuste.
+Si ça vous plaît, je le mets en ligne sur votre nom de domaine cette semaine. Sinon, dites-moi simplement ce qu'on ajuste.
 
 Anto
 SpeedPost.fr (WebAgentic Builder)
@@ -46,8 +56,12 @@ contact@speedpost.fr  |  webagentic.speedpost.fr
 
 ## Règles
 
-- **Longueur** : 120–180 mots corps **offre incluse** (court, vendeur, pas didactique).
-- **Ton** : pro, direct, confiant. Pas marketing-agressif. Pas de superlatifs.
+- **Longueur** : 180–280 mots corps **offre + services inclus**. Explicatif mais lisible et aéré.
+- **Ton** : pro, chaleureux, humain, confiant. Pas marketing-agressif ni pressant. Pas de superlatifs.
+- **Cadrage maquette obligatoire** : il doit être explicite que le lien est une maquette/aperçu offert (donner le goût, montrer l'intérêt), pas un produit facturé.
+- **Services obligatoires à expliciter** : rapport mensuel des visites, stratégie SEO, agent IA de modification, garantie première page Google (recherches locales naturelles + IA).
+- **Flexibilité obligatoire à expliciter** : prix discutable, paiement en plusieurs fois, on s'adapte, équipe humaine.
+- **Garantie Google crédible** : « on s'engage à vous positionner en première page sur des recherches locales pertinentes », jamais une promesse absolue invérifiable (« 1er partout »).
 - **Personnalisation obligatoire** : ≥ 2 faits factuels du research cités.
 - **URL GitHub Pages en clair** dans le corps (pas de "cliquez ici" masqué).
 - **Toujours préciser « HT »** sur les prix.
@@ -70,6 +84,6 @@ contact@speedpost.fr  |  webagentic.speedpost.fr
 
 - sujet retenu (≤ 55 chars)
 - 2-3 faits factuels cités (preuve de personnalisation)
-- nombre de mots du corps (doit être dans [120, 180])
+- nombre de mots du corps (doit être dans [180, 280])
 - URL GitHub Pages utilisée
 - chemins `email.txt`, `email.html`
